@@ -19,18 +19,30 @@ interface PromotionTypeDialogProps {
     promotionTypes: PromotionType[]
     selectedOption: PromotionType | null
     setSelectedOption: (selectedOption: PromotionType | null) => void
+    onSave: () => void
 }
 
-export const PromotionTypeDialog = ({
+const PromotionTypeDialog = ({
     open,
     onOpenChange,
     promotionTypes,
     selectedOption,
-    setSelectedOption
+    setSelectedOption,
+    onSave
 }: PromotionTypeDialogProps) => {
     const handleSave = () => {
-        onOpenChange(false)
+        onSave()
     }
+
+    const handleCheckedChange = (checked: string | boolean, promotionType: PromotionType) => {
+        if (checked === true) {
+            setSelectedOption(promotionType)
+        } else {
+            setSelectedOption(null)
+        }
+    }
+
+    console.log(selectedOption, "Opcion seleccionada")
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -45,13 +57,7 @@ export const PromotionTypeDialog = ({
                             <Checkbox
                                 id={promotionType.name}
                                 name={promotionType.name}
-                                onCheckedChange={(checked) => {
-                                    if (checked) {
-                                        setSelectedOption(promotionType)
-                                    } else {
-                                        setSelectedOption(null)
-                                    }
-                                }}
+                                onCheckedChange={(checked) => handleCheckedChange(checked, promotionType)}
                                 checked={selectedOption?.id === promotionType.id}
                                 className="hover:cursor-pointer"
                             />
@@ -74,3 +80,5 @@ export const PromotionTypeDialog = ({
         </Dialog>
     )
 }
+
+export default PromotionTypeDialog

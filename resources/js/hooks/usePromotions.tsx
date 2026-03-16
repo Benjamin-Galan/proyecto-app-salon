@@ -7,6 +7,7 @@ import { PromotionType } from "@/types"
 
 export const usePromotions = () => {
     const [toggleOptionsDialog, setToggleOptionsDialog] = useState(false);
+    const [togglePromotionDialog, setTogglePromotionDialog] = useState(false);
     const [selectedOption, setSelectedOption] = useState<PromotionType | null>(null)
 
     //Abrir el dialogo para seleccionar una opcion
@@ -17,8 +18,17 @@ export const usePromotions = () => {
 
     //Cerrar el dialogo para seleccionar una opcion
     const closeSelectOptionDialog = () => {
-        setSelectedOption(null)
         setToggleOptionsDialog(false)
+    }
+
+    //Abrir el dialogo para crear una promocion
+    const openPromotionDialog = () => {
+        setTogglePromotionDialog(true)
+    }
+
+    //Cerrar el dialogo para crear una promocion
+    const closePromotionDialog = () => {
+        setTogglePromotionDialog(false)
     }
 
     return {
@@ -28,6 +38,11 @@ export const usePromotions = () => {
         setSelectedOption,
 
         openSelectOptionDialog,
-        closeSelectOptionDialog
+        closeSelectOptionDialog,
+
+        togglePromotionDialog,
+        setTogglePromotionDialog,
+        openPromotionDialog,
+        closePromotionDialog
     }
 }

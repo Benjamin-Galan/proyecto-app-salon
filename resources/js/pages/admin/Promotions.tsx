@@ -6,8 +6,11 @@ import EmptyState from "@/components/EmptyState";
 import { BreadcrumbItem } from "@/types";
 import { Gift, Plus } from "lucide-react";
 import { usePromotions } from "@/hooks/usePromotions";
-import { PromotionTypeDialog } from "@/components/promotions/PromotionTypeDialog";
-import type { PromotionType } from "@/types";
+import PromotionTypeDialog from "@/components/promotions/PromotionTypeDialog";
+import PromotionDialog from "@/components/promotions/PromotionDialog";
+import PromotionsList from "@/components/promotions/PromotionsList";
+import type { Promotion, PromotionType, Service } from "@/types";
+import { useServices } from "@/hooks/useServices";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -27,10 +30,26 @@ export default function Promotions() {
         closeSelectOptionDialog,
         selectedOption,
         setSelectedOption,
+
+        togglePromotionDialog,
+        openPromotionDialog,
+        closePromotionDialog
     } = usePromotions()
 
-    const { promotionTypes = [] } = usePage().props as {
+    const { openSelectService, closeSelectService, toggleSelectServiceDialog } = useServices()
+
+    const { promotionTypes = [], services = [], allPromotions = [] } = usePage().props as {
         promotionTypes?: PromotionType[]
+        services?: Service[]
+        allPromotions?: Promotion[]
+    }
+
+    console.log(services, "LLEGAN LOS SERVICIOS????")
+    console.log(allPromotions, "LLEGAN TODAS LAS PROMOOS????")
+
+    const handleSaveOption = () => {
+        closeSelectOptionDialog()
+        openPromotionDialog()
     }
 
     return (
@@ -48,8 +67,19 @@ export default function Promotions() {
                 }
             >
                 <div>
-                    Hola
+                    Aqui irian los filtros
                 </div>
+
+                {/* Aquí iría la lista de promociones */}
+                {!allPromotions || allPromotions.length === 0 ? (
+                    <EmptyState type="promos" onCreate={openSelectOptionDialog} />
+                ) : (
+                    <PromotionsList 
+                        promotions={allPromotions}
+                        // onEdit={}
+                        // onDelete={}
+                    />
+                )}
             </ProductsLayout>
 
             <PromotionTypeDialog
@@ -58,6 +88,18 @@ export default function Promotions() {
                 promotionTypes={promotionTypes}
                 selectedOption={selectedOption}
                 setSelectedOption={setSelectedOption}
+                onSave={handleSaveOption}
+            />
+
+            <PromotionDialog
+                open={togglePromotionDialog}
+                onOpenChange={closePromotionDialog}
+                selectedOption={selectedOption}
+                services={services}
+                // promotion={promotion}
+                openSelectService={toggleSelectServiceDialog}
+                onOpenSelectService={openSelectService}
+                onCloseSelectService={closeSelectService}
             />
         </AppLayout>
     );
