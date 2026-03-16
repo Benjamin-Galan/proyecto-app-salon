@@ -30,7 +30,7 @@ export const PackagesForm = ({ services, package: currentPackage, openSelectServ
         name: string
         description: string
         discount: string
-        services: { service_id: number, service_price: number }[]
+        services: { service_id: number, service_price?: number }[]
     }>({
         name: currentPackage?.name ?? "",
         description: currentPackage?.description ?? "",
@@ -40,8 +40,6 @@ export const PackagesForm = ({ services, package: currentPackage, openSelectServ
             service_price: service.price
         })) ?? [],
     })
-
-    const [selectedService, setSelectedService] = useState<string>("")
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -70,10 +68,6 @@ export const PackagesForm = ({ services, package: currentPackage, openSelectServ
     useEffect(() => {
         onServicesCountChange?.(selectedServiceObjects.length)
     }, [selectedServiceObjects.length])
-
-    const handleUpdateField = (field: keyof typeof data, value: any) => {
-        setData(prev => ({ ...prev, [field]: value }))
-    }
 
     const handleRemoveService = (serviceId: number) => {
         setData(prev => ({
@@ -225,8 +219,6 @@ export const PackagesForm = ({ services, package: currentPackage, openSelectServ
                                 ))}
                             </div>
                         </div>
-
-
                     </div>
                 )}
             </div>
