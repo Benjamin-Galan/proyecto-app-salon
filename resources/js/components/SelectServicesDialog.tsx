@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-import { Service } from "@/types"
+import { PromotionFormService, Service } from "@/types"
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import { Search } from "lucide-react"
@@ -13,8 +13,8 @@ interface SelectServicesModalProps {
     open: boolean
     onClose: () => void
     services?: Service[]
-    selectedServices: { service_id: number }[]
-    onServicesChange: (services: { service_id: number }[]) => void
+    selectedServices: PromotionFormService[]
+    onServicesChange: (services: PromotionFormService[]) => void
 }
 
 export const SelectServicesDialog = ({
@@ -38,9 +38,14 @@ export const SelectServicesDialog = ({
                 selectedServices.filter(s => s.service_id !== serviceId)
             )
         } else {
+            const currentService = services?.find(s => s.id === serviceId)
             onServicesChange([
                 ...selectedServices,
-                { service_id: serviceId },
+                {
+                    service_id: serviceId,
+                    service_price: currentService?.price,
+                    service_discount: 0,
+                },
             ])
         }
     }
@@ -56,7 +61,11 @@ export const SelectServicesDialog = ({
             // Seleccionar todos los filtrados
             const newServices = filteredServices.filter(
                 service => !selectedIds.has(service.id)
-            ).map(service => ({ service_id: service.id }))
+            ).map(service => ({
+                service_id: service.id,
+                service_price: service.price,
+                service_discount: 0,
+            }))
 
             onServicesChange([...selectedServices, ...newServices])
         }

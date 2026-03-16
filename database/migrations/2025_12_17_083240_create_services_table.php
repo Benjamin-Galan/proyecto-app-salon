@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('price', 8, 2);
             $table->decimal('total_price', 8, 2)->nullable();
             $table->integer('discount')->default(0);
-            $table->integer('duration');
+            $table->string('duration');
             $table->string('image')->nullable();
             $table->boolean('active')->default(true);
             $table->foreignId('category_id')->constrained()->onDelete('cascade');

@@ -13,9 +13,7 @@ use App\Services\DiscountedPriceService;
 
 class CatalogService
 {
-    public function __construct(private ImageService $imageService, private DiscountedPriceService $discountedPriceService)
-    {
-    }
+    public function __construct(private ImageService $imageService, private DiscountedPriceService $discountedPriceService) {}
 
     public function createService(array $data)
     {
@@ -72,5 +70,22 @@ class CatalogService
         $service->update($data);
 
         return $service->load('category');
+    }
+
+    public function getServicesData(array $data): ServicesData
+    {
+        //Obtener los IDs de los servicios
+        $servicesIds = collect($data['services'] ?? [])
+            ->pluck('service_id');
+
+        //Traer servicios reales desde la bd
+        $services = Service::whereIn('id', $servicesIds)->get();
+
+        //Verificar que todos los servicios existen
+        if ($services->count() !== $servicesIds->count()) {
+            throw new InvalidArgumentException('Algunos servicios no existen.');
+        }
+
+        return new ServicesData($servicesIds, $services);
     }
 }
