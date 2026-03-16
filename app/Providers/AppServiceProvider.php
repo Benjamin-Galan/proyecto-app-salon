@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Package;
+use App\Models\Promotion;
+use App\Models\Service;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Relation::morphMap([
+            'service' => Service::class,
+            'promotion' => Promotion::class,
+            'package' => Package::class,
+        ]);
     }
 }
