@@ -19,13 +19,15 @@ class Promotion extends Model
         'total',
         'active',
         'main',
-        'expire_date'
+        'expire_date',
+        'promotion_type',
     ];
 
-    protected function services()
+    public function services()
     {
-        return $this->belongsToMany(Service::class, 'promotion_services')
+        return $this->belongsToMany(Service::class, 'promotions_services')
             ->withPivot('service_price', 'service_discount')
             ->withTimestamps();
     }
+
 }

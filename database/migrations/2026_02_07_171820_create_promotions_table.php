@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->decimal('total', 8, 2);
             $table->boolean('active')->default(true);
             $table->boolean('main')->default(false);
+            $table->string('promotion_type');
             $table->date('expire_date');
             $table->timestamps();
         });

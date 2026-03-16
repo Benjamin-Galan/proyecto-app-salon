@@ -6,27 +6,24 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class PromotionRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
             'name' => 'required|string|max:100',
             'description' => 'required|string',
-            'discount' => 'required|numeric|min:0|max:100',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'promotion_type' => 'required|in:General,Individual',
+            'discount' => 'required_if:promotion_type,general|nullable|numeric|min:0|max:100',
+            'expire_date' => 'required|date',
             'services' => 'required|array|min:1',
             'services.*.service_id' => 'required|exists:services,id',
+            'services.*.service_price' => 'nullable|numeric|min:0',
+            'services.*.service_discount' => 'nullable|numeric|min:0|max:100',
         ];
     }
 }
