@@ -8,15 +8,15 @@ export function getMainNavItemsByRole(role: 'admin' | 'cliente'): NavItem[] {
         { title: "Servicios", href: "/admin/services", icon: Scissors },
         { title: "Promociones", href: "/admin/promotions", icon: Percent },
         { title: "Paquetes", href: "/admin/packages", icon: Gift },
-        { title: "Personal", href: "/admin/staff", icon: Users },
+        { title: "Personal", href: "/admin/employees", icon: Users },
         { title: "Notificaciones", href: "/admin/notifications", icon: BellRing },
         { title: "Reportes", href: "/admin/reports", icon: ClipboardMinus },
     ]
 
     const client: NavItem[] = [
         { title: "Dashboard", href: "/client/dashboard", icon: LayoutGrid },
-        { title: "Agendamiento", href: "/client/services", icon: NotebookPen },
-        { title: "Mis citas", href: "/client/appointments", icon: Percent },
+        { title: "Agendamiento", href: "/client/scheduling", icon: NotebookPen },
+        { title: "Mis citas", href: "/client/history", icon: Percent },
         { title: "Notificaciones", href: "/client/notifications", icon: Gift },
     ];
 
