@@ -53,6 +53,14 @@ export interface Category {
     updated_at: string
 }
 
+interface ServicePivot {
+    service_id: number;
+    service_price: string;
+    service_discount: string;
+    created_at: string;
+    updated_at: string;
+}
+
 export interface Service {
     id: number
     name: string
@@ -67,6 +75,7 @@ export interface Service {
     created_at: string
     updated_at: string
     category?: Category | null
+    pivot?: ServicePivot | null
 }
 
 export interface PaginatedService {
@@ -123,3 +132,108 @@ export interface PromotionType {
     created_at: string;
     updated_at: string;
 }
+
+export interface Promotion {
+    id: number;
+    name: string;
+    description: string | null;
+    image: string | null;
+    duration: number;
+    subtotal: number;
+    discount: number;
+    total: number;
+    active: boolean;
+    main: boolean;
+    expire_date: string;
+    services: Service[];
+    promotion_type_id: number;
+    created_at: string;
+    updated_at: string;
+    promotion_type?: PromotionType | null;
+}
+
+export interface PromotionFormService {
+    service_id: number;
+    service_price?: number;
+    service_discount?: number;
+}
+
+export interface PromotionFormData {
+    name: string;
+    description: string;
+    image: File | null;
+    duration: string;
+    subtotal: string;
+    discount: string;
+    total: string;
+    services: PromotionFormService[];
+}
+
+export interface Employee {
+    id: number;
+    name: string;
+    email: string;
+    phone: string | null;
+    position: string | null;
+    available?: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Appointment {
+    id: number;
+    date: string;
+    time: string;
+    duration: number;
+    subtotal: number;
+    discount: number;
+    total: number;
+    code: string;
+    notes: string | null;
+    active: boolean;
+    status: string;
+    user_id: number;
+    employee_id: number;
+    created_at: string;
+    updated_at: string;
+    items: AppointmentItem[];
+    user: User;
+    employee: Employee;
+}
+
+export type AppointmentItemType = "service" | "promotion" | "package";
+
+interface AppointmentItemBase {
+    id: number;
+    appointment_id: number;
+    item_type: AppointmentItemType;
+    item_id: number;
+    quantity: number;
+    unit_price: number;
+    unit_discount: number;
+    duration_min: number;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface AppointmentServiceItem extends AppointmentItemBase {
+    item_type: "service";
+    item: Service;
+}
+
+export interface AppointmentPromotionItem extends AppointmentItemBase {
+    item_type: "promotion";
+    item: Promotion;
+}
+
+export interface AppointmentPackageItem extends AppointmentItemBase {
+    item_type: "package";
+    item: Package;
+}
+
+export type AppointmentItem =
+    | AppointmentServiceItem
+    | AppointmentPromotionItem
+    | AppointmentPackageItem;
+
+export type ClientScreen = "products" | "cart" | "datetime" | "summary" | "status" | "appointments" | "list" | "details" | "edit";
