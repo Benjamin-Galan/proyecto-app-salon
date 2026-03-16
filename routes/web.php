@@ -1,9 +1,14 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminAppointmentsController;
 use App\Http\Controllers\Admin\CategoriesController;
+use App\Http\Controllers\Admin\EmployeesController;
+use App\Http\Controllers\Admin\NotificationsController;
 use App\Http\Controllers\Admin\PackagesController;
 use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Admin\ServicesController;
+use App\Http\Controllers\Client\ClientAppointmentsController;
+use App\Http\Controllers\Client\SchedulingController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -56,6 +61,31 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('promotions', [PromotionController::class, 'store'])->name('promotions.store');
             Route::put('promotions/{promotion}/update', [PromotionController::class, 'update'])->name('promotions.update');
             Route::put('promotions/{promotion}/disable', [PromotionController::class, 'disable'])->name('promotions.disable');
+        });
+
+        Route::prefix('admin')->name('admin.')->group(function () {
+            Route::get('employees', [EmployeesController::class, 'index'])->name('employees.index');
+            Route::post('employees', [EmployeesController::class, 'store'])->name('employees.store');
+            Route::put('employees/{employee}/update', [EmployeesController::class, 'update'])->name('employees.update');
+            Route::put('employees/{employee}/destroy', [EmployeesController::class, 'disable'])->name('employees.destroy');
+        });
+
+        Route::prefix('admin')->name('admin.')->group(function () {
+            Route::get('appointments', [AdminAppointmentsController::class, 'index'])->name('appointments.index');
+            Route::get('appointments/{appointment}', [AdminAppointmentsController::class, 'show'])->name('appointments.show');
+            Route::put('appointments/{appointment}/confirm', [AdminAppointmentsController::class, 'confirm'])->name('appointments.confirm');
+            Route::put('appointments/{appointment}/cancel', [AdminAppointmentsController::class, 'cancel'])->name('appointments.cancel');
+        });
+
+        Route::prefix('admin')->name('admin.')->group(function () {
+            Route::get('notifications', [NotificationsController::class, 'index'])->name('notifications.index');
+        });
+    });
+
+    Route::middleware(['role:cliente'])->group(function () {
+        Route::prefix('client')->name('client.')->group(function () {
+            Route::get('scheduling', [SchedulingController::class, 'index'])->name('scheduling.index');
+            Route::post('scheduling', [SchedulingController::class, 'store'])->name('scheduling.store');
         });
     });
 });
