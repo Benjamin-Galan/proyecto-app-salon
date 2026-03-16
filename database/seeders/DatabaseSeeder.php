@@ -25,7 +25,9 @@ class DatabaseSeeder extends Seeder
         );
 
         $this->call([
-            PromotionTypeSeeder::class
+            PromotionTypeSeeder::class,
+            AppointmentStatusSeeder::class,
         ]);
+        
     }
 }
