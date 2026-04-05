@@ -11,6 +11,7 @@ use App\Services\UpdatePromotion;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Throwable;
 
 class PromotionController extends Controller
 {
@@ -67,7 +68,7 @@ class PromotionController extends Controller
         try {
             $this->updatePromotion->updatePromotion($promotion, $request->validated());
             return redirect()->back()->with('success', 'Promocion actualizada exitosamente.');
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             report($e);
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -78,7 +79,7 @@ class PromotionController extends Controller
         try {
             $promotion->update(['active' => false]);
             return redirect()->back()->with('success', 'Promocion desactivada exitosamente.');
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             report($e);
             return redirect()->back()->with('error', $e->getMessage());
         }

@@ -1,0 +1,19 @@
+.packages {
+  background: linear-gradient(
+    to bottom,
+    #3e1f0e,      // Marrón oscuro arriba
+    #4e2610 40%,  // Marrón intermedio
+    #7a3c12 100%  // Marrón cobrizo al fondo
+  );
+  padding-block: calc(var(--spacing) * 16);
+}
+
+.services {
+  background: linear-gradient(
+    to bottom,
+    #dbb396,      // Marrón oscuro arriba
+    #e0b89c 40%,  // Marrón intermedio
+    #b98f72 100%  // Marrón cobrizo al fondo
+  );
+  padding-block: calc(var(--spacing) * 16);
+}

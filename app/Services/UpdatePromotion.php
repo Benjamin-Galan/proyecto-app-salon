@@ -78,25 +78,15 @@ class UpdatePromotion
             ]);
 
             if ($promotionType === 'General') {
-                $pivotData = $services->mapWithKeys(function ($service) {
-                    return [
-                        $service->id => [
-                            'service_price' => $service->price
-                        ]
+                foreach ($data['services'] as $service) {
+                    $pivotData[$service['service_id']] = [
+                        'service_price' => $service['service_price'] ?? $promotion->service_price,
+                        'service_discount' => 0
                     ];
-                })->toArray();
+                }
             }
 
             if ($promotionType === 'Individual') {
-                // $pivotData = $services->mapWithKeys(function ($service) {
-                //     dump($service, 'SERVICE');
-                //     return [
-                //         $service->id => [
-                //             'service_price' => $service->price,
-                //             'service_discount' => $data['service_discount'] ?? 0
-                //         ]
-                //     ];
-                // })->toArray();
                 foreach ($data['services'] as $service) {
                     $pivotData[$service['service_id']] = [
                         'service_price' => $service['service_price'] ?? $promotion->service_price,

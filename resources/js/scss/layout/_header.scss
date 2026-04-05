@@ -1,0 +1,60 @@
+.header_container {
+    position: fixed;
+    /* ← clave */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 20;
+    /* suficientemente alto */
+    display: flex;
+    padding: 1rem 2rem;
+    justify-content: space-between;
+    align-items: center;
+    background-color: transparent;
+    /* ← permite que la imagen se vea detrás */
+    font-weight: 500;
+    color: white;
+}
+
+.header_logo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 18px;
+
+    img {
+        width: 2rem;
+        height: 2rem;
+    }
+}
+
+.header_nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.header_button {
+    border: 1px solid;
+    border-radius: 0.5rem;
+    padding: 6px 16px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        cursor: pointer;
+        background-color: rgba(255, 248, 220, 0.4);
+        /* light beige / cornsilk */
+    }
+}
+
+.header_container.scrolled {
+    backdrop-filter: blur(12px);
+    /* efecto blur */
+    background-color: rgba(255, 255, 255, 0.6);
+    /* blanco con opacidad */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* sombra sutil */
+    transition: all 0.3s ease;
+    color: rgb(20, 20, 20);
+}

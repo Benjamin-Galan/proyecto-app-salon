@@ -99,4 +99,13 @@ class PromotionService
             return $promotion->load('services');
         });
     }
+
+    public function validateServices(array $data)
+    {
+        if (!isset($data['services']) || count($data['services']) === 0) {
+            throw new InvalidArgumentException('La promocion debe tener al menos un servicio.');
+        }
+
+        return $data;
+    }
 }

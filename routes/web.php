@@ -12,16 +12,13 @@ use App\Http\Controllers\Client\ClientAppointmentsController;
 use App\Http\Controllers\Client\ClientHistoryController;
 use App\Http\Controllers\Client\ClientNotificationsController;
 use App\Http\Controllers\Client\SchedulingController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
-Route::get('/', function () {
-    return Inertia::render('welcome', [
-        'canRegister' => Features::enabled(Features::registration()),
-    ]);
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/test', [TestController::class, 'index']);
 

@@ -3,13 +3,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
-import { Service, Promotion, PromotionType, PromotionFormData, PromotionFormService } from "@/types";
-import { useForm, router } from "@inertiajs/react";
+import { Service, Promotion, PromotionType, PromotionFormData, PromotionFormService, Flash } from "@/types";
+import { useForm } from "@inertiajs/react";
 import { useEffect, useMemo, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SelectServicesDialog } from "../SelectServicesDialog";
 import ImagePreview from "../ImagePreview";
-import { toast } from "sonner";
+import { useAlerts } from "@/hooks/useAlerts";
 
 interface PromotionsProps {
     services: Service[];
@@ -31,10 +31,11 @@ export default function PromotionsMainForm({
     selectedOption
 }: PromotionsProps) {
     const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const { errorAlert, successAlert } = useAlerts()
 
     console.log(promotion, 'PROMO DESDE EL FORM?')
 
-    const { data, setData, post, processing, errors } = useForm<{
+    const { data, setData, post, processing, errors, transform } = useForm<{
         name: string
         description: string
         discount: string
@@ -66,38 +67,36 @@ export default function PromotionsMainForm({
         e.preventDefault();
 
         if (isEditing) {
-            // Construir FormData manualmente para que el array de objetos
-            // 'services' se serialice correctamente junto al File de imagen.
-            const formData = new FormData();
-            formData.append('_method', 'put');
-            formData.append('name', data.name);
-            formData.append('description', data.description);
-            formData.append('promotion_type', data.promotion_type);
-            formData.append('discount', data.discount ?? '0');
-            formData.append('main', data.main);
-            formData.append('duration', data.duration);
-            formData.append('expire_date', data.expire_date ?? '');
-            if (data.image) {
-                formData.append('image', data.image);
-            }
-            // Serializar cada servicio individualmente como services[i][campo]
-            data.services.forEach((service, index) => {
-                formData.append(`services[${index}][service_id]`, String(service.service_id));
-                formData.append(`services[${index}][service_price]`, String(service.service_price ?? 0));
-                formData.append(`services[${index}][service_discount]`, String(service.service_discount ?? 0));
-            });
+            transform((currentData) => ({
+                ...currentData,
+                _method: "put",
+            }))
 
-            router.post(`/admin/promotions/${promotion?.id}/update`, formData, {
-                onSuccess: () => {
-                    toast.success('Promoción actualizada')
+            post(`/admin/promotions/${promotion?.id}/update`, {
+                forceFormData: true,
+                onSuccess: (page: any) => {
+                    const flash = (page.props as { flash?: Flash }).flash
+                    successAlert(flash?.success || "Promocion actualizada")
                     onClose()
+                },
+                onError: (page: any) => {
+                    const flash = (page.props as { flash?: Flash }).flash
+                    errorAlert(flash?.error || "Error al actualizar la promocion")
                 }
             })
         } else {
+            transform((currentData) => currentData)
+
             post('/admin/promotions', {
-                onSuccess: () => {
-                    toast.success('Promoción creada')
+                forceFormData: true,
+                onSuccess: (page: any) => {
+                    const flash = (page.props as { flash?: Flash }).flash
+                    successAlert(flash?.success || "Promocion creada")
                     onClose()
+                },
+                onError: (page: any) => {
+                    const flash = (page.props as { flash?: Flash }).flash
+                    errorAlert(flash?.error || "Error al crear la promocion")
                 }
             })
         }
@@ -201,7 +200,7 @@ export default function PromotionsMainForm({
 
                         <div className="space-y-2">
                             <Label htmlFor="name" className="flex items-center gap-2 text-sm font-medium">
-                                Nombre de la promoción
+                                Nombre de la promocion
                             </Label>
                             <Input
                                 id="name"
@@ -215,7 +214,7 @@ export default function PromotionsMainForm({
 
                         <div className="space-y-2">
                             <Label htmlFor="description" className="flex items-center gap-2 text-sm font-medium">
-                                Descripción de la promoción
+                                Descripcion de la promocion
                             </Label>
                             <Textarea name="description" value={data.description} onChange={(e) => setData("description", e.target.value)} />
                             {errors.description && <p className="text-sm text-red-500 mt-1">{errors.description}</p>}
@@ -264,7 +263,7 @@ export default function PromotionsMainForm({
                             </div>
 
                             <div className="space-y-2 w-full">
-                                <Label>¿Es una promocion principal?</Label>
+                                <Label>Es una promocion principal?</Label>
                                 <div className="flex justify-center items-center ">
                                     <Select
                                         value={data.main}
@@ -317,7 +316,7 @@ export default function PromotionsMainForm({
 
                     {selectedServiceObjects.length === 0 && (
                         <p className="text-sm text-gray-500">
-                            Selecciona servicios para configurar la promoción.
+                            Selecciona servicios para configurar la promocion.
                         </p>
                     )}
 
