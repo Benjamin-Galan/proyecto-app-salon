@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
-import type { ServiceList } from "@/types"
-import { gotoRegister } from "@/utils/gotoRegister"
+import type { Service } from "@/types"
+import { gotoRegister } from "@/utils/goToRegister"
 
 interface ServicesProps {
-  services: ServiceList
+  services: Service[]
 }
 
 export default function Services({ services }: ServicesProps) {
@@ -62,7 +62,7 @@ export default function Services({ services }: ServicesProps) {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-beauty-deep font-bold text-base sm:text-lg">${servicio.price}</span>
+                  <span className="text-beauty-deep font-bold text-base sm:text-lg">C${servicio.price}</span>
                   <Button
                     variant="outline"
                     size="sm"

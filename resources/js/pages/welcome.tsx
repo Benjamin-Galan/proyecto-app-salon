@@ -4,6 +4,7 @@ import Hero from "./home/Hero";
 import WhatsAppChat from "@/components/WhatsappChat";
 import PackageList from "./home/Packages";
 import Services from "./home/Services";
+import Promotions from "./home/Promotions";
 import About from "./home/About";
 import MapSection from "./home/MapSection";
 import Contact from "./home/Contact";
@@ -98,6 +99,10 @@ export default function Welcome() {
 
                     <section id="servicios">
                         <Services services={services} />
+                    </section>
+
+                    <section id="promociones">
+                        <Promotions promotions={promotions} />
                     </section>
 
                     <section id="paquetes">

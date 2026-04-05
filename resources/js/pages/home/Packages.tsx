@@ -3,11 +3,11 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Check } from "lucide-react"
-import type { PackagesList } from "@/types"
-import { gotoRegister } from "@/utils/gotoRegister"
+import type { Package } from "@/types"
+import { gotoRegister } from "@/utils/goToRegister"
 
 interface PackageListProps {
-  packages: PackagesList
+  packages: Package[]
 }
 
 export default function Packages({ packages }: PackageListProps) {
@@ -40,7 +40,7 @@ export default function Packages({ packages }: PackageListProps) {
               <CardContent className="flex-grow">
                 <div className="mb-6">
                   <span className="text-2xl font-bold text-beauty-deep">
-                    ${pack.total}
+                    C$ {pack.total}
                     <span className="text-xs text-gray-500 font-normal"> / sesión</span>
                   </span>
                 </div>
