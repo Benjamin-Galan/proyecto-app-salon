@@ -28,33 +28,23 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function Promotions() {
     const {
         toggleOptionsDialog,
-        setToggleOptionsDialog,
-
         selectedOption,
         setSelectedOption,
-
         openSelectOptionDialog,
         closeSelectOptionDialog,
-
         togglePromotionDialog,
-        setTogglePromotionDialog,
         openPromotionDialog,
         closePromotionDialog,
         openEditPromotionDialog,
-
         toggleDeleteDialog,
-        setToggleDeleteDialog,
         openDeleteDialog,
         closeDeleteDialog,
-
         selectedPromotion,
-        setSelectedPromotion,
-
         deletePromotion,
     } = usePromotions()
 
     const { openSelectService, closeSelectService, toggleSelectServiceDialog } = useServices()
-    const { errorAlert, warningAlert, successAlert } = useAlerts()
+    const { errorAlert, successAlert } = useAlerts()
 
     const { promotionTypes = [], services = [], allPromotions = [] } = usePage().props as {
         promotionTypes?: PromotionType[]
