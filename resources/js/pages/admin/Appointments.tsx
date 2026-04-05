@@ -8,6 +8,7 @@ import { appointmentsTableColums } from "@/components/appointments/AppointmentsT
 import AppointmentsTable from "@/components/appointments/AppointmentsTable";
 import ConfirmDialog from "@/components/appointments/ConfirmDialog";
 import DeleteDialog from "@/components/appointments/DeleteDialog";
+import CompleteDialog from "@/components/appointments/CompleteDialog";
 import HeaderContent from "@/components/HeaderContent";
 
 import ProductsLayout from "@/layouts/admin/ProductsLayout";
@@ -40,7 +41,11 @@ export default function Appointments() {
         toggleCancelDialog,
         openCancelDialog,
         closeCancelDialog,
+        toggleCompleteDialog,
+        openCompleteDialog,
+        closeCompleteDialog,
         confirmAppointment,
+        completeAppointment,
         cancelAppointment,
         goToDetails,
         appointment
@@ -49,6 +54,24 @@ export default function Appointments() {
     const handleConfirm = (appointment: Appointment) => {
         try {
             confirmAppointment(appointment, {
+                onSuccess: (flash) => {
+                    if (flash?.success) {
+                        successAlert(flash.success)
+                    }
+
+                    if (flash?.error) {
+                        errorAlert(flash.error)
+                    }
+                }
+            })
+        } catch (error: any) {
+            errorAlert(error.message)
+        }
+    }
+
+    const handleComplete = (appointment: Appointment) => {
+        try {
+            completeAppointment(appointment, {
                 onSuccess: (flash) => {
                     if (flash?.success) {
                         successAlert(flash.success)
@@ -102,10 +125,21 @@ export default function Appointments() {
         }
     }
 
+    const handleOpenCompleteDialog = (appointment: Appointment) => {
+        try {
+            if (appointment) {
+                openCompleteDialog(appointment)
+            }
+        } catch (error: any) {
+            warningAlert(error.message)
+        }
+    }
+
     const columns = appointmentsTableColums({
         onView: goToDetails,
         onConfirm: handleOpenConfirmDialog,
-        onCancel: handleOpenDeleteDialog
+        onCancel: handleOpenDeleteDialog,
+        onComplete: handleOpenCompleteDialog
     })
 
     return (
@@ -139,6 +173,13 @@ export default function Appointments() {
                 open={toggleCancelDialog}
                 onOpenChange={closeCancelDialog}
                 onConfirm={handleCancel}
+                appointment={appointment}
+            />
+
+            <CompleteDialog
+                open={toggleCompleteDialog}
+                onOpenChange={closeCompleteDialog}
+                onComplete={handleComplete}
                 appointment={appointment}
             />
         </AppLayout>

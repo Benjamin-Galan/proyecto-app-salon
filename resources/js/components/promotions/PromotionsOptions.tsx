@@ -1,5 +1,5 @@
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { MoreVertical, Pencil, Trash } from "lucide-react";
+import { Eye, MoreVertical, Pencil, Trash } from "lucide-react";
 import { useState } from "react";
 import { Promotion } from "@/types";
 
@@ -7,9 +7,10 @@ interface Props {
     promotion: Promotion;
     onEdit: (promotion: Promotion) => void;
     onDelete: (promotion: Promotion) => void;
+    onView: (promotion: Promotion) => void;
 }
 
-export default function PromotionsOptions({ promotion, onEdit, onDelete }: Props) {
+export default function PromotionsOptions({ promotion, onEdit, onDelete, onView }: Props) {
     const [open, setOpen] = useState(false);
 
     return (
@@ -21,6 +22,11 @@ export default function PromotionsOptions({ promotion, onEdit, onDelete }: Props
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => onView(promotion)}>
+                    <Eye className="w-4 h-4 mr-2" />
+                    Mas detalles
+                </DropdownMenuItem>
+
                 <DropdownMenuItem onClick={() => onEdit(promotion)}>
                     <Pencil className="w-4 h-4 mr-2" />
                     Editar

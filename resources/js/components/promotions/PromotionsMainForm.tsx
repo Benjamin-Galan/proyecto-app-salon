@@ -3,15 +3,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
-import { Service, Promotion, PromotionType, PromotionFormData } from "@/types";
-import { useForm, usePage, router } from "@inertiajs/react";
+import { Service, Promotion, PromotionType, PromotionFormData, PromotionFormService } from "@/types";
+import { useForm, router } from "@inertiajs/react";
 import { useEffect, useMemo, useState } from "react";
-
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SelectServicesDialog } from "../SelectServicesDialog";
-import PromotionSettings from "./IndividualPromotionsSettings";
-import GeneralPromotionsSettings from "./GeneralPromotionsSettings";
 import ImagePreview from "../ImagePreview";
-import { route } from "ziggy-js";
 import { toast } from "sonner";
 
 interface PromotionsProps {
@@ -21,6 +18,7 @@ interface PromotionsProps {
     onOpenSelectService: () => void
     onCloseSelectService: () => void
     selectedOption: PromotionType | null
+    onClose: () => void
 }
 
 export default function PromotionsMainForm({
@@ -29,17 +27,21 @@ export default function PromotionsMainForm({
     openSelectService,
     onOpenSelectService,
     onCloseSelectService,
+    onClose,
     selectedOption
 }: PromotionsProps) {
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-    const { data, setData, post, put, processing, errors } = useForm<{
+    console.log(promotion, 'PROMO DESDE EL FORM?')
+
+    const { data, setData, post, processing, errors } = useForm<{
         name: string
         description: string
         discount: string
         image: File | null
         duration: string
         promotion_type: string
+        main: string
         expire_date?: string
         services: { service_id: number, service_price?: number, service_discount?: number }[]
     }>({
@@ -47,52 +49,55 @@ export default function PromotionsMainForm({
         description: promotion?.description ?? "",
         discount: promotion?.discount?.toString() ?? "",
         image: null,
-        duration: promotion?.duration.toString() ?? "",
-        promotion_type: promotion?.promotion_type ?? selectedOption?.name ?? "",
+        duration: promotion?.duration?.toString() ?? "",
+        promotion_type: promotion?.promotion_type?.toString() ?? selectedOption?.name ?? "",
+        main: promotion?.main?.toString() ?? "0",
         expire_date: promotion?.expire_date ?? new Date().toISOString().split("T")[0],
-        services: promotion?.services.map(service => ({
+        services: promotion?.services?.map(service => ({
             service_id: service.id,
-            service_price: service?.price,
-            service_discount: service?.discount
+            service_price: Number(service.pivot?.service_price ?? service.price),
+            service_discount: Number(service.pivot?.service_discount ?? 0)
         })) ?? [],
     })
 
-    const isEditing = !!promotion;
-
-    // const handleSubmit = (e: React.FormEvent) => {
-    //     e.preventDefault();
-
-    //     if (isEditing) {
-    //         put(route('admin.promotions.update', promotion.id), {
-    //             onSuccess: () => {
-    //                 toast.success('Promocion actualizada')
-    //             }
-    //         })
-    //     } else {
-    //         post(route('admin.promotions.store'), {
-    //             onSuccess: () => {
-    //                 toast.success("Paquete creado")
-    //             }
-    //         })
-    //     }
-    // }
+    const isEditing = !!promotion?.id;
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
         if (isEditing) {
-            router.post(`/admin/promotions/${promotion?.id}`, {
-                _method: 'put',
-                ...data,
-            }, {
+            // Construir FormData manualmente para que el array de objetos
+            // 'services' se serialice correctamente junto al File de imagen.
+            const formData = new FormData();
+            formData.append('_method', 'put');
+            formData.append('name', data.name);
+            formData.append('description', data.description);
+            formData.append('promotion_type', data.promotion_type);
+            formData.append('discount', data.discount ?? '0');
+            formData.append('main', data.main);
+            formData.append('duration', data.duration);
+            formData.append('expire_date', data.expire_date ?? '');
+            if (data.image) {
+                formData.append('image', data.image);
+            }
+            // Serializar cada servicio individualmente como services[i][campo]
+            data.services.forEach((service, index) => {
+                formData.append(`services[${index}][service_id]`, String(service.service_id));
+                formData.append(`services[${index}][service_price]`, String(service.service_price ?? 0));
+                formData.append(`services[${index}][service_discount]`, String(service.service_discount ?? 0));
+            });
+
+            router.post(`/admin/promotions/${promotion?.id}/update`, formData, {
                 onSuccess: () => {
                     toast.success('Promoción actualizada')
+                    onClose()
                 }
             })
         } else {
             post('/admin/promotions', {
                 onSuccess: () => {
                     toast.success('Promoción creada')
+                    onClose()
                 }
             })
         }
@@ -113,7 +118,7 @@ export default function PromotionsMainForm({
     )
 
     const total = useMemo(() => {
-        if (selectedOption?.name === "Individual") {
+        if ((selectedOption?.name === "Individual" || data.promotion_type === "Individual")) {
             return selectedServiceObjects.reduce((sum, service) => {
                 const serviceInForm = data.services.find(item => item.service_id === service.id)
                 const discount = Number(serviceInForm?.service_discount ?? 0)
@@ -126,21 +131,17 @@ export default function PromotionsMainForm({
         const globalDiscount = Number(data.discount || 0)
         const clampedGlobalDiscount = Math.min(Math.max(globalDiscount, 0), 100)
         return subtotal * (1 - clampedGlobalDiscount / 100)
-    }, [selectedOption?.name, selectedServiceObjects, data.services, data.discount, subtotal])
+    }, [selectedOption?.name, data.promotion_type, selectedServiceObjects, data.services, data.discount, subtotal])
 
     useEffect(() => {
-        const subtotalValue = subtotal.toFixed(2)
-        const totalValue = total.toFixed(2)
         const durationValue = totalDuration.toString()
         const effectiveDiscount =
             subtotal > 0 ? (((subtotal - total) / subtotal) * 100).toFixed(2) : "0"
 
         setData(prev => {
-            const nextDiscount = selectedOption?.name === "Individual" ? effectiveDiscount : prev.discount
+            const nextDiscount = (selectedOption?.name === "Individual" || data.promotion_type === "Individual") ? effectiveDiscount : prev.discount
 
             if (
-                prev.subtotal === subtotalValue &&
-                prev.total === totalValue &&
                 prev.duration === durationValue &&
                 prev.discount === nextDiscount
             ) {
@@ -149,8 +150,6 @@ export default function PromotionsMainForm({
 
             return {
                 ...prev,
-                subtotal: subtotalValue,
-                total: totalValue,
                 duration: durationValue,
                 discount: nextDiscount,
             }
@@ -186,7 +185,7 @@ export default function PromotionsMainForm({
             ...prev,
             services: prev.services.map((service) =>
                 service.service_id === serviceId
-                    ? { ...service, service_discount: discountValue }
+                    ? { ...service, service_discount: Number(discountValue) }
                     : service
             ),
         }))
@@ -199,6 +198,7 @@ export default function PromotionsMainForm({
                     {/*Columna izquireda */}
                     <div className="md:col-span-2 space-y-4">
                         {/*Nombre de la promocion */}
+
                         <div className="space-y-2">
                             <Label htmlFor="name" className="flex items-center gap-2 text-sm font-medium">
                                 Nombre de la promoción
@@ -251,14 +251,36 @@ export default function PromotionsMainForm({
                         </div>
 
                         {/*LUGAR TEMPORAL ACOMODAR BIEN LUEGO */}
-                        <div className="space-y-2 w-full">
-                            <Label>Fecha de expiracion</Label>
-                            <Input
-                                name="expire_date"
-                                type="date"
-                                onChange={e => setData("expire_date", e.target.value)}
-                            />
-                            {errors.expire_date && <p className="text-sm text-red-500 mt-1">{errors.expire_date}</p>}
+                        <div className="flex items-center gap-4">
+                            <div className="space-y-2 w-full">
+                                <Label>Fecha de expiracion</Label>
+                                <Input
+                                    name="expire_date"
+                                    type="date"
+                                    value={data.expire_date}
+                                    onChange={e => setData("expire_date", e.target.value)}
+                                />
+                                {errors.expire_date && <p className="text-sm text-red-500 mt-1">{errors.expire_date}</p>}
+                            </div>
+
+                            <div className="space-y-2 w-full">
+                                <Label>¿Es una promocion principal?</Label>
+                                <div className="flex justify-center items-center ">
+                                    <Select
+                                        value={data.main}
+                                        onValueChange={(value) => setData("main", value)}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Selecciona una opcion" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="1">Si</SelectItem>
+                                            <SelectItem value="0">No</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    {errors.main && <p className="text-sm text-red-500 mt-1">{errors.main}</p>}
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -272,10 +294,10 @@ export default function PromotionsMainForm({
                 <div className="space-y-4 rounded-lg border bg-gray-50 p-4 mt-4">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                         <div className="text-sm font-medium mb-2">
-                            {`Descuento ${selectedOption?.name} por servicio`}
+                            {`Descuento ${data.promotion_type ? data.promotion_type : selectedOption?.name} por servicio`}
                         </div>
 
-                        {selectedOption?.name === "General" && (
+                        {(selectedOption?.name === "General" || data.promotion_type === "General") && (
 
                             <div className="space-y-1 flex items-center gap-2">
                                 <Label htmlFor='discount'>Descuento (%)</Label>
@@ -325,7 +347,7 @@ export default function PromotionsMainForm({
                                         </button>
                                     </div>
 
-                                    {selectedOption?.name === "Individual" && (
+                                    {(selectedOption?.name === "Individual" || data.promotion_type === "Individual") && (
                                         <div>
                                             <div className="space-y-1 flex items-center gap-2">
                                                 <Label htmlFor={`discount-${service.id}`}>Descuento (%)</Label>
@@ -363,7 +385,6 @@ export default function PromotionsMainForm({
                 <div className="flex justify-end">
                     <div className="flex gap-3 pt-4 w-1/4">
                         <Button type="submit" className="flex-1">
-                            Guardar
                             {processing ? (
                                 <>
                                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
@@ -381,8 +402,12 @@ export default function PromotionsMainForm({
                 open={openSelectService}
                 onClose={onCloseSelectService}
                 services={services}
-                selectedServices={data.services}
-                onServicesChange={(services) => setData("services", services)}
+                selectedServices={data.services as PromotionFormService[]}
+                onServicesChange={(services) => setData("services", services.map(s => ({
+                    service_id: s.service_id,
+                    service_price: Number(s.service_price ?? 0),
+                    service_discount: Number(s.service_discount ?? 0),
+                })))}
             />
         </div>
     )

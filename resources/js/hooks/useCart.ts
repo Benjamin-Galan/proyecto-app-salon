@@ -1,7 +1,5 @@
 import { useMemo, useReducer } from "react";
-import type { Package, Promotion, Service } from "@/types";
-
-export type ProductType = "service" | "promotion" | "package";
+import type { Package, Promotion, Service, ProductType, AppointmentRequestPayload } from "@/types";
 type ProductItem = Service | Promotion | Package;
 
 export interface BookingCartItem {
@@ -34,28 +32,6 @@ export interface BookingTotals {
     discount: number;
     total: number;
     durationMin: number;
-}
-
-export interface AppointmentRequestPayload {
-    date: string;
-    time: string;
-    totals: {
-        lineItems: number;
-        itemsCount: number;
-        subtotal: number;
-        discount: number;
-        total: number;
-        durationMin: number;
-    };
-    items: {
-        item_id: number;
-        item_type: ProductType;
-        quantity: number;
-        unit_price: number;
-        original_unit_price: number;
-        unit_discount: number;
-        duration_min: number;
-    }[];
 }
 
 type BookingAction =

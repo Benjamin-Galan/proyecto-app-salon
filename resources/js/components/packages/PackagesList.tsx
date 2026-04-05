@@ -1,7 +1,10 @@
 import { Package, Service } from "@/types"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Separator } from "../ui/separator"
 import PackagesOptions from "./PackagesOptions"
 import { useState } from "react"
+import { formatDuration } from "@/utils/formatDuration"
+import { formatCurrency } from "@/utils/formatCurrency"
 
 interface PackagesListProps {
     packages: Package[]
@@ -10,7 +13,7 @@ interface PackagesListProps {
 }
 
 const totalDuration = (services: Service[]) => {
-    return services.reduce((total, service) => total + service.duration, 0)
+    return services.reduce((total, service) => Number(total) + Number(service.duration), 0)
 }
 
 const formatNumber = (number: number) => {
@@ -20,8 +23,10 @@ const formatNumber = (number: number) => {
 export default function PackagesList({ packages, onEdit, onDelete }: PackagesListProps) {
     const [expandedCard, setExpandedCard] = useState<number | null>(null);
 
+    console.log(packages, 'pacquetes')
+
     return (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {packages.map((pack) => {
                 const isExpanded = expandedCard === pack.id
                 const visibleServices = isExpanded ? pack.services : pack.services.slice(0, 3);
@@ -47,7 +52,7 @@ export default function PackagesList({ packages, onEdit, onDelete }: PackagesLis
                         }
                     >
                         {/* Header */}
-                        <CardHeader className="px-4">
+                        <CardHeader>
                             <div className="flex items-start justify-between">
                                 <div className="flex flex-col flex-1 min-w-0 gap-2">
                                     <CardTitle className="text-base font-semibold leading-tight line-clamp-2">
@@ -65,8 +70,9 @@ export default function PackagesList({ packages, onEdit, onDelete }: PackagesLis
                             </div>
                         </CardHeader>
 
-                        <CardContent className="p-4 pt-2 space-y-3">
-                            {/* Precio */}
+                        <CardContent className="px-4 space-y-3">
+                            <Separator className="bg-gray-100 dark:bg-gray-700/40" />
+
                             <div className="flex items-center justify-between">
                                 {pack.discount > 0 ? (
                                     <div className="flex items-center gap-2">
@@ -95,7 +101,7 @@ export default function PackagesList({ packages, onEdit, onDelete }: PackagesLis
                                     Duración:
                                 </span>
                                 <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                                    {totalDuration(pack.services)} minutos
+                                    {formatDuration(totalDuration(pack.services))}
                                 </span>
                             </div>
 

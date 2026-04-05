@@ -7,16 +7,22 @@ use App\Http\Requests\PromotionRequest;
 use App\Models\Promotion;
 use App\Models\Service;
 use App\Services\PromotionService;
+use App\Services\UpdatePromotion;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class PromotionController extends Controller
 {
     protected PromotionService $promotionService;
+    protected UpdatePromotion $updatePromotion;
 
-    public function __construct(PromotionService $promotionService)
-    {
+    public function __construct(
+        PromotionService $promotionService,
+        UpdatePromotion $updatePromotion
+    ) {
         $this->promotionService = $promotionService;
+        $this->updatePromotion = $updatePromotion;
     }
 
     public function index()
@@ -49,14 +55,32 @@ class PromotionController extends Controller
     {
         try {
             $this->promotionService->createPromotion($request->validated());
-
-            // return redirect()->back()->with('success', 'Promocion creada exitosamente.');
-            //probar json con el mensaje de éxito
-            return response()->json(['message' => 'Promocion creada exitosamente.']);
-        } catch (\Throwable $e) {
+            return redirect()->back()->with('success', 'Promocion creada exitosamente.');
+        } catch (Exception $e) {
             report($e);
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
 
-            return response()->json(['message' => 'Error al crear la promocion.', 'error' => $e->getMessage()], 500);
+    public function update(PromotionRequest $request, Promotion $promotion)
+    {
+        try {
+            $this->updatePromotion->updatePromotion($promotion, $request->validated());
+            return redirect()->back()->with('success', 'Promocion actualizada exitosamente.');
+        } catch (Exception $e) {
+            report($e);
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function disable(Promotion $promotion)
+    {
+        try {
+            $promotion->update(['active' => false]);
+            return redirect()->back()->with('success', 'Promocion desactivada exitosamente.');
+        } catch (Exception $e) {
+            report($e);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 }

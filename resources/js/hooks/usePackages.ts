@@ -3,11 +3,12 @@ import { Package } from "@/types"
 import { toast } from "sonner"
 import { router } from "@inertiajs/react"
 import { route } from "ziggy-js"
+import { Flash } from "@/types"
 
 export const usePackages = () => {
     const [togglePackagesDialog, setTogglePackageDialog] = useState(false)
     const [packageToUpdate, setPackageToUpdate] = useState<Package | null>(null)
-    const [packageToDisable, setPackageToDisable] = useState<Package | null>(null)
+    const [packageToDisable, setPackageToDisable] = useState<Package>({} as Package)
     const [toggleDisableDialog, setToggleDisableDialog] = useState(false)
 
     //Dialogo para crear un paquete
@@ -36,13 +37,17 @@ export const usePackages = () => {
 
     //Abrir el dialogo para deshabilitar un paquete
     const openDisablePackageDialog = (pack: Package) => {
+        if (!pack) {
+            throw new Error("No se seleccionó ningún paquete.")
+        }
+
         setPackageToDisable(pack)
         setToggleDisableDialog(true)
     }
 
     //Cerrar el dialogo para deshabilitar un paquete
     const closeDisablePackageDialog = () => {
-        setPackageToDisable(null)
+        setPackageToDisable({} as Package)
         setToggleDisableDialog(false)
     }
 
@@ -57,29 +62,25 @@ export const usePackages = () => {
         setPackageToUpdate(null)
     }
 
-    const disablePackage = () => {
-        if (!packageToDisable) {
-            toast.error("No se ha seleccionado ningún paquete.")
-            return
+    const disablePackage = (
+        pack: Package,
+        options?: {
+            onSuccess?: (flash?: Flash) => void
         }
-
-        router.put(
-            route("admin.packages.disable", packageToDisable.id),
-            {},
+    ) => {
+        router.put(route("admin.packages.disable", pack.id), {},
             {
                 preserveScroll: true,
-                onSuccess: () => {
-                    toast.success(`${packageToDisable.name} fue deshabilitado.`)
+                onSuccess: (page) => {
                     setToggleDisableDialog(false)
-                    setPackageToDisable(null)
-                },
-                onError: () => {
-                    toast.error(`${packageToDisable.name} no se pudo deshabilitar.`)
+                    setPackageToDisable({} as Package)
+
+                    const flash = (page.props as { flash?: Flash }).flash
+                    options?.onSuccess?.(flash)
                 }
             }
         )
     }
-
 
     return {
         togglePackagesDialog,

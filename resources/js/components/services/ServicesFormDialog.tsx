@@ -19,7 +19,6 @@ export const ServicesFormDialog = ({
     categories,
     onCreated,
     onUpdated,
-    onCategories
 }: ServicesFormDialogProps) => {
     return (
         <Dialog open={open} onOpenChange={onClose}>

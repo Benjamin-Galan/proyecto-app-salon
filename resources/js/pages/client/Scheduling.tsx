@@ -1,11 +1,13 @@
 import { Head, router, usePage } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
-import type { BreadcrumbItem, Package, Promotion, Service } from "@/types";
+import type { Appointment, BreadcrumbItem, Package, Promotion, Service } from "@/types";
 import { useScreenChange } from "@/hooks/useScreenChange";
 import ProductsSelection from "@/components/clients/scheduling/ProductsSelection";
 import ShoppingCartScreen from "@/components/clients/scheduling/ShoppingCart";
 import { useCart } from "@/hooks/useCart";
-import {route} from "ziggy-js";
+import { route } from "ziggy-js";
+import { useAppointments } from "@/hooks/useAppointments";
+import { useAlerts } from "@/hooks/useAlerts";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -36,11 +38,43 @@ export default function SchedulingPage() {
         buildAppointmentPayload,
     } = useCart();
 
-    const { services = [], packages = [], promotions = [] } = usePage()
-        .props as {
+    const { services = [], packages = [], promotions = [], uncompleted = [] } = usePage().props as {
         services?: Service[];
         promotions?: Promotion[];
         packages?: Package[];
+        uncompleted?: Appointment[];
+    };
+
+    uncompleted.forEach((appointment) => {
+        console.log(appointment, "ESTADO DE LA CITA:", appointment.id)
+    })
+
+    const { createAppointment, isProcessing } = useAppointments();
+    const { successAlert, errorAlert } = useAlerts();
+
+    const handleCreateAppointment = () => {
+        const payload = buildAppointmentPayload();
+
+        if (!payload) {
+            errorAlert("Por favor selecciona una fecha y hora para tu cita.");
+            return;
+        }
+
+        try {
+            createAppointment(payload, clearDraft, {
+                onSuccess: (flash) => {
+                    if (flash?.success) {
+                        successAlert(flash.success)
+                    }
+
+                    if (flash?.error) {
+                        errorAlert(flash.error)
+                    }
+                }
+            })
+        } catch (error: any) {
+            errorAlert(error)
+        }
     };
 
     const renderScreen = () => {
@@ -68,21 +102,9 @@ export default function SchedulingPage() {
                         setDate={setDate}
                         setTime={setTime}
                         clearItems={clearItems}
-                        submitAppointment={() => {
-                            const payload = buildAppointmentPayload();
-
-                            if (!payload) {
-                                return;
-                            }
-
-                            router.post(route("client.scheduling.store"), payload, {
-                                preserveScroll: true,
-                                onSuccess: () => {
-                                    clearDraft();
-                                    handleScheduleScreenChange("products");
-                                },
-                            });
-                        }}
+                        submitAppointment={handleCreateAppointment}
+                        isProcessing={isProcessing}
+                        uncompleted={uncompleted}
                     />
                 );
             default:

@@ -37,20 +37,6 @@ export function formatDateTime(
     }).format(date)
 }
 
-export function formatTime(time: string, invalidFallback = "-") {
-    if (!time) {
-        return invalidFallback
-    }
-
-    const [hours, minutes] = time.split(":")
-
-    if (!hours || !minutes) {
-        return invalidFallback
-    }
-
-    return `${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`
-}
-
 export function formatDate(date: string, invalidFallback = "-") {
     if (!date) {
         return invalidFallback
@@ -63,4 +49,49 @@ export function formatDate(date: string, invalidFallback = "-") {
     }
 
     return `${day}/${month}/${year}`
+}
+
+export function formatDateLong(
+    value: string | Date | null | undefined,
+    invalidFallback = "-"
+): string {
+    if (!value) return invalidFallback;
+
+    const raw = value instanceof Date ? value.toISOString() : value;
+
+    const [year, month, day] = raw.split("T")[0]?.split("-") ?? [];
+
+    if (!year || !month || !day) {
+        return invalidFallback;
+    }
+
+    const monthName = new Date(
+        Number(year),
+        Number(month) - 1
+    ).toLocaleString("es-NI", { month: "long" });
+
+    return `${day} de ${monthName}\nde ${year}`;
+}
+
+export function formatTime(
+    time: string | Date | null | undefined,
+    invalidFallback = "-"
+): string {
+    if (!time) return invalidFallback;
+
+    let raw: string;
+
+    if (time instanceof Date) {
+        raw = time.toISOString().split("T")[1]; // "HH:mm:ss"
+    } else {
+        raw = time.includes("T") ? time.split("T")[1] : time;
+    }
+
+    const [hours, minutes] = raw?.split(":") ?? [];
+
+    if (!hours || !minutes) {
+        return invalidFallback;
+    }
+
+    return `${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`;
 }

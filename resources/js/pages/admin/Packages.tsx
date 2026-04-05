@@ -11,6 +11,8 @@ import PackagesList from "@/components/packages/PackagesList";
 import { useState, useMemo } from "react";
 import PackagesFilters from "@/components/packages/PackagesFilters";
 import EmptyState from "@/components/EmptyState";
+import { useAlerts } from "@/hooks/useAlerts";
+import DeletePackageDialog from "@/components/packages/DeletePackageDialog"
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -26,19 +28,18 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function PackagesPage() {
     const { services = [], allPackages = [] } = usePage().props as { services?: Service[], allPackages?: Package[] }
     const { openSelectService, closeSelectService, toggleSelectServiceDialog } = useServices()
+    const { warningAlert, errorAlert, successAlert } = useAlerts()
     const {
         togglePackagesDialog,
         toggleDisableDialog,
-        packageToUpdate,
+        closeDisablePackageDialog,
         packageToDisable,
+        packageToUpdate,
         openCreatePackageDialog,
         closeCreatePackageDialog,
         openUpdatePackageDialog,
-        closeUpdatePackageDialog,
         openDisablePackageDialog,
-        closeDisablePackageDialog,
         successPackageCreate,
-        successPackageUpdate,
         disablePackage
     } = usePackages()
 
@@ -52,6 +53,36 @@ export default function PackagesPage() {
         )
     }, [search, allPackages])
 
+    const handleDisablePackage = (pack: Package) => {
+        try {
+            disablePackage(pack, {
+                onSuccess: (flash) => {
+                    if (flash?.success) {
+                        successAlert(flash.success)
+                    }
+
+                    if (flash?.error) {
+                        warningAlert(flash.error)
+                    }
+                }
+            })
+        } catch (error: any) {
+            errorAlert(error.message)
+        }
+    }
+
+    const handleOpenDisableDialog = (pack: Package) => {
+        try {
+            openDisablePackageDialog(pack)
+        } catch (error: any) {
+            warningAlert(error.message)
+        }
+    }
+
+    const mayShowActionButton = useMemo(() => {
+        return packagesList.length > 0
+    }, [packagesList])
+
     return (
         <AppLayout breadcrumbs={breadcrumbs} >
             <Head title="Paquetes" />
@@ -63,6 +94,7 @@ export default function PackagesPage() {
                         buttonIcon={<Plus className="w-4 h-4" />}
                         sectionTitle="Paquetes"
                         onOpenModal={openCreatePackageDialog}
+                        showActionButtons={mayShowActionButton}
                     />
                 }
             >
@@ -71,7 +103,7 @@ export default function PackagesPage() {
                 {!packagesList || packagesList.length === 0 ? (
                     <EmptyState type="paquetes" onCreate={openCreatePackageDialog} />
                 ) : (
-                    <PackagesList packages={packagesList} onEdit={openUpdatePackageDialog} onDelete={openDisablePackageDialog} />
+                    <PackagesList packages={packagesList} onEdit={openUpdatePackageDialog} onDelete={handleOpenDisableDialog} />
                 )}
             </ProductsLayout>
 
@@ -84,11 +116,13 @@ export default function PackagesPage() {
                 onCloseSelectService={closeSelectService}
                 services={services}
                 onSuccessCreate={successPackageCreate}
-            // onSuccessUpdate={successPackageUpdate}
-            // onOpenDisableDialog={openDisablePackageDialog}
-            // onCloseDisableDialog={closeDisablePackageDialog}
-            // packageToDisable={packageToDisable}
-            // disablePackage={disablePackage}
+            />
+
+            <DeletePackageDialog
+                open={toggleDisableDialog}
+                onOpenChange={closeDisablePackageDialog}
+                onConfirm={handleDisablePackage}
+                pack={packageToDisable}
             />
         </AppLayout>
     )

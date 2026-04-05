@@ -10,6 +10,7 @@ use App\Models\Promotion;
 use App\Models\Service;
 use App\Models\User;
 use App\Notifications\AppointmentCreatedNotification;
+use App\Services\AppointmentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
@@ -18,26 +19,36 @@ use Inertia\Inertia;
 
 class SchedulingController extends Controller
 {
+    private $appointmentService;
+
+    public function __construct(AppointmentService $appointmentService)
+    {
+        $this->appointmentService = $appointmentService;
+    }
+
     public function index()
     {
-        $services = Service::where('active', true)->get();
+        $services = Service::where('active', true)->paginate(8);
 
         $packages = Package::withWhereHas('services', function ($query) {
             $query->where('active', true);
         })
             ->where('active', true)
-            ->get();
+            ->paginate(5);
 
         $promotions = Promotion::withWhereHas('services', function ($query) {
             $query->where('active', true);
         })
             ->where('active', true)
-            ->get();
+            ->paginate(5);
+
+        $uncompleted = $this->appointmentService->getUncompletedAppointments();
 
         return Inertia::render('client/Scheduling', [
             'services' => $services,
             'packages' => $packages,
             'promotions' => $promotions,
+            'uncompleted' => $uncompleted,
         ]);
     }
 
@@ -81,7 +92,6 @@ class SchedulingController extends Controller
                 'total' => $validated['totals']['total'],
                 'code' => (string) Str::uuid(),
                 'notes' => $validated['notes'] ?? null,
-                'status' => 'pendiente',
                 'active' => true,
                 'user_id' => $request->user()->id,
                 'employee_id' => $employeeId,
@@ -111,7 +121,7 @@ class SchedulingController extends Controller
         }
 
         return redirect()
-            ->route('client.scheduling.index')
+            ->route('client.appointments.index')
             ->with('success', 'Cita creada correctamente.');
     }
 }

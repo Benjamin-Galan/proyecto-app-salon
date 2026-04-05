@@ -37,7 +37,7 @@ class Service extends Model
 
     public function promotions()
     {
-        return $this->belongsToMany(Promotion::class, 'promotion_services')
+        return $this->belongsToMany(Promotion::class, 'promotions_services')
             ->withPivot('service_price', 'service_discount')
             ->withTimestamps();
     }

@@ -1,16 +1,15 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Select, SelectContent, SelectItem } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Package, Service } from "@/types";
-import { useForm, usePage, router } from "@inertiajs/react";
-import { useEffect, useMemo, useState } from "react";
+import { Flash, Package, Service } from "@/types";
+import { useForm } from "@inertiajs/react";
+import { useEffect, useMemo } from "react";
 import { SelectServicesDialog } from "../SelectServicesDialog";
 import { Plus, X } from "lucide-react";
 import { toast } from "sonner";
 import { route } from "ziggy-js";
+import { useAlerts } from "@/hooks/useAlerts";
 
 interface PackagesFormProps {
     services?: Service[]
@@ -25,6 +24,7 @@ interface PackagesFormProps {
 
 export const PackagesForm = ({ services, package: currentPackage, openSelectService, onOpenSelectService, onCloseSelectService, onServicesCountChange, onClose, onSuccessCreate }: PackagesFormProps) => {
     const isEditing = !!currentPackage
+    const { warningAlert, successAlert, errorAlert } = useAlerts()
 
     const { data, setData, post, put, processing, errors } = useForm<{
         name: string
@@ -46,15 +46,26 @@ export const PackagesForm = ({ services, package: currentPackage, openSelectServ
 
         if (isEditing) {
             put(route('admin.packages.update', currentPackage.id), {
-                onSuccess: () => {
-                    toast.success("Paquete actualizado correctamente")
+                onSuccess: (page) => {
+                    const flash = (page.props as { flash?: Flash }).flash
+                    successAlert(flash?.success || "Paquete actualizado")
                     onClose()
+                },
+                onError: (page) => {
+                    const flash = (page.props as { flash?: Flash }).flash
+                    errorAlert(flash?.error || "Error al actualizar el paquete")
                 }
             })
         } else {
             post(route('admin.packages.store'), {
-                onSuccess: () => {
-                    onSuccessCreate()
+                onSuccess: (page) => {
+                    const flash = (page.props as { flash?: Flash }).flash
+                    successAlert(flash?.success || "Paquete creado")
+                    onClose()
+                },
+                onError: (page) => {
+                    const flash = (page.props as { flash?: Flash }).flash
+                    errorAlert(flash?.error || "Error al crear el paquete")
                 }
             })
         }

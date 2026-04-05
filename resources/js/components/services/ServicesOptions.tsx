@@ -1,5 +1,5 @@
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { MoreVertical, Pencil, Trash } from "lucide-react";
+import { MoreVertical, Pencil, Trash, Eye } from "lucide-react";
 import { useState } from "react";
 import { Service } from "@/types";
 
@@ -7,9 +7,10 @@ interface Props {
     service: Service;
     onEdit: (service: Service) => void;
     onDelete: (service: Service) => void;
+    onOpenDetails: (service: Service) => void;
 }
 
-export default function OptionsMenu({ service, onEdit, onDelete }: Props) {
+export default function OptionsMenu({ service, onEdit, onDelete, onOpenDetails }: Props) {
     const [open, setOpen] = useState(false);
 
     return (
@@ -24,8 +25,20 @@ export default function OptionsMenu({ service, onEdit, onDelete }: Props) {
                 <DropdownMenuItem asChild className="w-full">
                     <button
                         onClick={() => {
-                            setOpen(false); // ⬅️ Cierra el dropdown
-                            setTimeout(() => onEdit(service), 100); // ⬅️ Abre el modal después
+                            setOpen(false);
+                            setTimeout(() => onOpenDetails(service), 100);
+                        }}
+                    >
+                        <Eye className="mr-2 h-4 w-4" />
+                        Mas detalles
+                    </button>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem asChild className="w-full">
+                    <button
+                        onClick={() => {
+                            setOpen(false);
+                            setTimeout(() => onEdit(service), 100);
                         }}
                     >
                         <Pencil className="mr-2 h-4 w-4" />

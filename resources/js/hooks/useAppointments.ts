@@ -1,4 +1,4 @@
-import { Appointment } from "@/types"
+import { Appointment, AppointmentRequestPayload } from "@/types"
 import { useState } from "react"
 import { router } from "@inertiajs/react"
 import { route } from "ziggy-js";
@@ -14,6 +14,8 @@ export const useAppointments = () => {
     const [toggleEditDialog, setToggleEditDialog] = useState(false)
     const [toggleConfirmDialog, setToggleConfirmDialog] = useState(false)
     const [toggleCancelDialog, setToggleCancelDialog] = useState(false)
+    const [toggleCompleteDialog, setToggleCompleteDialog] = useState(false)
+    const [isProcessing, setIsProcessing] = useState(false)
 
     const [appointment, setAppointment] = useState<Appointment>({} as Appointment)
 
@@ -24,11 +26,15 @@ export const useAppointments = () => {
     const openEditDialog = () => setToggleEditDialog(true)
 
     const closeCancelDialog = () => setToggleCancelDialog(false)
-
     const closeConfirmDialog = () => setToggleConfirmDialog(false)
+    const closeCompleteDialog = () => setToggleCompleteDialog(false)
 
-    const goToDetails = (id: number) => {
-        router.get(route('admin.appointments.show', id))
+    const goToDetails = (id: number, role: string = 'admin') => {
+        if (role === 'admin') {
+            router.get(route('admin.appointments.show', id))
+        } else {
+            router.get(route('client.appointments.details', id))
+        }
     }
 
     const openConfirmDialog = (appointment: Appointment) => {
@@ -58,6 +64,19 @@ export const useAppointments = () => {
         setToggleCancelDialog(true)
     }
 
+    const openCompleteDialog = (appointment: Appointment) => {
+        if (!appointment) {
+            throw new Error('No se ha seleccionado ninguna cita')
+        }
+
+        if (appointment.status === 'completed') {
+            throw new Error('La cita ya esta completada')
+        }
+
+        setAppointment(appointment)
+        setToggleCompleteDialog(true)
+    }
+
     const confirmAppointment = (
         appointment: Appointment,
         options?: {
@@ -65,6 +84,22 @@ export const useAppointments = () => {
         }
     ) => {
         router.put(route('admin.appointments.confirm', appointment.id), {}, {
+            onSuccess: (page) => {
+                closeConfirmDialog()
+
+                const flash = (page.props as { flash?: AppointmentFlash }).flash
+                options?.onSuccess?.(flash)
+            }
+        })
+    }
+
+    const completeAppointment = (
+        appointment: Appointment,
+        options?: {
+            onSuccess?: (flash?: AppointmentFlash) => void
+        }
+    ) => {
+        router.put(route('admin.appointments.complete', appointment.id), {}, {
             onSuccess: (page) => {
                 closeConfirmDialog()
 
@@ -90,6 +125,47 @@ export const useAppointments = () => {
         })
     }
 
+    const deleteAppointment = (
+        appointment: Appointment,
+        role: string,
+        options?: {
+            onSuccess?: (flash?: AppointmentFlash) => void
+        }
+    ) => {
+        router.delete(route(`${role}.appointments.destroy`, appointment.id), {
+            onSuccess: (page) => {
+                closeCancelDialog()
+
+                const flash = (page.props as { flash?: AppointmentFlash }).flash
+                options?.onSuccess?.(flash)
+            }
+        })
+    }
+
+    const createAppointment = (
+        payload: AppointmentRequestPayload,
+        clearDraft?: () => void,
+        options?: {
+            onSuccess?: (flash?: AppointmentFlash) => void
+        }
+    ) => {
+        setIsProcessing(true)
+
+        router.post(route('client.scheduling.store'), payload, {
+            onSuccess: (page) => {
+                if (clearDraft) {
+                    clearDraft()
+                }
+
+                const flash = (page.props as { flash?: AppointmentFlash }).flash
+                options?.onSuccess?.(flash)
+            },
+            onFinish: () => {
+                setIsProcessing(false)
+            }
+        })
+    }
+
     return {
         toggleDetailsDialog,
         setToggleDetailsDialog,
@@ -111,10 +187,19 @@ export const useAppointments = () => {
         closeCancelDialog,
         openCancelDialog,
 
+        toggleCompleteDialog,
+        setToggleCompleteDialog,
+        closeCompleteDialog,
+        openCompleteDialog,
+
         goToDetails,
         confirmAppointment,
         cancelAppointment,
+        completeAppointment,
+        deleteAppointment,
+        createAppointment,
 
-        appointment
+        appointment,
+        isProcessing
     }
 }

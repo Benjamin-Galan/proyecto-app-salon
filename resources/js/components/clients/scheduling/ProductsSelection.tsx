@@ -5,6 +5,7 @@ import type { ProductType } from "@/hooks/useCart";
 import type { ClientScreen, Package, Promotion, Service } from "@/types";
 import { Calendar, ShoppingCart } from "lucide-react";
 import { ProductsCard } from "./ProductsCard";
+import Pagination from "@/components/Pagination";
 
 interface Props {
     handleScheduleScreenChange: (screen: ClientScreen) => void;
@@ -76,7 +77,7 @@ export default function ProductsSelection({
 
                 <TabsContent value="services" className="space-y-4">
                     <div className="grid gap-4">
-                        {services.map((service) => (
+                        {services.data.map((service) => (
                             <ProductsCard
                                 key={service.id}
                                 item={service}
@@ -86,12 +87,19 @@ export default function ProductsSelection({
                                 }
                             />
                         ))}
+
+                        <Pagination
+                            links={services.links}
+                            from={services.from}
+                            to={services.to}
+                            total={services.total}
+                        />
                     </div>
                 </TabsContent>
 
                 <TabsContent value="packages" className="space-y-4">
                     <div className="grid gap-4">
-                        {packages.map((pkg) => (
+                        {packages.data.map((pkg) => (
                             <ProductsCard
                                 key={pkg.id}
                                 item={pkg}
@@ -101,12 +109,19 @@ export default function ProductsSelection({
                                 }
                             />
                         ))}
+
+                        <Pagination
+                            links={packages.links}
+                            from={packages.from}
+                            to={packages.to}
+                            total={packages.total}
+                        />
                     </div>
                 </TabsContent>
 
                 <TabsContent value="promotions" className="space-y-4">
                     <div className="grid gap-4">
-                        {promotions.map((promotion) => (
+                        {promotions.data.map((promotion) => (
                             <ProductsCard
                                 key={promotion.id}
                                 item={promotion}
@@ -116,6 +131,13 @@ export default function ProductsSelection({
                                 }
                             />
                         ))}
+
+                        <Pagination
+                            links={promotions.links}
+                            from={promotions.from}
+                            to={promotions.to}
+                            total={promotions.total}
+                        />
                     </div>
                 </TabsContent>
             </Tabs>

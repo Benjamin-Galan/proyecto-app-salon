@@ -12,7 +12,6 @@ interface PackagesFormDialogProps {
     onOpenSelectService: () => void
     onCloseSelectService: () => void
     onSuccessCreate: () => void
-    // onSuccessUpdate: () => void
 }
 
 export const PackagesFormDialog = ({

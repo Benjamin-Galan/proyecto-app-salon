@@ -9,8 +9,10 @@ import { usePromotions } from "@/hooks/usePromotions";
 import PromotionTypeDialog from "@/components/promotions/PromotionTypeDialog";
 import PromotionDialog from "@/components/promotions/PromotionDialog";
 import PromotionsList from "@/components/promotions/PromotionsList";
+import DeletePromotionDialog from "@/components/promotions/DeletePromotionDialog";
 import type { Promotion, PromotionType, Service } from "@/types";
 import { useServices } from "@/hooks/useServices";
+import { useAlerts } from "@/hooks/useAlerts";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -26,17 +28,33 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function Promotions() {
     const {
         toggleOptionsDialog,
-        openSelectOptionDialog,
-        closeSelectOptionDialog,
+        setToggleOptionsDialog,
+
         selectedOption,
         setSelectedOption,
 
+        openSelectOptionDialog,
+        closeSelectOptionDialog,
+
         togglePromotionDialog,
+        setTogglePromotionDialog,
         openPromotionDialog,
-        closePromotionDialog
+        closePromotionDialog,
+        openEditPromotionDialog,
+
+        toggleDeleteDialog,
+        setToggleDeleteDialog,
+        openDeleteDialog,
+        closeDeleteDialog,
+
+        selectedPromotion,
+        setSelectedPromotion,
+
+        deletePromotion,
     } = usePromotions()
 
     const { openSelectService, closeSelectService, toggleSelectServiceDialog } = useServices()
+    const { errorAlert, warningAlert, successAlert } = useAlerts()
 
     const { promotionTypes = [], services = [], allPromotions = [] } = usePage().props as {
         promotionTypes?: PromotionType[]
@@ -44,13 +62,42 @@ export default function Promotions() {
         allPromotions?: Promotion[]
     }
 
-    console.log(services, "LLEGAN LOS SERVICIOS????")
-    console.log(allPromotions, "LLEGAN TODAS LAS PROMOOS????")
-
     const handleSaveOption = () => {
         closeSelectOptionDialog()
         openPromotionDialog()
     }
+
+    const handleOpenEditDialog = (promotion: Promotion) => {
+        try {
+            openEditPromotionDialog(promotion)
+        } catch (error: any) {
+            errorAlert(error.message)
+        }
+    }
+
+    const handleOpenDeleteDialog = (promotion: Promotion) => {
+        try {
+            openDeleteDialog(promotion)
+        } catch (error: any) {
+            errorAlert(error.message)
+        }
+    }
+
+    const handleDeletePromotion = (promotion: Promotion) => {
+        try {
+            deletePromotion(promotion, {
+                onSuccess: (flash) => {
+                    if (flash?.success) {
+                        successAlert(flash.success)
+                    }
+                }
+            })
+        } catch (error: any) {
+            errorAlert(error.message)
+        }
+    }
+
+    const showButtons = allPromotions && allPromotions.length > 0
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -63,21 +110,18 @@ export default function Promotions() {
                         buttonIcon={<Plus className="w-4 h-4" />}
                         sectionTitle="Promociones"
                         onOpenModal={openSelectOptionDialog}
+                        showActionButtons={showButtons}
                     />
                 }
             >
-                <div>
-                    Aqui irian los filtros
-                </div>
-
                 {/* Aquí iría la lista de promociones */}
                 {!allPromotions || allPromotions.length === 0 ? (
                     <EmptyState type="promos" onCreate={openSelectOptionDialog} />
                 ) : (
-                    <PromotionsList 
+                    <PromotionsList
                         promotions={allPromotions}
-                        // onEdit={}
-                        // onDelete={}
+                        onEdit={handleOpenEditDialog}
+                        onDelete={handleOpenDeleteDialog}
                     />
                 )}
             </ProductsLayout>
@@ -96,10 +140,17 @@ export default function Promotions() {
                 onOpenChange={closePromotionDialog}
                 selectedOption={selectedOption}
                 services={services}
-                // promotion={promotion}
+                promotion={selectedPromotion}
                 openSelectService={toggleSelectServiceDialog}
                 onOpenSelectService={openSelectService}
                 onCloseSelectService={closeSelectService}
+            />
+
+            <DeletePromotionDialog
+                open={toggleDeleteDialog}
+                onOpenChange={closeDeleteDialog}
+                onConfirm={handleDeletePromotion}
+                promotion={selectedPromotion}
             />
         </AppLayout>
     );

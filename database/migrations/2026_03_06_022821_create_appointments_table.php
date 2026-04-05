@@ -4,14 +4,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-         Schema::create('appointments', function (Blueprint $table) {
+        Schema::create('appointments', function (Blueprint $table) {
             $table->id();
             $table->date('date');
             $table->time('time');
@@ -22,7 +21,7 @@ return new class extends Migration
             $table->uuid('code')->unique();
             $table->string('notes')->nullable();
             $table->boolean('active')->default(true);
-            $table->string('status')->default('pendiente');
+            $table->string('status')->default('Pendiente');
 
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('employee_id')->constrained()->cascadeOnDelete();

@@ -29,8 +29,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 ]
 
 export default function ServicesPage() {
-    const { categories = [], services = [] } = usePage().props as {
-        services?: PaginatedService[]
+    const { categories = [], services } = usePage().props as {
+        services?: PaginatedService
         categories?: Category[]
     }
 
@@ -88,6 +88,7 @@ export default function ServicesPage() {
                         sectionTitle="Servicios"
                         onOpenModal={openCreateService}
                         onCategories={openSidebar}
+                        showActionButtons={services && services.data.length > 0}
                     />
                 }
             >

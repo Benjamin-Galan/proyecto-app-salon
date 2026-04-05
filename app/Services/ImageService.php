@@ -29,4 +29,12 @@ class ImageService
 
         return $imgName;
     }
+
+    public function deleteImage(string $filename, string $path): void
+    {
+        $fullPath = storage_path('app/public/' . trim($path, '/\\') . '/' . $filename);
+        if (File::exists($fullPath)) {
+            File::delete($fullPath);
+        }
+    }
 }

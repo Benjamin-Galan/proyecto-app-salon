@@ -24,12 +24,14 @@ interface AppointmentTableActions {
     onView: (id: number) => void
     onConfirm: (appointment: Appointment) => void
     onCancel: (appointment: Appointment) => void
+    onComplete: (appointment: Appointment) => void
 }
 
 export const appointmentsTableColums = ({
     onView,
     onConfirm,
-    onCancel
+    onCancel,
+    onComplete
 }: AppointmentTableActions): ColumnDef<Appointment>[] => [
         {
             id: "client",
@@ -89,7 +91,7 @@ export const appointmentsTableColums = ({
 
                         <DropdownMenuContent align="end">
                             <DropdownMenuItem onClick={() => onView(appointment.id)}>Mas detalles</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => console.log(appointment)}>Editar</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => onComplete(appointment)}>Completar</DropdownMenuItem>
                             <DropdownMenuItem onClick={() => onConfirm(appointment)}>Confirmar</DropdownMenuItem>
                             <DropdownMenuItem onClick={() => onCancel(appointment)}>Cancelar</DropdownMenuItem>
                         </DropdownMenuContent>

@@ -13,19 +13,15 @@ class PromotionService
         private DiscountedPriceService $discountedPriceService,
         private ImageService $imageService,
         private CatalogService $catalogService
-    ) {}
+    ) {
+    }
 
     public function createPromotion(array $data)
     {
-        dump($data, 'data');
-
         return DB::transaction(function () use ($data) {
             $servicesData = $this->catalogService->getServicesData($data);
             $services = $servicesData->services;
             $servicesById = $services->keyBy('id');
-
-
-            //dump($servicesData, 'services', 'servicesById');
 
             $imagePath = null;
             if (
@@ -37,6 +33,7 @@ class PromotionService
             }
 
             $type = $data['promotion_type'];
+            $isMain = $data['main'] ? 1 : 0;
             $subtotal = 0.0;
             $discountPercent = 0.0;
             $total = 0.0;
@@ -72,9 +69,10 @@ class PromotionService
                 'discount' => $discountPercent,
                 'total' => $total,
                 'promotion_type' => $type,
+                'main' => $isMain
             ]);
 
-            if ($type === 'general') {
+            if ($type === 'General') {
                 $pivotData = $services->mapWithKeys(function ($service) use ($discountPercent) {
                     return [
                         $service->id => [
@@ -86,10 +84,7 @@ class PromotionService
             } else {
                 $pivotData = collect($data['services'])->mapWithKeys(function ($service) use ($servicesById) {
                     $model = $servicesById->get($service['service_id']);
-                    $serviceDiscount = intval($service['service_discount'] ?? 0);
-
-                    dump($service, 'service', $model);
-                    dump($serviceDiscount, 'serviceDiscount');
+                    $serviceDiscount = (float) ($service['service_discount'] ?? 0);
 
                     return [
                         $service['service_id'] => [

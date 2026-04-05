@@ -149,13 +149,14 @@ export interface Promotion {
     promotion_type_id: number;
     created_at: string;
     updated_at: string;
-    promotion_type?: PromotionType | null;
+    promotion_type?: string;
 }
 
 export interface PromotionFormService {
     service_id: number;
-    service_price?: number;
-    service_discount?: number;
+    service_price?: number | string;
+    service_discount?: number | string;
+    [key: string]: any;
 }
 
 export interface PromotionFormData {
@@ -166,7 +167,10 @@ export interface PromotionFormData {
     subtotal: string;
     discount: string;
     total: string;
+    promotion_type: string | "";
+    expire_date?: string;
     services: PromotionFormService[];
+    [key: string]: any;
 }
 
 export interface Employee {
@@ -201,7 +205,52 @@ export interface Appointment {
     employee: Employee;
 }
 
-export type AppointmentItemType = "service" | "promotion" | "package";
+export interface AppNotification {
+    id: string;
+    type: string;
+    title: string;
+    message: string | null;
+    appointment_id: number | null;
+    read_at: string | null;
+    created_at: string | null;
+}
+
+export interface PaginatedNotification {
+    current_page: number;
+    data: AppNotification[];
+    from: number;
+    last_page: number;
+    next_page_url: string | null;
+    prev_page_url: string | null;
+    per_page: number;
+    to: number;
+    total: number;
+    links: {
+        url: string | null;
+        label: string;
+        active: boolean;
+    }[];
+}
+
+export interface PaginatedAppointment {
+    current_page: number;
+    data: Appointment[];
+    from: number;
+    last_page: number;
+    next_page_url: string | null;
+    prev_page_url: string | null;
+    per_page: number;
+    to: number;
+    total: number;
+    links: {
+        url: string | null;
+        label: string;
+        active: boolean;
+    }[];
+}
+
+export type ProductType = "service" | "promotion" | "package";
+export type AppointmentItemType = ProductType;
 
 interface AppointmentItemBase {
     id: number;
@@ -237,3 +286,32 @@ export type AppointmentItem =
     | AppointmentPackageItem;
 
 export type ClientScreen = "products" | "cart" | "datetime" | "summary" | "status" | "appointments" | "list" | "details" | "edit";
+
+export type Flash = {
+    success?: string
+    error?: string
+    warning?: string
+}
+
+
+export type AppointmentRequestPayload = {
+    date: string;
+    time: string;
+    totals: {
+        lineItems: number;
+        itemsCount: number;
+        subtotal: number;
+        discount: number;
+        total: number;
+        durationMin: number;
+    };
+    items: {
+        item_id: number;
+        item_type: ProductType;
+        quantity: number;
+        unit_price: number;
+        original_unit_price: number;
+        unit_discount: number;
+        duration_min: number;
+    }[];
+}

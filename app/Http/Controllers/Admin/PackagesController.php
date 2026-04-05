@@ -68,13 +68,14 @@ class PackagesController extends Controller
         }
     }
 
-    public function destroy()
+    public function disable(Package $package)
     {
-
-    }
-
-    public function disable()
-    {
-
+        try {
+            $package->update(['active' => false]);
+            return redirect()->back()->with('success', 'Paquete desactivado exitosamente.');
+        } catch (\Throwable $e) {
+            report($e);
+            return redirect()->back()->with('error', 'Error al desactivar el paquete.');
+        }
     }
 }

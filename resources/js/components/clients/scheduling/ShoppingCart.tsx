@@ -5,7 +5,7 @@ import type {
     BookingDraft,
     BookingTotals,
 } from "@/hooks/useCart";
-import type { ClientScreen } from "@/types";
+import type { Appointment, ClientScreen } from "@/types";
 import { ArrowLeft, Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
 
 interface Props {
@@ -19,6 +19,8 @@ interface Props {
     setTime: (time: string | null) => void;
     clearItems: () => void;
     submitAppointment: () => void;
+    isProcessing: boolean;
+    uncompleted: Appointment[];
 }
 
 const typeLabel: Record<string, string> = {
@@ -38,11 +40,22 @@ export default function ShoppingCartScreen({
     setTime,
     clearItems,
     submitAppointment,
+    isProcessing,
+    uncompleted,
 }: Props) {
     const handleContinue = () => {
         submitAppointment();
     };
 
+    const takenDate = new Set(
+        uncompleted.map((appointment) => appointment.date)
+    )
+
+    const takenTime = new Set(
+        uncompleted.map((appointment) => appointment.time)
+    )
+
+    console.log(takenTime, "takenTime")
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -204,9 +217,9 @@ export default function ShoppingCartScreen({
                         </Button>
                         <Button
                             onClick={handleContinue}
-                            disabled={!canContinueToConfirmation}
+                            disabled={!canContinueToConfirmation || isProcessing}
                         >
-                            Confirmar datos
+                            {isProcessing ? "Procesando..." : "Confirmar datos"}
                         </Button>
                     </div>
                 </>

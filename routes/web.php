@@ -7,7 +7,10 @@ use App\Http\Controllers\Admin\NotificationsController;
 use App\Http\Controllers\Admin\PackagesController;
 use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Admin\ServicesController;
+use App\Http\Controllers\Client\AppointmentDetailsController;
 use App\Http\Controllers\Client\ClientAppointmentsController;
+use App\Http\Controllers\Client\ClientHistoryController;
+use App\Http\Controllers\Client\ClientNotificationsController;
 use App\Http\Controllers\Client\SchedulingController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
@@ -75,6 +78,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('appointments/{appointment}', [AdminAppointmentsController::class, 'show'])->name('appointments.show');
             Route::put('appointments/{appointment}/confirm', [AdminAppointmentsController::class, 'confirm'])->name('appointments.confirm');
             Route::put('appointments/{appointment}/cancel', [AdminAppointmentsController::class, 'cancel'])->name('appointments.cancel');
+            Route::put('appointments/{appointment}/complete', [AdminAppointmentsController::class, 'complete'])->name('appointments.complete');
+            Route::delete('appointments/{appointment}/destroy', [AdminAppointmentsController::class, 'destroy'])->name('appointments.destroy');
         });
 
         Route::prefix('admin')->name('admin.')->group(function () {
@@ -86,6 +91,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::prefix('client')->name('client.')->group(function () {
             Route::get('scheduling', [SchedulingController::class, 'index'])->name('scheduling.index');
             Route::post('scheduling', [SchedulingController::class, 'store'])->name('scheduling.store');
+        });
+
+        Route::prefix('client')->name('client.')->group(function () {
+            Route::get('appointments', [ClientAppointmentsController::class, 'index'])->name('appointments.index');
+            Route::get('appointments/{appointment}/details', [AppointmentDetailsController::class, 'show'])->name('appointments.details');
+        });
+
+        Route::prefix('client')->name('client.')->group(function () {
+            Route::get('history', [ClientHistoryController::class, 'index'])->name('history.index');
+        });
+
+        Route::prefix('client')->name('client.')->group(function () {
+            Route::get('notifications', [ClientNotificationsController::class, 'index'])->name('notifications.index');
+            Route::put('notifications/{notification}/read', [ClientNotificationsController::class, 'read'])->name('notifications.read');
+            Route::delete('notifications/{notification}/delete', [ClientNotificationsController::class, 'delete'])->name('notifications.delete');
+            Route::put('notifications/read-all', [ClientNotificationsController::class, 'markAllAsRead'])->name('notifications.readAll');
+            Route::delete('appointments/{appointment}/destroy', [ClientHistoryController::class, 'destroy'])->name('appointments.destroy');
         });
     });
 });
