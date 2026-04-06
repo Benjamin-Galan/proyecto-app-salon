@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminAppointmentsController;
+use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\EmployeesController;
 use App\Http\Controllers\Admin\NotificationsController;
@@ -24,11 +25,22 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/test', [TestController::class, 'index']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
+    Route::get('/dashboard', function () {
+        $user = request()->user();
+
+        return match ($user?->role) {
+            'admin' => to_route('admin.dashboard.index'),
+            'cliente' => to_route('client.dashboard.index'),
+            default => abort(403, 'Rol no autorizado.'),
+        };
     })->name('dashboard');
 
+
     Route::middleware(['role:admin'])->group(function () {
+        Route::prefix('admin')->name('admin.')->group(function () {
+            Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard.index');
+        });
+
         // Resto de rutas admin...
         Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('services', [ServicesController::class, 'index'])
