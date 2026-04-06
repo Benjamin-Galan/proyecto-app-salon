@@ -1,17 +1,19 @@
-import { usePage } from "@inertiajs/react"
-import { PaginatedNotification, Flash, AppNotification } from "@/types"
-import { router } from "@inertiajs/react"
+import { AppNotification, Flash, PaginatedNotification } from "@/types"
+import { router, usePage } from "@inertiajs/react"
 import { route } from "ziggy-js"
-import { useState } from "react"
 
-export const useNotifications = () => {
+type NotificationScope = "client" | "admin"
+
+export const useNotifications = (scope: NotificationScope = "client") => {
     const { notifications } = usePage<{ notifications: PaginatedNotification }>().props
+
+    const routeBase = `${scope}.notifications`
 
     const deleteNotification = (id: string, options?: {
         onSuccess?: (flash?: Flash) => void
         onError?: (flash?: Flash) => void
     }) => {
-        router.delete(route('client.notifications.delete', id), {
+        router.delete(route(`${routeBase}.delete`, id), {
             onSuccess: (page) => {
                 const flash = (page.props as { flash?: Flash }).flash
                 options?.onSuccess?.(flash)
@@ -27,7 +29,7 @@ export const useNotifications = () => {
         onSuccess?: (flash?: Flash) => void
         onError?: (flash?: Flash) => void
     }) => {
-        router.put(route('client.notifications.read', id), {}, {
+        router.put(route(`${routeBase}.read`, id), {}, {
             onSuccess: (page) => {
                 const flash = (page.props as { flash?: Flash }).flash
                 options?.onSuccess?.(flash)
@@ -43,7 +45,7 @@ export const useNotifications = () => {
         onSuccess?: (flash?: Flash) => void
         onError?: (flash?: Flash) => void
     }) => {
-        router.put(route('client.notifications.mark-all-as-read'), {}, {
+        router.put(route(`${routeBase}.readAll`), {}, {
             onSuccess: (page) => {
                 const flash = (page.props as { flash?: Flash }).flash
                 options?.onSuccess?.(flash)

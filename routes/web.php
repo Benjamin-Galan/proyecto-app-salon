@@ -94,6 +94,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('notifications', [NotificationsController::class, 'index'])->name('notifications.index');
+            Route::put('notifications/{notification}/read', [NotificationsController::class, 'read'])->name('notifications.read');
+            Route::delete('notifications/{notification}/delete', [NotificationsController::class, 'delete'])->name('notifications.delete');
+            Route::put('notifications/read-all', [NotificationsController::class, 'readAll'])->name('notifications.readAll');
         });
     });
 

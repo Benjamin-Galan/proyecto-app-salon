@@ -224,6 +224,53 @@ export interface Appointment {
     employee: Employee;
 }
 
+export interface AdminDashboardOverview {
+    revenueToday: number;
+    revenueMonth: number;
+    newClientsMonth: number;
+    attendedClientsMonth: number;
+    completedAppointmentsMonth: number;
+    averageTicketMonth: number;
+    appointmentsToday: number;
+    upcomingAppointments: number;
+    totalClients: number;
+    totalAppointments: number;
+    completionRate: number;
+}
+
+export interface AdminDashboardMonthlyPoint {
+    month: string;
+    label: string;
+    labelLong: string;
+    revenue: number;
+    newClients: number;
+    attendedClients: number;
+    completedAppointments: number;
+}
+
+export interface AdminDashboardStatusPoint {
+    status: string;
+    count: number;
+}
+
+export interface AdminDashboardAppointmentItem {
+    id: number;
+    date: string;
+    time: string;
+    total: number;
+    status: string;
+    user?: Pick<User, "id" | "name"> | null;
+    employee?: Pick<Employee, "id" | "name"> | null;
+}
+
+export interface AdminDashboardStats {
+    overview: AdminDashboardOverview;
+    monthly: AdminDashboardMonthlyPoint[];
+    statusBreakdown: AdminDashboardStatusPoint[];
+    recentCompletedAppointments: AdminDashboardAppointmentItem[];
+    upcomingAppointments: AdminDashboardAppointmentItem[];
+}
+
 export interface AppNotification {
     id: string;
     type: string;

@@ -17,9 +17,6 @@ export default function NotificationList({
     onMarkAsRead,
     onDeleteNotification
 }: Props) {
-    console.log(type, 'type')
-    console.log(notifications, 'notifications LISTA NOTIFICACIONES')
-
     const filteredNotifications = useMemo(() => {
         if (type === "unread") {
             return notifications.data.filter((notification) => notification.read_at === null)
@@ -54,7 +51,6 @@ export default function NotificationList({
 
                             <OptionsMenu
                                 notification={notification}
-                                notificationId={notification.id}
                                 onMarkAsRead={onMarkAsRead}
                                 onDeleteNotification={onDeleteNotification}
                             />

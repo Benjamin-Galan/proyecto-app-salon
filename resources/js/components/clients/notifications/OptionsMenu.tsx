@@ -4,19 +4,15 @@ import { AppNotification } from "@/types"
 
 interface Props {
     notification: AppNotification
-    notificationId: string
     onMarkAsRead: (notification: AppNotification) => void
     onDeleteNotification: (notification: AppNotification) => void
 }
 
 export default function OptionsMenu({
     notification,
-    notificationId,
     onMarkAsRead,
     onDeleteNotification
 }: Props) {
-    console.log(notification, 'notification options menu');
-
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -29,10 +25,12 @@ export default function OptionsMenu({
             </DropdownMenuTrigger>
 
             <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => onMarkAsRead(notification)}>
-                    <Eye className="w-4 h-4 mr-2" />
-                    Marcar como leída
-                </DropdownMenuItem>
+                {!notification.read_at ? (
+                    <DropdownMenuItem onClick={() => onMarkAsRead(notification)}>
+                        <Eye className="w-4 h-4 mr-2" />
+                        Marcar como leída
+                    </DropdownMenuItem>
+                ) : null}
 
                 <DropdownMenuItem onClick={() => onDeleteNotification(notification)}>
                     <X className="w-4 h-4 mr-2" />

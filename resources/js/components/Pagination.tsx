@@ -18,8 +18,6 @@ interface PaginationProps {
 export default function Pagination({ links, from, to, total }: PaginationProps) {
   if (!links || links.length === 0) return null
 
-  console.log(links)
-
   return (
     <div className="flex items-center justify-between mt-4 px-6 py-4 border-t border-gray-200 dark:border-gray-700">
       {/* Info */}
