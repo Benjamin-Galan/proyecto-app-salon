@@ -23,8 +23,8 @@ class EmployeeRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:employees,email',
-            'phone' => 'required|string|max:20|unique:employees,phone',
+            'email' => 'required|email|unique:employees,email,' . $this->employee->id,
+            'phone' => 'required|string|max:20|unique:employees,phone,' . $this->employee->id,
             'position' => 'required|string|max:100',
             'available' => 'required|boolean'
         ];

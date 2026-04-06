@@ -9,5 +9,6 @@ class ServicesData
     public function __construct(
         public Collection $servicesIds,
         public Collection $services
-    ) {}
+    ) {
+    }
 }

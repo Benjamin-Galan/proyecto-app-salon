@@ -8,7 +8,7 @@ class EmployeeService
 {
     public function getAllEmployees()
     {
-        return Employee::where('available', true)->get();
+        return Employee::all();
     }
 
     public function createEmployee(array $data)

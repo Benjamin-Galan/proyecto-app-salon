@@ -4,7 +4,6 @@ import { Separator } from "../ui/separator"
 import PackagesOptions from "./PackagesOptions"
 import { useState } from "react"
 import { formatDuration } from "@/utils/formatDuration"
-import { formatCurrency } from "@/utils/formatCurrency"
 
 interface PackagesListProps {
     packages: Package[]

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Clock, Plus } from "lucide-react"
 import { Service, Promotion, Package } from "@/types"
+import { formatDuration } from "@/utils/formatDuration"
 
 interface ProductsCardProps {
     item: Service | Promotion | Package
@@ -14,44 +15,36 @@ export function ProductsCard({ item, type, onAdd }: ProductsCardProps) {
     const typedItem = item as Service | Package
     const itemDiscount = typedItem.discount
 
+    console.log(item, 'ITEM')
+
     const getPrice = () => {
         if (type === "service") {
             const service = item as Service
-            return Number.parseFloat(service.price) - Number.parseFloat(service.discount)
+            return Number(service.price) - Number(service.discount)
         }
 
         const other = item as Promotion | Package
-        return Number.parseFloat(String(other.total ?? "0"))
+        return Number(other.total ?? "0")
     }
 
     const getOriginalPrice = () => {
         if (type === "service") {
             const service = item as Service
-            return Number.parseFloat(service.price)
+            return Number(service.price)
         }
 
         const other = item as Package | Promotion
-        return Number.parseFloat(String(other.subtotal ?? "0"))
+        return Number(other.subtotal ?? "0")
     }
 
     const hasDiscount = () => {
         if (type === "service") {
             const service = item as Service
-            return Number.parseFloat(service.discount) > 0
+            return Number(service.discount) > 0
         }
 
         const other = item as Package
-        return Number.parseFloat(String(other.discount ?? "0")) > 0
-    }
-
-    const getDuration = () => {
-        if (type === "service") {
-            return (item as Service).duration
-        }
-        if ("services" in item) {
-            return item.services.reduce((total: number, service: Service) => total + service.duration, 0)
-        }
-        return 0
+        return Number(other.discount ?? "0") > 0
     }
 
     const getImageUrl = () => {
@@ -143,7 +136,7 @@ export function ProductsCard({ item, type, onAdd }: ProductsCardProps) {
                         <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-1">
                                 <Clock className="w-3 h-3 text-muted-foreground" />
-                                <span className="text-xs text-muted-foreground">{getDuration()} min</span>
+                                <span className="text-xs text-muted-foreground">{formatDuration(item.duration)}</span>
                             </div>
                             <div className="text-right">
                                 {hasDiscount() && (

@@ -147,6 +147,7 @@ export const useAppointments = () => {
         clearDraft?: () => void,
         options?: {
             onSuccess?: (flash?: AppointmentFlash) => void
+            onError?: (flash?: AppointmentFlash) => void
         }
     ) => {
         setIsProcessing(true)
@@ -159,6 +160,12 @@ export const useAppointments = () => {
 
                 const flash = (page.props as { flash?: AppointmentFlash }).flash
                 options?.onSuccess?.(flash)
+            },
+            onError: (errors) => {
+                const error = {
+                    error: errors.general
+                }
+                options?.onError?.(error)
             },
             onFinish: () => {
                 setIsProcessing(false)

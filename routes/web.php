@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Admin\ServicesController;
 use App\Http\Controllers\Client\AppointmentDetailsController;
 use App\Http\Controllers\Client\ClientAppointmentsController;
+use App\Http\Controllers\Client\ClientDashboardController;
 use App\Http\Controllers\Client\ClientHistoryController;
 use App\Http\Controllers\Client\ClientNotificationsController;
 use App\Http\Controllers\Client\SchedulingController;
@@ -85,6 +86,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::middleware(['role:cliente'])->group(function () {
+        Route::prefix('client')->name('client.')->group(function () {
+            Route::get('dashboard', [ClientDashboardController::class, 'index'])->name('dashboard.index');
+        });
+
         Route::prefix('client')->name('client.')->group(function () {
             Route::get('scheduling', [SchedulingController::class, 'index'])->name('scheduling.index');
             Route::post('scheduling', [SchedulingController::class, 'store'])->name('scheduling.store');

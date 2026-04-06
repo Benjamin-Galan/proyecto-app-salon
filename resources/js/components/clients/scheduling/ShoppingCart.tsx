@@ -1,12 +1,18 @@
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { SelectTrigger, SelectValue, Select, SelectContent, SelectItem } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import type {
     BookingDraft,
     BookingTotals,
 } from "@/hooks/useCart";
-import type { Appointment, ClientScreen } from "@/types";
+import type { Appointment, ClientScreen, Employee } from "@/types";
 import { ArrowLeft, Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { timeSlots } from "@/utils/timeSelectionData";
+import { useEffect, useMemo } from "react";
+import { formatDate, formatTime } from "@/utils/formatDateTime";
 
 interface Props {
     handleScheduleScreenChange: (screen: ClientScreen) => void;
@@ -21,6 +27,7 @@ interface Props {
     submitAppointment: () => void;
     isProcessing: boolean;
     uncompleted: Appointment[];
+    employees: Employee[];
 }
 
 const typeLabel: Record<string, string> = {
@@ -42,20 +49,29 @@ export default function ShoppingCartScreen({
     submitAppointment,
     isProcessing,
     uncompleted,
+    employees
 }: Props) {
     const handleContinue = () => {
         submitAppointment();
     };
 
-    const takenDate = new Set(
-        uncompleted.map((appointment) => appointment.date)
-    )
+    const appointmentsByDate = useMemo(() => {
+        if (!draft.date) return [];
+
+        return uncompleted.filter((appointment) => {
+            const appointmentDate = appointment.date.split("T")[0];
+            return appointmentDate === draft.date;
+        });
+    }, [draft.date, uncompleted]);
 
     const takenTime = new Set(
-        uncompleted.map((appointment) => appointment.time)
+        appointmentsByDate.map((appointment) => formatTime(appointment.time))
     )
 
-    console.log(takenTime, "takenTime")
+    const availableEmployees = employees.some((e) => e.available)
+    const today = new Date();
+    const minDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -178,13 +194,20 @@ export default function ShoppingCartScreen({
                     </Card>
 
                     <Card className="p-4 space-y-3">
-                        <h2 className="font-semibold text-sm">Fecha y hora</h2>
+                        <h2 className="font-semibold text-sm p-0 m-0">Fecha y hora</h2>
+
+                        {/**Como un tip para decir que las horas deshabilitadas estan elegidas */}
+                        <div className="flex items-center gap-2 p-0 m-0">
+                            <div className="w-2 h-2 rounded-full bg-red-400"></div>
+                            <p className="text-xs text-muted-foreground">Las horas deshabilitadas pertenecen a una cita.</p>
+                        </div>
 
                         <div className="grid grid-cols-2 gap-3">
                             <label className="text-sm space-y-1">
                                 <span className="text-muted-foreground">Fecha</span>
                                 <input
                                     type="date"
+                                    min={minDate}
                                     className="w-full rounded-md border bg-background px-3 py-2 text-sm"
                                     value={draft.date ?? ""}
                                     onChange={(event) =>
@@ -193,17 +216,33 @@ export default function ShoppingCartScreen({
                                 />
                             </label>
 
-                            <label className="text-sm space-y-1">
-                                <span className="text-muted-foreground">Hora</span>
-                                <input
-                                    type="time"
-                                    className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+                            <div>
+                                <Label
+                                    htmlFor="duration"
+                                    className="flex items-center gap-2 text-sm font-light"
+                                >
+                                    Hora
+                                </Label>
+                                <Select
                                     value={draft.time ?? ""}
-                                    onChange={(event) =>
-                                        setTime(event.target.value || null)
-                                    }
-                                />
-                            </label>
+                                    onValueChange={(value) => setTime(value || null)}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Selecciona una hora" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {timeSlots.map((slot) => (
+                                            <SelectItem
+                                                key={slot.value}
+                                                value={slot.value}
+                                                disabled={takenTime.has(slot.value) && !availableEmployees}
+                                            >
+                                                {slot.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
                     </Card>
 

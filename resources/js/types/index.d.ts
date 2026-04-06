@@ -106,11 +106,13 @@ export interface Package {
     created_at: string;
     updated_at: string;
     services: Service[];
+    image?: string | null;
+    duration: number
 }
 
 export interface PaginatedPackage {
     current_page: number;
-    data: Package;
+    data: Package[];
     from: number;
     last_page: number;
     next_page_url: string | null;
@@ -150,6 +152,23 @@ export interface Promotion {
     created_at: string;
     updated_at: string;
     promotion_type?: string;
+}
+
+export interface PaginatedPromotion {
+    current_page: number;
+    data: Promotion[];
+    from: number;
+    last_page: number;
+    next_page_url: string | null;
+    prev_page_url: string | null;
+    per_page: number;
+    to: number;
+    total: number;
+    links: {
+        url: string | null;
+        label: string;
+        active: boolean;
+    }[];
 }
 
 export interface PromotionFormService {

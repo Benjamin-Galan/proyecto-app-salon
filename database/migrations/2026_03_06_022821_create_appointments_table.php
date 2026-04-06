@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->string('status')->default('Pendiente');
 
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('employee_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('employee_id')->nullable()->constrained()->nullOnDelete();
 
             $table->timestamps();
         });

@@ -10,6 +10,7 @@ import HistoryFilters from "@/components/clients/history/HistoryFilters"
 import Pagination from "@/components/Pagination"
 
 import { Button } from "@/components/ui/button"
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 import { SlidersHorizontal } from "lucide-react"
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -105,13 +106,25 @@ export default function History() {
 
             <div className="min-h-screen bg-background">
                 <div className="container mx-auto max-w-md px-4 py-6 flex flex-col gap-4">
-                    <Button
-                        onClick={() => setToggleFilters(true)}
-                        className="w-1/3"
-                    >
-                        <SlidersHorizontal />
-                        Filtros
-                    </Button>
+                    <div className="flex justify-between">
+
+                        <h2 className="text-xl font-semibold">Historial de citas</h2>
+
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    onClick={() => setToggleFilters(true)}
+                                    className="w-1/6"
+                                >
+                                    <SlidersHorizontal />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Filtros</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </div>
 
                     <HistoryList
                         appointments={historyFilteredAppointments}

@@ -8,7 +8,6 @@ type MainLayoutProps = {
 export default function MainLayout({ children }: MainLayoutProps) {
     return (
         <>
-
             {children}
             <Footer />
         </>

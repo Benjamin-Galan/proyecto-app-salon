@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EmployeeRequest;
+use App\Models\Employee;
 use App\Services\EmployeeService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -34,7 +35,23 @@ class EmployeesController extends Controller
         }
     }
 
-    public function update() {}
+    public function update(EmployeeRequest $request, Employee $employee)
+    {
+        try {
+            $this->employeeService->updateEmployee($employee, $request->validated());
+            return redirect()->route('admin.employees.index')->with('success', 'Empleado actualizado exitosamente.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.employees.index')->with('error', 'Error al actualizar el empleado: ' . $e->getMessage());
+        }
+    }
 
-    public function destroy() {}
+    public function destroy(Employee $employee)
+    {
+        try {
+            $this->employeeService->deleteEmployee($employee);
+            return redirect()->route('admin.employees.index')->with('success', 'Empleado eliminado exitosamente.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.employees.index')->with('error', 'Error al eliminar el empleado: ' . $e->getMessage());
+        }
+    }
 }

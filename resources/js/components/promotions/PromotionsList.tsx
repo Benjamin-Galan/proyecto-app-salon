@@ -16,7 +16,7 @@ const formatNumber = (number: number) => Number(number).toFixed(0)
 const getPromotionType = (promotion: Promotion): string => {
     const direct = (promotion as Promotion & { promotion_type?: string }).promotion_type
     if (typeof direct === "string") return direct.toLowerCase()
-    if (promotion.promotion_type?.name) return String(promotion.promotion_type.name).toLowerCase()
+    if (promotion.promotion_type) return String(promotion.promotion_type).toLowerCase()
     return ""
 }
 

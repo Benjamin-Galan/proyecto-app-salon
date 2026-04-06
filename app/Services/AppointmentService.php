@@ -3,8 +3,13 @@
 namespace App\Services;
 
 use App\Models\Appointment;
+use App\Models\Employee;
 use App\Models\Package;
 use App\Models\Promotion;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AppointmentService
 {
@@ -132,5 +137,46 @@ class AppointmentService
         $status = ['Pendiente', 'Confirmada'];
         $appointments = Appointment::whereIn('status', $status)->orderBy('date', 'desc')->get();
         return $appointments;
+    }
+
+    public function createAppointment(array $data)
+    {
+        return DB::transaction(function () use ($data) {
+            $date = Carbon::parse($data['date'])->toDateString();
+            $duration = (int) $data['totals']['durationMin'];
+            $employeeId = Employee::where('available', true)->first()->id ?? null;
+
+            $appointment = Appointment::create([
+                'date' => $date,
+                'time' => $data['time'],
+                'duration' => $duration,
+                'subtotal' => $data['totals']['subtotal'],
+                'discount' => $data['totals']['discount'],
+                'total' => $data['totals']['total'],
+                'code' => (string) Str::uuid(),
+                'notes' => $data['notes'] ?? null,
+                'active' => true,
+                'user_id' => auth()->user()->id,
+                'employee_id' => $employeeId,
+            ]);
+
+            $appointment->items()->createMany(array_map(
+                fn(array $item) => [
+                    'item_type' => $item['item_type'],
+                    'item_id' => $item['item_id'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['unit_price'],
+                    'unit_discount' => $item['unit_discount'] ?? 0,
+                    'duration_min' => $item['duration_min'],
+                ],
+                $data['items'],
+            ));
+
+            Employee::where('id', $employeeId)->update([
+                'available' => false,
+            ]);
+
+            return $appointment;
+        });
     }
 }

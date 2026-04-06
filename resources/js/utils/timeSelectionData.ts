@@ -12,3 +12,28 @@ export const durationIntervals = [
     { label: "4 horas y 30 minutos", value: "270" },
     { label: "5 horas", value: "300" },
 ];
+
+export const timeSlots = [
+    { label: "8 am", value: "08:00" },
+    { label: "8:30 am", value: "08:30" },
+    { label: "9 am", value: "09:00" },
+    { label: "9:30 am", value: "09:30" },
+    { label: "10 am", value: "10:00" },
+    { label: "10:30 am", value: "10:30" },
+    { label: "11 am", value: "11:00" },
+    { label: "11:30 am", value: "11:30" },
+    { label: "12 pm", value: "12:00" },
+    { label: "12:30 pm", value: "12:30" },
+    { label: "1 pm", value: "13:00" },
+    { label: "1:30 pm", value: "13:30" },
+    { label: "2 pm", value: "14:00" },
+    { label: "2:30 pm", value: "14:30" },
+    { label: "3 pm", value: "15:00" },
+    { label: "3:30 pm", value: "15:30" },
+    { label: "4 pm", value: "16:00" },
+    { label: "4:30 pm", value: "16:30" },
+    { label: "5 pm", value: "17:00" },
+    { label: "5:30 pm", value: "17:30" },
+    { label: "6 pm", value: "18:00" },
+    { label: "6:30 pm", value: "18:30" },
+]

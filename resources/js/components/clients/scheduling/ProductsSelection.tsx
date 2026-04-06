@@ -1,17 +1,16 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { ProductType } from "@/hooks/useCart";
-import type { ClientScreen, Package, Promotion, Service } from "@/types";
+import type { ClientScreen, Package, PaginatedPackage, PaginatedPromotion, PaginatedService, ProductType, Promotion, Service } from "@/types";
 import { Calendar, ShoppingCart } from "lucide-react";
 import { ProductsCard } from "./ProductsCard";
 import Pagination from "@/components/Pagination";
 
 interface Props {
     handleScheduleScreenChange: (screen: ClientScreen) => void;
-    services: Service[];
-    packages: Package[];
-    promotions: Promotion[];
+    services: PaginatedService;
+    packages: PaginatedPackage;
+    promotions: PaginatedPromotion;
     cartItemsCount: number;
     onAddItem: (
         item: Service | Package | Promotion,
@@ -34,6 +33,8 @@ export default function ProductsSelection({
         console.log("Agregando al carrito:", item, "Tipo:", type);
         onAddItem(item, type);
     };
+
+    console.log(services.data, 'SERIVIO')
 
     return (
         <div className="space-y-6">

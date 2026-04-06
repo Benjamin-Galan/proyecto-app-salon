@@ -13,6 +13,8 @@ import DeletePromotionDialog from "@/components/promotions/DeletePromotionDialog
 import type { Promotion, PromotionType, Service } from "@/types";
 import { useServices } from "@/hooks/useServices";
 import { useAlerts } from "@/hooks/useAlerts";
+import PromotionsFilters from "@/components/promotions/PromotionsFilters"
+import { useMemo, useState } from "react";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -26,6 +28,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 ]
 
 export default function Promotions() {
+    const [search, setSearch] = useState('')
+    const [type, setType] = useState('all')
+
     const {
         toggleOptionsDialog,
         selectedOption,
@@ -89,6 +94,14 @@ export default function Promotions() {
 
     const showButtons = allPromotions && allPromotions.length > 0
 
+    const promotionList = useMemo(() => {
+        return allPromotions.filter((promotion) => {
+            const matchesSearch = promotion.name.toLowerCase().includes(search.toLowerCase())
+            const matchesType = type === 'all' || promotion.promotion_type === type
+            return matchesSearch && matchesType
+        })
+    }, [allPromotions, search, type])
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Promociones" />
@@ -104,12 +117,19 @@ export default function Promotions() {
                     />
                 }
             >
+                <PromotionsFilters
+                    search={search}
+                    setSearch={setSearch}
+                    type={type}
+                    setType={setType}
+                />
+
                 {/* Aquí iría la lista de promociones */}
                 {!allPromotions || allPromotions.length === 0 ? (
                     <EmptyState type="promos" onCreate={openSelectOptionDialog} />
                 ) : (
                     <PromotionsList
-                        promotions={allPromotions}
+                        promotions={promotionList}
                         onEdit={handleOpenEditDialog}
                         onDelete={handleOpenDeleteDialog}
                     />

@@ -1,6 +1,6 @@
 import { Head, router, usePage } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
-import type { Appointment, BreadcrumbItem, Package, Promotion, Service } from "@/types";
+import type { Appointment, BreadcrumbItem, Employee, Package, PaginatedPackage, PaginatedPromotion, PaginatedService, Promotion, Service } from "@/types";
 import { useScreenChange } from "@/hooks/useScreenChange";
 import ProductsSelection from "@/components/clients/scheduling/ProductsSelection";
 import ShoppingCartScreen from "@/components/clients/scheduling/ShoppingCart";
@@ -38,16 +38,13 @@ export default function SchedulingPage() {
         buildAppointmentPayload,
     } = useCart();
 
-    const { services = [], packages = [], promotions = [], uncompleted = [] } = usePage().props as {
-        services?: Service[];
-        promotions?: Promotion[];
-        packages?: Package[];
+    const { services, packages, promotions, uncompleted = [], employees = [] } = usePage().props as unknown as {
+        services: PaginatedService;
+        promotions: PaginatedPromotion;
+        packages: PaginatedPackage;
         uncompleted?: Appointment[];
+        employees?: Employee[];
     };
-
-    uncompleted.forEach((appointment) => {
-        console.log(appointment, "ESTADO DE LA CITA:", appointment.id)
-    })
 
     const { createAppointment, isProcessing } = useAppointments();
     const { successAlert, errorAlert } = useAlerts();
@@ -66,7 +63,8 @@ export default function SchedulingPage() {
                     if (flash?.success) {
                         successAlert(flash.success)
                     }
-
+                },
+                onError: (flash) => {
                     if (flash?.error) {
                         errorAlert(flash.error)
                     }
@@ -105,6 +103,7 @@ export default function SchedulingPage() {
                         submitAppointment={handleCreateAppointment}
                         isProcessing={isProcessing}
                         uncompleted={uncompleted}
+                        employees={employees}
                     />
                 );
             default:
