@@ -10,11 +10,11 @@ export default function DetailsIncludeFooter({ appointment }: Props) {
         <div className="mt-6 space-y-4">
             {/* Notes */}
             <div>
-                <p className="text-sm font-semibold text-gray-500 mb-2">
+                <p className="mb-2 text-sm font-semibold text-muted-foreground">
                     NOTES
                 </p>
 
-                <div className="bg-gray-100 text-gray-500 text-sm italic rounded-md p-4">
+                <div className="rounded-md border border-border/70 bg-muted/60 p-4 text-sm italic text-muted-foreground dark:border-border dark:bg-muted/30">
                     {appointment?.notes || "No notes provided"}
                 </div>
             </div>
@@ -29,7 +29,7 @@ export default function DetailsIncludeFooter({ appointment }: Props) {
                 </Button>
 
                 <button
-                    className="text-sm text-gray-500 hover:text-red-500 transition"
+                    className="text-sm text-muted-foreground transition hover:text-red-500 dark:hover:text-red-400"
                 >
                     Cancel appointment
                 </button>

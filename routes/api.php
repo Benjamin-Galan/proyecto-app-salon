@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Employee\CheckInController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -11,4 +12,12 @@ Route::prefix('auth')->group(function () {
         Route::get('me', [AuthController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
     });
+});
+
+// Rutas protegidas para funciones de la aplicación móvil (Empleados / Clientes)
+Route::middleware('auth:sanctum')->group(function () {
+    // Rutas de Check-in
+    Route::get('/appointments/confirmed', [CheckInController::class, 'index']);
+    Route::post('/appointments/{id}/check-in', [CheckInController::class, 'checkIn']);
+    Route::get('/appointments/{id}/details', [CheckInController::class, 'show']);
 });

@@ -27,6 +27,8 @@ class PackageService
             throw new Exception('Algunos servicios no existen.');
         }
 
+        $duration = $services->sum('duration');
+
         // 4. Calcular subtotal real
         $subtotal = $services->sum('price');
 
@@ -45,6 +47,7 @@ class PackageService
             'subtotal' => $subtotal,
             'discount' => $discountPercent,
             'total' => $total,
+            'duration' => $duration,
         ]);
 
         $pivotData = $services->mapWithKeys(function ($service) {
@@ -78,12 +81,15 @@ class PackageService
             $discountPercent = $data['discount'];
             $total = $this->discountedPriceService->getDiscountedPrice($subtotal, $discountPercent);
 
+            $duration = $services->sum('duration');
+
             $package->update([
                 'name' => $data['name'],
                 'description' => $data['description'],
                 'subtotal' => $subtotal,
                 'discount' => $discountPercent,
                 'total' => $total,
+                'duration' => $duration,
             ]);
 
             $pivotData = $services->mapWithKeys(fn($service) => [

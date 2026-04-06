@@ -2,8 +2,6 @@ import { Appointment } from "@/types";
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardHeader,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -18,7 +16,7 @@ export default function DetailsIncludeHeader({ appointment }: Props) {
     const status = appointment?.status ?? "Pendiente";
 
     return (
-        <Card className="rounded-2xl shadow-sm border">
+        <Card className="rounded-2xl border border-border/70 bg-card shadow-sm dark:border-border dark:bg-card">
             <CardContent className="space-y-5">
                 {/* Top badges */}
                 <div className="flex items-center justify-between">
@@ -29,7 +27,7 @@ export default function DetailsIncludeHeader({ appointment }: Props) {
                         {status}
                     </Badge>
 
-                    <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+                    <div className="flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-sm text-muted-foreground dark:bg-muted/80 dark:text-muted-foreground">
                         <ClockIcon className="w-4 h-4" />
                         <span>{appointment?.duration} min</span>
                     </div>
@@ -37,15 +35,15 @@ export default function DetailsIncludeHeader({ appointment }: Props) {
 
                 {/* Date */}
                 <div className="flex items-start gap-3">
-                    <div className="bg-gray-100 p-2 rounded-lg">
-                        <CalendarIcon className="w-5 h-5 text-gray-600" />
+                    <div className="rounded-lg bg-muted p-2 dark:bg-muted/80">
+                        <CalendarIcon className="w-5 h-5 text-muted-foreground" />
                     </div>
 
                     <div>
-                        <p className="text-base text-gray-500">
+                        <p className="text-base text-muted-foreground">
                             Fecha y hora
                         </p>
-                        <p className="text-lg font-semibold text-gray-900">
+                        <p className="text-lg font-semibold text-foreground">
                             {formatDateLong(appointment?.date)} a las{" "}
                             {formatTime(appointment?.time)}
                         </p>
@@ -54,15 +52,15 @@ export default function DetailsIncludeHeader({ appointment }: Props) {
 
                 {/* Employee */}
                 <div className="flex items-start gap-3">
-                    <div className="bg-gray-100 p-2 rounded-lg">
-                        <UserIcon className="w-5 h-5 text-gray-600" />
+                    <div className="rounded-lg bg-muted p-2 dark:bg-muted/80">
+                        <UserIcon className="w-5 h-5 text-muted-foreground" />
                     </div>
 
                     <div>
-                        <p className="text-base text-gray-500">
+                        <p className="text-base text-muted-foreground">
                             Estilista
                         </p>
-                        <p className="text-md font-semibold text-gray-900">
+                        <p className="text-md font-semibold text-foreground">
                             {appointment?.employee?.name}
                         </p>
                     </div>

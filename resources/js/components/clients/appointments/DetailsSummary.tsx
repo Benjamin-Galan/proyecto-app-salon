@@ -13,9 +13,9 @@ export default function DetailsSummary({ appointment }: Props) {
         `C$${value?.toFixed(2)}`;
 
     return (
-        <div className="bg-gray-100 rounded-2xl p-5 space-y-3">
+        <div className="space-y-3 rounded-2xl border border-border/70 bg-muted/60 p-5 dark:border-border dark:bg-muted/30">
             {/* Subtotal */}
-            <div className="flex justify-between text-sm text-gray-600">
+            <div className="flex justify-between text-sm text-muted-foreground">
                 <span>Subtotal</span>
                 <span>{formatCurrency(subtotal)}</span>
             </div>
@@ -28,10 +28,10 @@ export default function DetailsSummary({ appointment }: Props) {
 
             {/* Total */}
             <div className="flex justify-between items-center pt-2">
-                <span className="font-semibold text-gray-800">
+                <span className="font-semibold text-foreground/90">
                     Total
                 </span>
-                <span className="text-xl font-bold text-gray-900">
+                <span className="text-xl font-bold text-foreground">
                     {formatCurrency(total)}
                 </span>
             </div>

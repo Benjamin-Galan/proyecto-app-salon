@@ -1,17 +1,10 @@
 import AppLayout from "@/layouts/app-layout"
 import { Appointment, BreadcrumbItem } from "@/types"
 import { Head, usePage } from "@inertiajs/react"
-import { useState } from "react"
-import AppointmentCard from "@/components/clients/appointments/AppointmentCard"
 import DetailsIncludeHeader from "@/components/clients/appointments/DetailsIncludeHeader"
 import DetailsIncludeList from "@/components/appointments/DetailsIncludeList"
 import DetailsIncludeFooter from "@/components/clients/appointments/DetailsIncludeFooter"
 import DetailsSummary from "@/components/clients/appointments/DetailsSummary"
-
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function Details() {
     const { appointment = null } = usePage().props as {
@@ -29,16 +22,16 @@ export default function Details() {
         }
     ];
 
-    console.log(appointment, 'appointment');
-
     if (!appointment) {
         return (
             <AppLayout breadcrumbs={breadcrumbs}>
                 <Head title="Detalles de la cita" />
 
                 <div className="min-h-screen bg-background">
-                    <div className="container mx-auto max-w-md px-4 py-6 h-full">
-                        <p>No se encontró la cita</p>
+                    <div className="container mx-auto h-full max-w-md px-4 py-6">
+                        <p className="text-foreground/80 dark:text-foreground/70">
+                            No se encontro la cita
+                        </p>
                     </div>
                 </div>
             </AppLayout>
@@ -50,7 +43,7 @@ export default function Details() {
             <Head title="Detalles de la cita" />
 
             <div className="min-h-screen bg-background">
-                <div className="container mx-auto max-w-md px-4 py-6 h-full">
+                <div className="container mx-auto h-full max-w-md px-4 py-6">
                     <DetailsIncludeHeader appointment={appointment} />
 
                     <div className="mt-6">
