@@ -22,11 +22,18 @@ class EmployeeRequest extends FormRequest
      */
     public function rules(): array
     {
-        $employeeId = $this->route('employee')?->id;
+        $employee = $this->route('employee');
+        $employeeId = $employee?->id;
+        $userId = $employee?->user_id;
 
         return [
             'name' => 'required|string|max:255',
-            'email' => ['required', 'email', Rule::unique('employees', 'email')->ignore($employeeId)],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('employees', 'email')->ignore($employeeId),
+                Rule::unique('users', 'email')->ignore($userId),
+            ],
             'phone' => ['required', 'string', 'max:20', Rule::unique('employees', 'phone')->ignore($employeeId)],
             'position' => 'required|string|max:100',
             'available' => 'required|boolean'
