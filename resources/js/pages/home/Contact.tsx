@@ -2,9 +2,11 @@
 
 import type React from "react"
 
-import { useState } from "react"
-import { MapPin, Phone, MessageSquare, Clock } from "lucide-react"
+import { useForm } from "@inertiajs/react"
+import { toast } from "sonner"
+import { MapPin, Phone, MessageSquare, Clock, Loader2 } from "lucide-react"
 import { contactUs } from "@/utils/data"
+import { FormEvent } from "react"
 
 // Componente personalizado para los campos de entrada
 type InputFieldProps = {
@@ -12,15 +14,17 @@ type InputFieldProps = {
   type: string
   placeholder: string
   value: string
+  name: string
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
   required?: boolean
 }
 
-const InputField = ({ label, type, placeholder, value, onChange, required = false }: InputFieldProps) => (
+const InputField = ({ label, type, placeholder, value, name, onChange, required = false }: InputFieldProps) => (
   <div className="mb-4">
     <label className="block text-gray-700 mb-2">{label}</label>
     {type === "textarea" ? (
       <textarea
+        name={name}
         className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-beauty-medium/30 focus:border-beauty-medium transition-colors"
         placeholder={placeholder}
         value={value}
@@ -31,6 +35,7 @@ const InputField = ({ label, type, placeholder, value, onChange, required = fals
     ) : (
       <input
         type={type}
+        name={name}
         className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-beauty-medium/30 focus:border-beauty-medium transition-colors"
         placeholder={placeholder}
         value={value}
@@ -61,7 +66,7 @@ const ContactInfoItem = ({ icon, title, content }: ContactInfoItemProps) => (
 )
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
+  const { data, setData, post, processing, reset, errors } = useForm({
     name: "",
     email: "",
     phone: "",
@@ -70,14 +75,23 @@ export default function Contact() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setData(name as any, value)
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    // Aquí iría la lógica para enviar el formulario
-    alert("Mensaje enviado correctamente")
-    setFormData({ name: "", email: "", phone: "", message: "" })
+    
+    // @ts-ignore
+    post(route('contact.send'), {
+      preserveScroll: true,
+      onSuccess: () => {
+        toast.success("Mensaje enviado correctamente. Nos comunicaremos contigo pronto.")
+        reset()
+      },
+      onError: () => {
+        toast.error("Hubo un error al enviar el mensaje. Revisa los campos.")
+      }
+    })
   }
 
   return (
@@ -142,42 +156,53 @@ export default function Contact() {
                   label="Nombre"
                   type="text"
                   placeholder="Tu nombre"
-                  value={formData.name}
+                  value={data.name}
                   onChange={handleChange}
+                  name="name"
                   required
                 />
+                {errors.name && <p className="text-red-500 text-xs -mt-3 mb-2">{errors.name}</p>}
+                
                 <InputField
                   label="Email"
                   type="email"
                   placeholder="tu@email.com"
-                  value={formData.email}
+                  value={data.email}
                   onChange={handleChange}
+                  name="email"
                   required
                 />
+                {errors.email && <p className="text-red-500 text-xs -mt-3 mb-2">{errors.email}</p>}
               </div>
 
               <InputField
                 label="Teléfono"
                 type="tel"
                 placeholder="+123 456 7890"
-                value={formData.phone}
+                value={data.phone}
                 onChange={handleChange}
+                name="phone"
               />
+              {errors.phone && <p className="text-red-500 text-xs -mt-3 mb-2">{errors.phone}</p>}
 
               <InputField
                 label="Mensaje"
                 type="textarea"
                 placeholder="¿En qué podemos ayudarte?"
-                value={formData.message}
+                value={data.message}
                 onChange={handleChange}
+                name="message"
                 required
               />
+              {errors.message && <p className="text-red-500 text-xs -mt-3 mb-2">{errors.message}</p>}
 
               <button
                 type="submit"
-                className="w-full mt-4 py-3 bg-beauty-deep text-white rounded-lg hover:bg-beauty-dark transition-colors"
+                disabled={processing}
+                className="w-full mt-4 py-3 bg-beauty-deep text-white rounded-lg hover:bg-beauty-dark transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                Enviar mensaje
+                {processing && <Loader2 className="w-4 h-4 animate-spin" />}
+                {processing ? "Enviando..." : "Enviar mensaje"}
               </button>
             </form>
           </div>

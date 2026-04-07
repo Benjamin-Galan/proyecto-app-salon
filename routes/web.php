@@ -22,6 +22,7 @@ use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::post('/contact', [HomeController::class, 'contact'])->name('contact.send');
 
 Route::get('/test', [TestController::class, 'index']);
 
