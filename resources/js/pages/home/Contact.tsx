@@ -1,7 +1,4 @@
-"use client"
-
 import type React from "react"
-
 import { useForm } from "@inertiajs/react"
 import { toast } from "sonner"
 import { MapPin, Phone, MessageSquare, Clock, Loader2 } from "lucide-react"
@@ -20,12 +17,11 @@ type InputFieldProps = {
 }
 
 const InputField = ({ label, type, placeholder, value, name, onChange, required = false }: InputFieldProps) => (
-  <div className="mb-4">
-    <label className="block text-gray-700 mb-2">{label}</label>
+  <div className="input-group">
+    <label>{label}</label>
     {type === "textarea" ? (
       <textarea
         name={name}
-        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-beauty-medium/30 focus:border-beauty-medium transition-colors"
         placeholder={placeholder}
         value={value}
         onChange={onChange}
@@ -36,7 +32,6 @@ const InputField = ({ label, type, placeholder, value, name, onChange, required 
       <input
         type={type}
         name={name}
-        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-beauty-medium/30 focus:border-beauty-medium transition-colors"
         placeholder={placeholder}
         value={value}
         onChange={onChange}
@@ -54,13 +49,13 @@ type ContactInfoItemProps = {
 }
 
 const ContactInfoItem = ({ icon, title, content }: ContactInfoItemProps) => (
-  <div className="flex items-start gap-4 mb-6">
-    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-beauty-light mt-1">
-      <div className="text-beauty-deep">{icon}</div>
+  <div className="info-item">
+    <div className="icon-container">
+      <div className="icon">{icon}</div>
     </div>
-    <div>
-      <h4 className="font-medium text-gray-800 mb-1">{title}</h4>
-      <div className="text-gray-600">{content}</div>
+    <div className="info-content">
+      <h4 className="info-label">{title}</h4>
+      <div className="info-detail">{content}</div>
     </div>
   </div>
 )
@@ -95,84 +90,90 @@ export default function Contact() {
   }
 
   return (
-    <section className="py-20 bg-gradient-to-b from-beauty-light to-white" id="contacto">
-      <div className="container mx-auto px-4">
+    <section className="contact-section" id="contacto">
+      <div className="contact-container">
         {/* Título y descripción */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-beauty-deep mb-4">Contáctanos</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto font-bold">
+        <div className="contact-header">
+          <h2 className="title">Contáctanos</h2>
+          <p className="subtitle">
             Estamos aquí para responder tus preguntas y ayudarte a programar tu cita.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="contact-grid">
           {/* Columna izquierda: Información de contacto */}
-          <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
-            <h3 className="text-xl font-bold text-beauty-deep mb-6">Información de Contacto</h3>
-            <p className="text-gray-600 mb-8">Encuentra todas las formas de comunicarte con nosotros</p>
+          <div className="contact-card">
+            <h3 className="card-title">Información de Contacto</h3>
+            <p className="card-description">Encuentra todas las formas de comunicarte con nosotros</p>
 
-            <ContactInfoItem
-              icon={<MapPin className="w-5 h-5" />}
-              title="Dirección"
-              content={<p>{contactUs.address}</p>}
-            />
+            <div className="contact-info-list">
+              <ContactInfoItem
+                icon={<MapPin />}
+                title="Dirección"
+                content={<p>{contactUs.address}</p>}
+              />
 
-            <ContactInfoItem icon={<Phone className="w-5 h-5" />} title="Teléfono" content={<p>{contactUs.phone}</p>} />
+              <ContactInfoItem icon={<Phone />} title="Teléfono" content={<p>{contactUs.phone}</p>} />
 
-            <ContactInfoItem
-              icon={<MessageSquare className="w-5 h-5" />}
-              title="WhatsApp"
-              content={<p>{contactUs.whatsapp}</p>}
-            />
+              <ContactInfoItem
+                icon={<MessageSquare />}
+                title="WhatsApp"
+                content={<p>{contactUs.whatsapp}</p>}
+              />
 
-            <ContactInfoItem
-              icon={<Clock className="w-5 h-5" />}
-              title="Horario"
-              content={
-                <div>
-                  <p>{contactUs.schedule.normal}</p>
-                  <p>{contactUs.schedule.sunday}</p>
-                </div>
-              }
-            />
+              <ContactInfoItem
+                icon={<Clock />}
+                title="Horario"
+                content={
+                  <div>
+                    <p>{contactUs.schedule.normal}</p>
+                    <p>{contactUs.schedule.sunday}</p>
+                  </div>
+                }
+              />
+            </div>
 
             <button
-              className="mt-4 inline-flex items-center justify-center px-6 py-3 bg-white border border-beauty-medium text-beauty-medium rounded-full hover:bg-beauty-medium/10 transition-colors"
+              className="whatsapp-action-btn"
               onClick={() => window.open(`https://wa.me/${contactUs.whatsapp.replace(/\D/g, "")}`, "_blank")}
             >
-              <MessageSquare className="w-4 h-4 mr-2" />
+              <MessageSquare className="icon" />
               Enviar mensaje
             </button>
           </div>
 
           {/* Columna derecha: Formulario de contacto */}
-          <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
-            <h3 className="text-xl font-bold text-beauty-deep mb-6">Envíanos un Mensaje</h3>
-            <p className="text-gray-600 mb-8">Completa el formulario y te responderemos a la brevedad</p>
+          <div className="contact-card">
+            <h3 className="card-title">Envíanos un Mensaje</h3>
+            <p className="card-description">Completa el formulario y te responderemos a la brevedad</p>
 
-            <form onSubmit={handleSubmit}>
-              <div className="grid sm:grid-cols-2 gap-4">
-                <InputField
-                  label="Nombre"
-                  type="text"
-                  placeholder="Tu nombre"
-                  value={data.name}
-                  onChange={handleChange}
-                  name="name"
-                  required
-                />
-                {errors.name && <p className="text-red-500 text-xs -mt-3 mb-2">{errors.name}</p>}
+            <form onSubmit={handleSubmit} className="contact-form">
+              <div className="form-row">
+                <div>
+                  <InputField
+                    label="Nombre"
+                    type="text"
+                    placeholder="Tu nombre"
+                    value={data.name}
+                    onChange={handleChange}
+                    name="name"
+                    required
+                  />
+                  {errors.name && <p className="error-msg">{errors.name}</p>}
+                </div>
                 
-                <InputField
-                  label="Email"
-                  type="email"
-                  placeholder="tu@email.com"
-                  value={data.email}
-                  onChange={handleChange}
-                  name="email"
-                  required
-                />
-                {errors.email && <p className="text-red-500 text-xs -mt-3 mb-2">{errors.email}</p>}
+                <div>
+                  <InputField
+                    label="Email"
+                    type="email"
+                    placeholder="tu@email.com"
+                    value={data.email}
+                    onChange={handleChange}
+                    name="email"
+                    required
+                  />
+                  {errors.email && <p className="error-msg">{errors.email}</p>}
+                </div>
               </div>
 
               <InputField
@@ -183,7 +184,7 @@ export default function Contact() {
                 onChange={handleChange}
                 name="phone"
               />
-              {errors.phone && <p className="text-red-500 text-xs -mt-3 mb-2">{errors.phone}</p>}
+              {errors.phone && <p className="error-msg">{errors.phone}</p>}
 
               <InputField
                 label="Mensaje"
@@ -194,14 +195,14 @@ export default function Contact() {
                 name="message"
                 required
               />
-              {errors.message && <p className="text-red-500 text-xs -mt-3 mb-2">{errors.message}</p>}
+              {errors.message && <p className="error-msg">{errors.message}</p>}
 
               <button
                 type="submit"
                 disabled={processing}
-                className="w-full mt-4 py-3 bg-beauty-deep text-white rounded-lg hover:bg-beauty-dark transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="submit-btn"
               >
-                {processing && <Loader2 className="w-4 h-4 animate-spin" />}
+                {processing && <Loader2 className="spinner" />}
                 {processing ? "Enviando..." : "Enviar mensaje"}
               </button>
             </form>

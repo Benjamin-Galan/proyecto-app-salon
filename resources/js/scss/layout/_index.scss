@@ -1,6 +1,12 @@
 @use 'hero';
 @use 'header';
 @use 'services';
+@use 'about';
+@use 'packages';
+@use 'promotions';
+@use 'contact';
+@use 'footer';
+@use 'map';
 
 html {
   scroll-behavior: smooth;

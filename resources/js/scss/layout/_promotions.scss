@@ -1,0 +1,514 @@
+.promotions-section {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(to bottom, var(--color-beauty-light), #ffffff, color-mix(in srgb, var(--color-beauty-soft) 20%, transparent));
+  padding: 5rem 0; // py-20
+
+  .promotions-background {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+
+    .circle-1 {
+      position: absolute;
+      top: 8%;
+      right: 6%;
+      height: 16rem;
+      width: 16rem;
+      border-radius: 50%;
+      background-color: color-mix(in srgb, var(--color-beauty-soft) 70%, transparent);
+      filter: blur(120px);
+    }
+
+    .circle-2 {
+      position: absolute;
+      bottom: 8%;
+      left: 6%;
+      height: 16rem;
+      width: 16rem;
+      border-radius: 50%;
+      background-color: var(--color-beauty-light);
+      filter: blur(120px);
+    }
+  }
+
+  .promotions-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    position: relative;
+    z-index: 10;
+    
+    @media (min-width: 768px) {
+      padding: 0 1.5rem;
+    }
+  }
+
+  .promotions-header {
+    margin-bottom: 3rem; // mb-12
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    .decoration {
+      margin-bottom: 0.75rem; // mb-3
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+
+      .line {
+        height: 1px;
+        width: 2rem;
+        background-color: var(--color-beauty-medium);
+      }
+    }
+
+    .title {
+      font-size: 1.875rem; // text-3xl
+      font-weight: 700;
+      color: #1f2937;
+
+      @media (min-width: 768px) {
+        font-size: 2.25rem; // text-4xl
+      }
+    }
+
+    .subtitle {
+      margin: 0.75rem auto 0;
+      max-width: 36rem;
+      color: #6b7280;
+    }
+  }
+
+  // --- Main Promotion Card ---
+  .main-promotion-card {
+    margin-bottom: 2.5rem; // mb-10
+    overflow: hidden;
+    border-radius: 1.5rem; // rounded-3xl
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 24px 80px -32px rgba(120, 84, 58, 0.28);
+    backdrop-filter: blur(4px);
+
+    .card-layout {
+      display: flex;
+      flex-direction: column;
+
+      @media (min-width: 768px) {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        align-items: stretch;
+      }
+    }
+
+    .content-side {
+      order: 2;
+      padding: 1.5rem; // p-6
+
+      @media (min-width: 768px) {
+        order: 1;
+        padding: 3rem; // p-12
+      }
+
+      @media (min-width: 1024px) {
+        padding: 4rem; // lg:p-16
+      }
+
+      .main-badge {
+        margin-bottom: 1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        border-radius: 9999px;
+        border: 1px solid rgba(var(--color-beauty-medium), 0.2);
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 0.25rem 0.75rem;
+        color: var(--color-beauty-deep);
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      .promo-info {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        .promo-title {
+          font-size: 1.5rem; // text-2xl
+          font-weight: 700;
+          letter-spacing: -0.025em;
+          color: #1f2937;
+
+          @media (min-width: 768px) {
+            font-size: 1.875rem; // text-3xl
+          }
+
+          @media (min-width: 1024px) {
+            font-size: 2.25rem; // text-4xl
+          }
+        }
+
+        .promo-description {
+          font-size: 1rem;
+          color: #4b5563;
+
+          @media (min-width: 768px) {
+            font-size: 1.125rem; // text-lg
+          }
+        }
+      }
+
+      .services-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding-top: 0.75rem;
+
+        @media (min-width: 768px) {
+          gap: 1rem;
+          padding-top: 1.25rem;
+        }
+
+        .service-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          border-radius: 1rem;
+          border: 1px solid #fef3c7; // amber-100
+          background-color: rgba(255, 255, 255, 0.95);
+          padding: 0.75rem;
+          box-shadow: 0 1px 2px 0 rgba(254, 243, 199, 0.4);
+
+          .name {
+            padding-right: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #1f2937;
+
+            @media (min-width: 768px) {
+              font-size: 1rem;
+            }
+          }
+
+          .prices {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            @media (min-width: 768px) {
+              gap: 0.75rem;
+            }
+
+            .current {
+              font-size: 0.875rem;
+              font-weight: 700;
+              color: var(--color-beauty-deep);
+
+              @media (min-width: 768px) {
+                font-size: 1rem;
+              }
+            }
+
+            .old {
+              font-size: 0.75rem;
+              color: #9ca3af;
+              text-decoration: line-through;
+
+              @media (min-width: 768px) {
+                font-size: 0.875rem;
+              }
+            }
+          }
+        }
+      }
+
+      .button-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding-top: 1rem;
+
+        @media (min-width: 640px) {
+          flex-direction: row;
+        }
+
+        @media (min-width: 768px) {
+          padding-top: 1.5rem;
+        }
+
+        .primary-btn {
+          background-color: var(--color-beauty-deep);
+          color: #ffffff;
+          padding: 0.75rem 1.5rem;
+          border-radius: 9999px;
+          font-size: 0.875rem;
+          font-weight: 600;
+          border: none;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: 0 10px 15px -3px rgba(var(--color-beauty-soft), 0.3);
+
+          &:hover {
+            background-color: var(--color-beauty-dark);
+            box-shadow: 0 10px 15px -3px rgba(var(--color-beauty-soft), 0.5);
+          }
+
+          @media (min-width: 768px) {
+            font-size: 1rem;
+          }
+        }
+
+        .secondary-btn {
+          background-color: #ffffff;
+          color: var(--color-beauty-deep);
+          padding: 0.75rem 1.5rem;
+          border-radius: 9999px;
+          font-size: 0.875rem;
+          font-weight: 600;
+          border: 1px solid rgba(var(--color-beauty-medium), 0.4);
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background-color: var(--color-beauty-light);
+          }
+
+          @media (min-width: 768px) {
+            font-size: 1rem;
+          }
+        }
+      }
+
+      .disclaimer {
+        padding-top: 0.5rem;
+        font-size: 0.75rem;
+        font-style: italic;
+        color: #6b7280;
+
+        @media (min-width: 768px) {
+          padding-top: 1rem;
+        }
+      }
+    }
+
+    .image-side {
+      position: relative;
+      order: 1;
+      min-height: 260px;
+
+      @media (min-width: 768px) {
+        order: 2;
+        min-height: 500px;
+      }
+
+      img {
+        position: absolute;
+        inset: 0;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
+
+      .image-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(var(--color-beauty-deep), 0.7), rgba(var(--color-beauty-deep), 0.25), rgba(255, 255, 255, 0.1));
+
+        .overlay-content {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          padding: 1rem;
+          color: #ffffff;
+
+          @media (min-width: 768px) {
+            padding: 2rem;
+          }
+
+          .overlay-badge {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 9999px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+            @media (min-width: 768px) {
+              padding: 0.5rem 1rem;
+              font-size: 0.875rem;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // --- Secondary Promotions Grid ---
+  .secondary-promotions-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+
+    @media (min-width: 640px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .compact-promo-card {
+    background-color: #ffffff;
+    border-radius: 1rem; // rounded-2xl
+    border: 1px solid #fef3c7; // border-amber-100
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-media {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        transition: transform 0.7s ease;
+      }
+
+      &:hover img {
+        transform: scale(1.05);
+      }
+
+      .card-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(var(--color-beauty-deep), 0.7), rgba(var(--color-beauty-deep), 0.2), transparent);
+      }
+
+      .card-badge {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        background-color: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 9999px;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.75rem;
+        color: #ffffff;
+      }
+    }
+
+    .card-body {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      @media (min-width: 640px) {
+        padding: 1.5rem;
+      }
+
+      .card-info {
+        .card-promo-title {
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: #1f2937;
+          margin-bottom: 0.5rem;
+        }
+
+        .card-promo-description {
+          font-size: 0.875rem;
+          color: #4b5563;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+      }
+
+      .compact-services {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        .compact-service-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          border-radius: 0.75rem;
+          background-color: rgba(255, 251, 235, 0.7); // amber-50/70
+          padding: 0.5rem 0.75rem;
+
+          .name {
+            font-size: 0.875rem;
+            color: #374151;
+            padding-right: 0.75rem;
+          }
+
+          .price {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-beauty-deep);
+          }
+        }
+      }
+
+      .card-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding-top: 0.5rem;
+
+        .reserve-btn {
+          background-color: var(--color-beauty-deep);
+          color: #ffffff;
+          padding: 0.5rem 1rem;
+          border-radius: 9999px;
+          font-size: 0.875rem;
+          border: none;
+          cursor: pointer;
+          transition: background 0.3s ease;
+
+          &:hover {
+            background-color: var(--color-beauty-dark);
+          }
+        }
+
+        .more-btn {
+          background-color: #ffffff;
+          color: var(--color-beauty-deep);
+          padding: 0.5rem 1rem;
+          border-radius: 9999px;
+          font-size: 0.875rem;
+          border: 1px solid rgba(var(--color-beauty-medium), 0.4);
+          cursor: pointer;
+          transition: background 0.3s ease;
+
+          &:hover {
+            background-color: var(--color-beauty-light);
+          }
+        }
+      }
+    }
+  }
+}

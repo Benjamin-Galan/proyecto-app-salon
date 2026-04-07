@@ -27,6 +27,8 @@ export default function Employees() {
     }
     const columns = useMemo(() => getEmployeesColumns({ onEdit: openToEdit }), [openToEdit])
 
+    console.log(employees)
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Personal" />

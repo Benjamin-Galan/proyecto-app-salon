@@ -29,7 +29,7 @@ export default function PromotionDialog({
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="
-            max-h-[90vh] overflow-y-auto
+            max-h-[90vh] overflow-y-auto dark:bg-slate-900 dark:border-slate-800
             transition-all duration-300 md:max-w-6xl">
                 <DialogHeader>
                     <DialogTitle>{`${isEditing ? 'Editar' : 'Crear'} promoción ${selectedOption?.name?.toLowerCase() || ''}`}</DialogTitle>

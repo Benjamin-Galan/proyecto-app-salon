@@ -6,6 +6,7 @@ import {
     useReactTable,
 } from "@tanstack/react-table"
 import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 
 import {
     Table,
@@ -95,6 +96,35 @@ export function EmployeesTable<TData, TValue>({
                     )}
                 </TableBody>
             </Table>
+
+            {table.getPageCount() > 1 && (
+                <div className="flex items-center justify-between border-t px-4 py-3 bg-muted/10">
+                    <div className="text-sm text-muted-foreground">
+                        Página {table.getState().pagination.pageIndex + 1} de{" "}
+                        {table.getPageCount()}
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <Button
+                            className="bg-background dark:bg-slate-800 border-border"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => table.previousPage()}
+                            disabled={!table.getCanPreviousPage()}
+                        >
+                            Anterior
+                        </Button>
+                        <Button
+                            className="bg-background dark:bg-slate-800 border-border"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => table.nextPage()}
+                            disabled={!table.getCanNextPage()}
+                        >
+                            Siguiente
+                        </Button>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

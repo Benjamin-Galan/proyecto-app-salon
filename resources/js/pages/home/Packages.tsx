@@ -1,7 +1,3 @@
-"use client"
-
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Check } from "lucide-react"
 import type { Package } from "@/types"
 import { gotoRegister } from "@/utils/goToRegister"
@@ -14,59 +10,56 @@ export default function Packages({ packages }: PackageListProps) {
   const { handleNavigate } = gotoRegister()
 
   return (
-    <section className="py-18 bg-gradient-to-b from-beauty-light to-beauty-soft/20">
-      <div className="container mx-auto px-4">
+    <section className="packages-section">
+      <div className="packages-container">
         {/* Título y Descripción */}
-        <div className="flex flex-col items-center text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4 text-zinc-700">Paquetes Especiales</h2>
-          <p className="text-lg text-zinc-600 max-w-xl">
+        <div className="packages-header">
+          <h2 className="title">Paquetes Especiales</h2>
+          <p className="subtitle">
             Combina nuestros servicios y ahorra con estos paquetes diseñados para ti.
           </p>
         </div>
 
         {/* Grid de Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="packages-grid">
           {packages.map((pack) => (
-            <Card
+            <div
               key={pack.id}
-              className="flex flex-col justify-between hover:scale-105 hover:shadow-lg transition-all duration-300 bg-white border border-gray-200"
+              className="package-card"
             >
-              <CardHeader className="relative">
+              <div className="package-header">
+                <h3 className="package-title">{pack.name}</h3>
+                <p className="package-description">{pack.description}</p>
+              </div>
 
-                <CardTitle className="text-xl font-bold text-gray-800 pr-20">{pack.name}</CardTitle>
-                <CardDescription className="text-gray-600">{pack.description}</CardDescription>
-              </CardHeader>
-
-              <CardContent className="flex-grow">
-                <div className="mb-6">
-                  <span className="text-2xl font-bold text-beauty-deep">
+              <div className="package-content">
+                <div className="price-wrapper">
+                  <div className="price-amount">
                     C$ {pack.total}
-                    <span className="text-xs text-gray-500 font-normal"> / sesión</span>
-                  </span>
+                    <span className="price-unit"> / sesión</span>
+                  </div>
                 </div>
 
                 {/* Lista de servicios con checkmarks */}
-                <div className="mb-6">
-                  <ul className="space-y-2">
-                    {pack.services.map((service, index) => (
-                      <li key={index} className="flex items-center gap-2">
-                        <Check className="w-4 h-4 text-beauty-medium flex-shrink-0" />
-                        <span className="text-gray-700 text-sm">{service.name}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </CardContent>
+                <ul className="services-list">
+                  {pack.services.map((service, index) => (
+                    <li key={index} className="service-item">
+                      <Check className="check-icon" />
+                      <span className="service-name">{service.name}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-              <CardFooter>
-                <Button
-                  className="bg-beauty-deep hover:bg-beauty-dark text-white transition-all duration-300 w-full"
+              <div className="package-footer">
+                <button
+                  className="reserve-btn"
                   onClick={handleNavigate}
                 >
                   Reservar ahora
-                </Button>
-              </CardFooter>
-            </Card>
+                </button>
+              </div>
+            </div>
           ))}
         </div>
       </div>

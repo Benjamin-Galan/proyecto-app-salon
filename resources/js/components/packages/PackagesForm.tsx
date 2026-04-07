@@ -113,9 +113,9 @@ export const PackagesForm = ({ services, package: currentPackage, openSelectServ
                             value={data.name}
                             onChange={(e) => setData("name", e.target.value)}
                             placeholder="Ingresa el nombre del paquete"
-                            className={errors.name ? "border-red-500 focus-visible:ring-red-500" : ""}
+                            className={errors.name ? "border-red-500 focus-visible:ring-red-500 dark:border-red-400 dark:focus-visible:ring-red-400" : ""}
                         />
-                        {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name}</p>}
+                        {errors.name && <p className="text-sm text-red-500 dark:text-red-400 mt-1">{errors.name}</p>}
                     </div>
                     <div>
                         <Label htmlFor="description">Descripción del paquete</Label>
@@ -124,9 +124,9 @@ export const PackagesForm = ({ services, package: currentPackage, openSelectServ
                             value={data.description}
                             onChange={(e) => setData("description", e.target.value)}
                             placeholder="Ingresa la descripción del paquete"
-                            className={errors.description ? "border-red-500 focus-visible:ring-red-500" : ""}
+                            className={errors.description ? "border-red-500 focus-visible:ring-red-500 dark:border-red-400 dark:focus-visible:ring-red-400" : ""}
                         />
-                        {errors.description && <p className="text-sm text-red-500 mt-1">{errors.description}</p>}
+                        {errors.description && <p className="text-sm text-red-500 dark:text-red-400 mt-1">{errors.description}</p>}
                     </div>
                     <div>
                         <Label htmlFor="discount">Descuento del paquete</Label>
@@ -138,9 +138,9 @@ export const PackagesForm = ({ services, package: currentPackage, openSelectServ
                             value={data.discount}
                             onChange={(e) => setData("discount", e.target.value)}
                             placeholder="Ingresa el descuento del paquete"
-                            className={errors.discount ? "border-red-500 focus-visible:ring-red-500" : ""}
+                            className={errors.discount ? "border-red-500 focus-visible:ring-red-500 dark:border-red-400 dark:focus-visible:ring-red-400" : ""}
                         />
-                        {errors.discount && <p className="text-sm text-red-500 mt-1">{errors.discount}</p>}
+                        {errors.discount && <p className="text-sm text-red-500 dark:text-red-400 mt-1">{errors.discount}</p>}
                     </div>
                     <div>
                         <Label>Servicios del paquete</Label>
@@ -148,36 +148,36 @@ export const PackagesForm = ({ services, package: currentPackage, openSelectServ
                             type="button"
                             variant="outline"
                             onClick={onOpenSelectService}
-                            className="w-full justify-start text-gray-500 mt-2"
+                            className="w-full justify-start text-gray-500 dark:text-gray-400 mt-2"
                         >
                             <Plus className="w-4 h-4 mr-2" />
                             Agregar servicios ({data.services.length})
                         </Button>
-                        {errors.services && <p className="text-sm text-red-500 mt-1">{errors.services}</p>}
+                        {errors.services && <p className="text-sm text-red-500 dark:text-red-400 mt-1">{errors.services}</p>}
                     </div>
 
                     {/*Resumen del precio y descuento */}
-                    <div className="rounded-lg border bg-gradient-to-br from-purple-50 to-purple-100 p-4 space-y-2">
+                    <div className="rounded-lg border dark:border-slate-700 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-slate-800 dark:to-slate-900 p-4 space-y-2">
                         <p>Resumen:</p>
 
-                        <p className="text-sm text-gray-700">
+                        <p className="text-sm text-gray-700 dark:text-gray-300">
                             Precio: <strong>C$ {totalPrice.toFixed(2)}</strong>
                         </p>
 
                         {Number(data.discount) > 0 && (
                             <>
-                                <p className="text-sm text-gray-700">
+                                <p className="text-sm text-gray-700 dark:text-gray-300">
                                     Descuento: <strong>{data.discount}%</strong>
                                 </p>
 
-                                <p className="text-sm text-green-600">
+                                <p className="text-sm text-green-600 dark:text-green-400">
                                     Ahorro: <strong>C$ {discountAmount.toFixed(2)}</strong>
                                 </p>
                             </>
                         )}
 
-                        <div className="border-t pt-2">
-                            <p className="text-lg font-bold text-purple-600">Total: C$ {finalPrice.toFixed(2)}</p>
+                        <div className="border-t dark:border-slate-700 pt-2">
+                            <p className="text-lg font-bold text-purple-600 dark:text-purple-400">Total: C$ {finalPrice.toFixed(2)}</p>
                         </div>
                     </div>
 
@@ -206,14 +206,14 @@ export const PackagesForm = ({ services, package: currentPackage, openSelectServ
                                 {selectedServiceObjects.map(service => (
                                     <div
                                         key={service.id}
-                                        className="flex items-center justify-between p-3 bg-purple-50 border border-purple-200 rounded-lg"
+                                        className="flex items-center justify-between p-3 bg-purple-50 dark:bg-slate-800 border border-purple-200 dark:border-slate-700 rounded-lg"
                                     >
                                         <div className="flex flex-col items-start gap-1">
-                                            <p className="font-medium text-sm text-purple-900">
+                                            <p className="font-medium text-sm text-purple-900 dark:text-purple-100">
                                                 {service.name}
                                             </p>
 
-                                            <p className="text-sm text-purple-700">
+                                            <p className="text-sm text-purple-700 dark:text-purple-300">
                                                 C$ {service.price}
                                             </p>
                                         </div>
@@ -221,9 +221,9 @@ export const PackagesForm = ({ services, package: currentPackage, openSelectServ
                                         <button
                                             type="button"
                                             onClick={() => handleRemoveService(service.id)}
-                                            className="ml-2 p-1 hover:bg-purple-200 rounded transition-colors"
+                                            className="ml-2 p-1 hover:bg-purple-200 dark:hover:bg-purple-900/50 rounded transition-colors"
                                         >
-                                            <X className="w-4 h-4 text-purple-600" />
+                                            <X className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                                         </button>
                                     </div>
                                 ))}
@@ -237,8 +237,11 @@ export const PackagesForm = ({ services, package: currentPackage, openSelectServ
                 open={openSelectService}
                 onClose={onCloseSelectService}
                 services={services}
-                selectedServices={data.services}
-                onServicesChange={(services) => setData("services", services)}
+                selectedServices={data.services as any}
+                onServicesChange={(services) => setData("services", services.map(s => ({
+                    service_id: s.service_id,
+                    service_price: Number(s.service_price ?? 0)
+                })))}
             />
         </form>
     )

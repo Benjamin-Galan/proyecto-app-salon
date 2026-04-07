@@ -76,7 +76,7 @@ export const SelectServicesDialog = ({
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent className="md:max-w-2xl">
+            <DialogContent className="md:max-w-2xl dark:bg-slate-900 dark:border-slate-800">
                 <DialogHeader>
                     <DialogTitle>Selecciona los servicios del paquete</DialogTitle>
                 </DialogHeader>
@@ -94,7 +94,7 @@ export const SelectServicesDialog = ({
                     </div>
 
                     {/* Select All */}
-                    <div className="flex items-center space-x-2 pb-2 border-b">
+                    <div className="flex items-center space-x-2 pb-2 border-b dark:border-slate-800">
                         <Checkbox
                             id="select-all"
                             checked={allFiltered && filteredServices.length > 0}
@@ -114,7 +114,7 @@ export const SelectServicesDialog = ({
                             filteredServices.map(service => (
                                 <div
                                     key={service.id}
-                                    className="flex items-start space-x-3 p-3 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                                    className="flex items-start space-x-3 p-3 border dark:border-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 cursor-pointer transition-colors"
                                     onClick={() => handleToggleService(service.id)}
                                 >
                                     <Checkbox
@@ -130,7 +130,7 @@ export const SelectServicesDialog = ({
                                             {service.name}
                                         </Label>
                                         {service.description && (
-                                            <p className="text-xs text-gray-500 mt-1 line-clamp-2">
+                                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
                                                 {service.description}
                                             </p>
                                         )}
@@ -138,15 +138,15 @@ export const SelectServicesDialog = ({
                                 </div>
                             ))
                         ) : (
-                            <div className="col-span-full text-center py-8 text-gray-500">
+                            <div className="col-span-full text-center py-8 text-gray-500 dark:text-gray-400">
                                 No se encontraron servicios
                             </div>
                         )}
                     </div>
 
                     {/* Summary */}
-                    <div className="bg-purple-50 p-3 rounded-lg">
-                        <p className="text-sm font-medium text-purple-900">
+                    <div className="bg-purple-50 dark:bg-slate-800 p-3 rounded-lg">
+                        <p className="text-sm font-medium text-purple-900 dark:text-purple-100">
                             {selectedServices.length === 0
                                 ? "No hay servicios seleccionados"
                                 : `${selectedServices.length} servicio${selectedServices.length !== 1 ? "s" : ""} seleccionado${selectedServices.length !== 1 ? "s" : ""}`}

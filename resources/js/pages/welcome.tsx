@@ -123,7 +123,7 @@ export default function Welcome() {
                 </main>
 
 
-                <WhatsAppChat phoneNumber="+505 1234 5678" />
+                <WhatsAppChat phoneNumber="+505 7820 6792" />
             </MainLayout>
         </>
     )

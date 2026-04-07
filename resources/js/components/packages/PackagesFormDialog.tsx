@@ -30,7 +30,7 @@ export const PackagesFormDialog = ({
     return (
         <Dialog open={open} onOpenChange={onClose}>
             <DialogContent className={`
-          max-h-[90vh] overflow-y-auto
+          max-h-[90vh] overflow-y-auto dark:bg-slate-900 dark:border-slate-800
           transition-all duration-300
           ${hasSelectedServices ? "md:max-w-4xl" : "md:max-w-xl"}
         `}>

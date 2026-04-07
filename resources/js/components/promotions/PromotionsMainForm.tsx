@@ -207,9 +207,9 @@ export default function PromotionsMainForm({
                                 value={data.name}
                                 onChange={(e) => setData("name", e.target.value)}
                                 placeholder="Ingresa el nombre completo"
-                                className={errors.name ? "border-red-500 focus-visible:ring-red-500" : ""}
+                                className={errors.name ? "border-red-500 focus-visible:ring-red-500 dark:border-red-400 dark:focus-visible:ring-red-400" : ""}
                             />
-                            {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name}</p>}
+                            {errors.name && <p className="text-sm text-red-500 dark:text-red-400 mt-1">{errors.name}</p>}
                         </div>
 
                         <div className="space-y-2">
@@ -217,7 +217,7 @@ export default function PromotionsMainForm({
                                 Descripcion de la promocion
                             </Label>
                             <Textarea name="description" value={data.description} onChange={(e) => setData("description", e.target.value)} />
-                            {errors.description && <p className="text-sm text-red-500 mt-1">{errors.description}</p>}
+                            {errors.description && <p className="text-sm text-red-500 dark:text-red-400 mt-1">{errors.description}</p>}
                         </div>
 
                         <div
@@ -231,7 +231,7 @@ export default function PromotionsMainForm({
                                     accept="image/*"
                                     onChange={e => handleImageChange(e)}
                                 />
-                                {errors.image && <p className="text-sm text-red-500 mt-1">{errors.image}</p>}
+                                {errors.image && <p className="text-sm text-red-500 dark:text-red-400 mt-1">{errors.image}</p>}
                             </div>
 
                             <div className="w-full">
@@ -240,12 +240,12 @@ export default function PromotionsMainForm({
                                     type="button"
                                     variant="outline"
                                     onClick={onOpenSelectService}
-                                    className="w-full justify-start text-gray-500 mt-2"
+                                    className="w-full justify-start text-gray-500 dark:text-gray-400 mt-2"
                                 >
                                     <Plus className="w-4 h-4 mr-2" />
                                     Agregar servicios ({data.services.length})
                                 </Button>
-                                {errors.services && <p className="text-sm text-red-500 mt-1">{errors.services}</p>}
+                                {errors.services && <p className="text-sm text-red-500 dark:text-red-400 mt-1">{errors.services}</p>}
                             </div>
                         </div>
 
@@ -259,7 +259,7 @@ export default function PromotionsMainForm({
                                     value={data.expire_date}
                                     onChange={e => setData("expire_date", e.target.value)}
                                 />
-                                {errors.expire_date && <p className="text-sm text-red-500 mt-1">{errors.expire_date}</p>}
+                                {errors.expire_date && <p className="text-sm text-red-500 dark:text-red-400 mt-1">{errors.expire_date}</p>}
                             </div>
 
                             <div className="space-y-2 w-full">
@@ -277,7 +277,7 @@ export default function PromotionsMainForm({
                                             <SelectItem value="0">No</SelectItem>
                                         </SelectContent>
                                     </Select>
-                                    {errors.main && <p className="text-sm text-red-500 mt-1">{errors.main}</p>}
+                                    {errors.main && <p className="text-sm text-red-500 dark:text-red-400 mt-1">{errors.main}</p>}
                                 </div>
                             </div>
                         </div>
@@ -290,7 +290,7 @@ export default function PromotionsMainForm({
                     </div>
                 </div>
 
-                <div className="space-y-4 rounded-lg border bg-gray-50 p-4 mt-4">
+                <div className="space-y-4 rounded-lg border dark:border-slate-800 bg-gray-50 dark:bg-slate-900 p-4 mt-4">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                         <div className="text-sm font-medium mb-2">
                             {`Descuento ${data.promotion_type ? data.promotion_type : selectedOption?.name} por servicio`}
@@ -315,7 +315,7 @@ export default function PromotionsMainForm({
                     </div>
 
                     {selectedServiceObjects.length === 0 && (
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
                             Selecciona servicios para configurar la promocion.
                         </p>
                     )}
@@ -332,7 +332,7 @@ export default function PromotionsMainForm({
                             return (
                                 <div
                                     key={service.id}
-                                    className="rounded-md border bg-white p-3 space-y-2"
+                                    className="rounded-md border dark:border-slate-700 bg-white dark:bg-slate-800 p-3 space-y-2"
                                 >
                                     <div className="flex items-center justify-between text-sm">
                                         <p className="font-medium">{service.name}</p>
@@ -340,9 +340,9 @@ export default function PromotionsMainForm({
                                         <button
                                             type="button"
                                             onClick={() => handleRemoveService(service.id)}
-                                            className="ml-2 p-1 hover:bg-purple-200 rounded transition-colors"
+                                            className="ml-2 p-1 hover:bg-purple-200 dark:hover:bg-purple-900/50 rounded transition-colors"
                                         >
-                                            <X className="w-4 h-4 text-gray-600" />
+                                            <X className="w-4 h-4 text-gray-600 dark:text-gray-400" />
                                         </button>
                                     </div>
 
@@ -363,11 +363,11 @@ export default function PromotionsMainForm({
                                             </div>
 
                                             <div className="flex items-center justify-between text-sm">
-                                                <p className="text-xs text-gray-600">
+                                                <p className="text-xs text-gray-600 dark:text-gray-400">
                                                     Precio base: C$ {Number(service.price).toFixed(2)}
                                                 </p>
 
-                                                <p className="text-xs text-gray-600">
+                                                <p className="text-xs text-gray-600 dark:text-gray-400">
                                                     Total con descuento: C$ {serviceTotal.toFixed(2)}
                                                 </p>
                                             </div>
@@ -378,7 +378,7 @@ export default function PromotionsMainForm({
                         })}
                     </div>
 
-                    {errors.services && <p className="text-sm text-red-500">{errors.services}</p>}
+                    {errors.services && <p className="text-sm text-red-500 dark:text-red-400">{errors.services}</p>}
                 </div>
 
                 <div className="flex justify-end">
@@ -390,7 +390,7 @@ export default function PromotionsMainForm({
                                     {isEditing ? "Actualizando..." : "Creando..."}
                                 </>
                             ) : (
-                                <>{isEditing ? "Actualizar Paquete" : "Crear Paquete"}</>
+                                <>{isEditing ? "Actualizar Promoción" : "Crear Promoción"}</>
                             )}
                         </Button>
                     </div>

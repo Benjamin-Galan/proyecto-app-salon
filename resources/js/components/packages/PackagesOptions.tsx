@@ -15,7 +15,7 @@ export default function PackagesOptions({ pack, onEdit, onDelete }: Props) {
     return (
         <DropdownMenu open={open} onOpenChange={setOpen}>
             <DropdownMenuTrigger asChild>
-                <button className="p-2 hover:bg-gray-100 rounded">
+                <button className="p-2 rounded-full bg-white dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 border border-transparent dark:border-slate-700 shadow-[0_2px_4px_rgba(0,0,0,0.05)] dark:shadow-none transition-colors">
                     <MoreVertical className="w-4 h-4" />
                 </button>
             </DropdownMenuTrigger>
