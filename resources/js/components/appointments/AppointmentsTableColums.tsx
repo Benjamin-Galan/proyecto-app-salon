@@ -93,7 +93,7 @@ export const appointmentsTableColums = ({
                             <DropdownMenuItem onClick={() => onView(appointment.id)}>Mas detalles</DropdownMenuItem>
                             <DropdownMenuItem onClick={() => onComplete(appointment)}>Completar</DropdownMenuItem>
                             <DropdownMenuItem onClick={() => onConfirm(appointment)}>Confirmar</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => onCancel(appointment)}>Cancelar</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => onCancel(appointment)}>Eliminar</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 )

@@ -42,7 +42,7 @@ export default function Appointments() {
         closeCompleteDialog,
         confirmAppointment,
         completeAppointment,
-        cancelAppointment,
+        deleteAppointment,
         goToDetails,
         appointment
     } = useAppointments()
@@ -83,9 +83,9 @@ export default function Appointments() {
         }
     }
 
-    const handleCancel = (appointment: Appointment) => {
+    const handleDelete = (appointment: Appointment) => {
         try {
-            cancelAppointment(appointment, {
+            deleteAppointment(appointment, 'admin', {
                 onSuccess: (flash) => {
                     if (flash?.success) {
                         successAlert(flash.success)
@@ -168,7 +168,7 @@ export default function Appointments() {
             <DeleteDialog
                 open={toggleCancelDialog}
                 onOpenChange={closeCancelDialog}
-                onConfirm={handleCancel}
+                onConfirm={handleDelete}
                 appointment={appointment}
             />
 
