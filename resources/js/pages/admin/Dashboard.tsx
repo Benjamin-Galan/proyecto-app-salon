@@ -19,6 +19,16 @@ import {
     Users,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import {
+    CartesianGrid,
+    Line,
+    LineChart,
+    ReferenceLine,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis,
+} from "recharts";
 import { route } from "ziggy-js";
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -44,14 +54,6 @@ type OverviewCard = {
 export default function Dashboard() {
     const { stats } = usePage<DashboardPageProps>().props;
     const overview = stats.overview;
-
-    const revenueScale = Math.max(...stats.monthly.map((point) => point.revenue), 1);
-    const monthlyActivityScale = Math.max(
-        ...stats.monthly.map((point) =>
-            Math.max(point.newClients, point.attendedClients, point.completedAppointments),
-        ),
-        1,
-    );
     const statusScale = Math.max(...stats.statusBreakdown.map((item) => item.count), 1);
 
     const overviewCards: OverviewCard[] = [
@@ -147,77 +149,7 @@ export default function Dashboard() {
                     })}
                 </div>
 
-                <div className="grid gap-6 xl:grid-cols-5">
-                    <Card className="xl:col-span-3">
-                        <CardHeader>
-                            <CardTitle>Ingresos por mes</CardTitle>
-                            <CardDescription>
-                                Evolución de los ingresos obtenidos por citas completadas en los últimos 6 meses.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            {stats.monthly.map((point) => (
-                                <div key={point.month} className="space-y-2">
-                                    <div className="flex items-center justify-between gap-4">
-                                        <div>
-                                            <p className="text-sm font-medium">{point.labelLong}</p>
-                                            <p className="text-xs text-muted-foreground">
-                                                {point.completedAppointments} citas completadas
-                                            </p>
-                                        </div>
-                                        <p className="text-sm font-semibold">{formatCurrency(point.revenue)}</p>
-                                    </div>
-                                    <div className="h-2 overflow-hidden rounded-full bg-muted">
-                                        <div
-                                            className="h-full rounded-full bg-emerald-500"
-                                            style={{ width: `${Math.max((point.revenue / revenueScale) * 100, 6)}%` }}
-                                        />
-                                    </div>
-                                </div>
-                            ))}
-                        </CardContent>
-                    </Card>
-
-                    <Card className="xl:col-span-2">
-                        <CardHeader>
-                            <CardTitle>Clientes y atención</CardTitle>
-                            <CardDescription>
-                                Cruce mensual entre captación de clientes y atención real en citas completadas.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            {stats.monthly.map((point) => (
-                                <div key={point.month} className="rounded-xl border p-4">
-                                    <div className="mb-3 flex items-center justify-between gap-3">
-                                        <p className="font-medium">{point.labelLong}</p>
-                                        <Badge variant="outline">{point.label}</Badge>
-                                    </div>
-
-                                    <div className="space-y-3">
-                                        <MetricRow
-                                            label="Clientes nuevos"
-                                            value={point.newClients}
-                                            scale={monthlyActivityScale}
-                                            className="bg-violet-500"
-                                        />
-                                        <MetricRow
-                                            label="Clientes atendidos"
-                                            value={point.attendedClients}
-                                            scale={monthlyActivityScale}
-                                            className="bg-amber-500"
-                                        />
-                                        <MetricRow
-                                            label="Citas completadas"
-                                            value={point.completedAppointments}
-                                            scale={monthlyActivityScale}
-                                            className="bg-sky-500"
-                                        />
-                                    </div>
-                                </div>
-                            ))}
-                        </CardContent>
-                    </Card>
-                </div>
+                <RevenueChart data={stats.monthly} />
 
                 <div className="grid gap-6 xl:grid-cols-3">
                     <Card>
@@ -309,39 +241,86 @@ export default function Dashboard() {
     );
 }
 
-function MetricRow({
-    label,
-    value,
-    scale,
-    className,
-}: {
-    label: string;
-    value: number;
-    scale: number;
-    className: string;
-}) {
-    return (
-        <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">{label}</span>
-                <span className="font-medium">{value}</span>
-            </div>
-            <div className="h-2 overflow-hidden rounded-full bg-muted">
-                <div
-                    className={`h-full rounded-full ${className}`}
-                    style={{ width: `${Math.max((value / scale) * 100, value > 0 ? 8 : 0)}%` }}
-                />
-            </div>
-        </div>
-    );
-}
-
 function SummaryPill({ label, value }: { label: string; value: number | string }) {
     return (
         <div className="rounded-xl border bg-muted/40 p-3">
             <p className="text-xs uppercase tracking-wide text-muted-foreground">{label}</p>
             <p className="mt-1 text-xl font-semibold">{value}</p>
         </div>
+    );
+}
+
+function RevenueChart({ data }: { data: AdminDashboardStats["monthly"] }) {
+    const averageRevenue = data.length > 0 ? data.reduce((sum, item) => sum + item.revenue, 0) / data.length : 0;
+    const currentYear = new Date().getFullYear();
+
+    return (
+        <Card className="border-sky-200/70 bg-white shadow-sm dark:border-sky-900 dark:bg-gray-900">
+            <CardHeader className="flex flex-col gap-3 pb-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <CardTitle className="text-xl font-semibold">Ganancias mensuales</CardTitle>
+                    <CardDescription>Tendencia de ingresos de los últimos 6 meses.</CardDescription>
+                </div>
+                <div className="text-left sm:text-right">
+                    <p className="text-sm text-muted-foreground">Año actual</p>
+                    <p className="text-lg font-semibold">{currentYear}</p>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <div className="h-[320px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <LineChart
+                            data={data}
+                            margin={{
+                                top: 20,
+                                right: 24,
+                                left: 8,
+                                bottom: 8,
+                            }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" opacity={0.12} />
+                            <XAxis
+                                dataKey="label"
+                                tickLine={false}
+                                axisLine={false}
+                                tick={{ fill: "currentColor", fontSize: 12 }}
+                                tickMargin={10}
+                            />
+                            <YAxis
+                                tickLine={false}
+                                axisLine={false}
+                                tick={{ fill: "currentColor", fontSize: 12 }}
+                                tickFormatter={(value) => formatCompactCurrency(Number(value))}
+                                width={72}
+                            />
+                            <Tooltip
+                                formatter={(value) => [formatCurrency(Number(value)), "Ingresos"]}
+                                labelFormatter={(_, payload) => {
+                                    const point = payload?.[0]?.payload;
+
+                                    return point?.labelLong ? `Mes: ${point.labelLong}` : "";
+                                }}
+                                contentStyle={{
+                                    backgroundColor: "#0f172a",
+                                    border: "none",
+                                    borderRadius: "12px",
+                                    color: "#f8fafc",
+                                }}
+                            />
+                            <ReferenceLine y={averageRevenue} stroke="#0ea5e9" strokeDasharray="5 5" opacity={0.7} />
+                            <Line
+                                type="monotone"
+                                dataKey="revenue"
+                                stroke="#0ea5e9"
+                                strokeWidth={3}
+                                dot={{ r: 4, strokeWidth: 2, fill: "#0ea5e9" }}
+                                activeDot={{ r: 6, strokeWidth: 3, fill: "#0ea5e9" }}
+                            />
+                        </LineChart>
+                    </ResponsiveContainer>
+                </div>
+            </CardContent>
+        </Card>
     );
 }
 
@@ -391,6 +370,17 @@ function formatCurrency(amount: number) {
     return new Intl.NumberFormat("es-NI", {
         style: "currency",
         currency: "NIO",
+    })
+        .format(amount)
+        .replace("NIO", "C$");
+}
+
+function formatCompactCurrency(amount: number) {
+    return new Intl.NumberFormat("es-NI", {
+        style: "currency",
+        currency: "NIO",
+        notation: "compact",
+        maximumFractionDigits: 1,
     })
         .format(amount)
         .replace("NIO", "C$");
