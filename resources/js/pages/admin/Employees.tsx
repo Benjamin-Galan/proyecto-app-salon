@@ -42,6 +42,7 @@ export default function Employees() {
                         buttonIcon={<Plus className="w-4 h-4" />}
                         sectionTitle="Empleados"
                         onOpenModal={openToCreate}
+                        showActionButtons={true}
                     />
                 }
             >
