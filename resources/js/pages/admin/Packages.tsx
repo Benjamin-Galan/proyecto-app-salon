@@ -16,12 +16,8 @@ import DeletePackageDialog from "@/components/packages/DeletePackageDialog"
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: "Dashboard",
-        href: "/dashboard",
-    },
-    {
-        title: "Servicios",
-        href: "/services",
+        title: "Paquetes",
+        href: "/packages",
     },
 ]
 

@@ -18,10 +18,6 @@ import { Appointment, BreadcrumbItem } from "@/types";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: "Dashboard",
-        href: "/dashboard",
-    },
-    {
         title: "Citas",
         href: "/admin/appointments",
     },

@@ -18,12 +18,8 @@ import { useMemo, useState } from "react";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: "Dashboard",
-        href: "/dashboard",
-    },
-    {
-        title: "Servicios",
-        href: "/services",
+        title: "Promociones",
+        href: "/promotions",
     },
 ]
 
