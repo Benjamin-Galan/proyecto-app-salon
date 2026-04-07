@@ -20,7 +20,7 @@ export default function DeleteUser() {
     const passwordInput = useRef<HTMLInputElement>(null);
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 opacity-50 cursor-not-allowed">
             <HeadingSmall
                 title="Eliminar cuenta"
                 description="Elimina tu cuenta y todos sus recursos"
@@ -36,6 +36,7 @@ export default function DeleteUser() {
                 <Dialog>
                     <DialogTrigger asChild>
                         <Button
+                            disabled={true}
                             variant="destructive"
                             data-test="delete-user-button"
                         >
@@ -98,10 +99,11 @@ export default function DeleteUser() {
 
                                         <Button
                                             variant="destructive"
-                                            disabled={processing}
+                                            disabled={true}
                                             asChild
                                         >
                                             <button
+                                                disabled
                                                 type="submit"
                                                 data-test="confirm-delete-user-button"
                                             >
