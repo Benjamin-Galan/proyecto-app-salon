@@ -26,11 +26,19 @@ class CheckInController extends Controller
         $appointments = Appointment::with('user')
             ->where('status', 'Confirmada')
             // ->whereDate('date', today())
-            ->get();
+            ->orderBy('date')
+            ->orderBy('time')
+            ->paginate(10);
 
         return response()->json([
             'success' => true,
-            'data' => $appointments
+            'data' => $appointments->items(),
+            'pagination' => [
+                'current_page' => $appointments->currentPage(),
+                'last_page' => $appointments->lastPage(),
+                'per_page' => $appointments->perPage(),
+                'total' => $appointments->total(),
+            ],
         ]);
     }
 
