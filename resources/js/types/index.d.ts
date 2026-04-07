@@ -424,6 +424,7 @@ export type Flash = {
 export type AppointmentRequestPayload = {
     date: string;
     time: string;
+    notes?: string | null;
     totals: {
         lineItems: number;
         itemsCount: number;

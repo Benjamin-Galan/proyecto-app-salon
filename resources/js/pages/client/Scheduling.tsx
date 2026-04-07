@@ -33,6 +33,7 @@ export default function SchedulingPage() {
         setQuantity,
         setDate,
         setTime,
+        setNotes,
         clearItems,
         clearDraft,
         buildAppointmentPayload,
@@ -99,6 +100,7 @@ export default function SchedulingPage() {
                         removeItem={removeItem}
                         setDate={setDate}
                         setTime={setTime}
+                        setNotes={setNotes}
                         clearItems={clearItems}
                         submitAppointment={handleCreateAppointment}
                         isProcessing={isProcessing}

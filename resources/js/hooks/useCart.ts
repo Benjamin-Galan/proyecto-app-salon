@@ -19,6 +19,7 @@ export interface BookingDraft {
     items: BookingCartItem[];
     date: string | null;
     time: string | null;
+    notes: string;
 }
 
 interface BookingState {
@@ -40,6 +41,7 @@ type BookingAction =
     | { type: "SET_QUANTITY"; payload: { key: string; quantity: number } }
     | { type: "SET_DATE"; payload: string | null }
     | { type: "SET_TIME"; payload: string | null }
+    | { type: "SET_NOTES"; payload: string }
     | { type: "CLEAR_ITEMS" }
     | { type: "RESET_DRAFT" };
 
@@ -48,6 +50,7 @@ const initialState: BookingState = {
         items: [],
         date: null,
         time: null,
+        notes: "",
     },
 };
 
@@ -193,6 +196,11 @@ const bookingReducer = (
                 ...state,
                 draft: { ...state.draft, time: action.payload },
             };
+        case "SET_NOTES":
+            return {
+                ...state,
+                draft: { ...state.draft, notes: action.payload },
+            };
         case "CLEAR_ITEMS":
             return {
                 ...state,
@@ -259,6 +267,10 @@ export const useCart = () => {
         dispatch({ type: "SET_TIME", payload: time });
     };
 
+    const setNotes = (notes: string) => {
+        dispatch({ type: "SET_NOTES", payload: notes });
+    };
+
     const clearItems = () => {
         dispatch({ type: "CLEAR_ITEMS" });
     };
@@ -275,6 +287,7 @@ export const useCart = () => {
         return {
             date: state.draft.date,
             time: state.draft.time,
+            notes: state.draft.notes.trim() || null,
             totals: {
                 lineItems: totals.lineItems,
                 itemsCount: totals.itemsCount,
@@ -305,6 +318,7 @@ export const useCart = () => {
         setQuantity,
         setDate,
         setTime,
+        setNotes,
         clearItems,
         clearDraft,
         buildAppointmentPayload,

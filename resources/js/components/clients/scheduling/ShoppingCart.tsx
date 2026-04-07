@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SelectTrigger, SelectValue, Select, SelectContent, SelectItem } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import type {
     BookingDraft,
     BookingTotals,
@@ -23,6 +24,7 @@ interface Props {
     removeItem: (key: string) => void;
     setDate: (date: string | null) => void;
     setTime: (time: string | null) => void;
+    setNotes: (notes: string) => void;
     clearItems: () => void;
     submitAppointment: () => void;
     isProcessing: boolean;
@@ -45,6 +47,7 @@ export default function ShoppingCartScreen({
     removeItem,
     setDate,
     setTime,
+    setNotes,
     clearItems,
     submitAppointment,
     isProcessing,
@@ -243,6 +246,32 @@ export default function ShoppingCartScreen({
                                     </SelectContent>
                                 </Select>
                             </div>
+                        </div>
+                    </Card>
+
+                    <Card className="p-4 space-y-3">
+                        <div className="space-y-1">
+                            <h2 className="font-semibold text-sm p-0 m-0">Notas para la cita</h2>
+                            <p className="text-xs text-muted-foreground">
+                                Agrega instrucciones, preferencias o detalles importantes para el personal.
+                            </p>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="appointment-notes" className="text-sm font-light">
+                                Notas adicionales
+                            </Label>
+                            <Textarea
+                                id="appointment-notes"
+                                value={draft.notes}
+                                onChange={(event) => setNotes(event.target.value)}
+                                placeholder="Ej: prefiero a partir de las 3 pm, tengo el cabello sensible, deseo un acabado natural..."
+                                maxLength={1000}
+                                className="min-h-28 resize-none"
+                            />
+                            <p className="text-xs text-muted-foreground text-right">
+                                {draft.notes.length}/1000
+                            </p>
                         </div>
                     </Card>
 
