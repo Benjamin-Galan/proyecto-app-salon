@@ -271,6 +271,67 @@ export interface AdminDashboardStats {
     upcomingAppointments: AdminDashboardAppointmentItem[];
 }
 
+export interface AdminReportsOverview {
+    totalAppointments: number;
+    activeAppointments: number;
+    completedAppointments: number;
+    cancelledAppointments: number;
+    confirmedAppointments: number;
+    pendingAppointments: number;
+    uniqueClients: number;
+    totalRevenue: number;
+    averageTicket: number;
+    completionRate: number;
+}
+
+export interface AdminReportsDailyPoint {
+    date: string;
+    label: string;
+    appointments: number;
+    completedAppointments: number;
+    revenue: number;
+}
+
+export interface AdminReportsTypePoint {
+    type: string;
+    label: string;
+    count: number;
+    revenue: number;
+}
+
+export interface AdminReportsTopItem {
+    name: string;
+    type: string;
+    typeLabel: string;
+    count: number;
+    revenue: number;
+}
+
+export interface AdminReportsTopClient {
+    id: number | null;
+    name: string;
+    appointments: number;
+    totalSpent: number;
+    lastAppointmentDate: string | null;
+}
+
+export interface AdminReportsFilters {
+    startDate: string;
+    endDate: string;
+    days: number;
+}
+
+export interface AdminReportsStats {
+    filters: AdminReportsFilters;
+    overview: AdminReportsOverview;
+    dailySeries: AdminReportsDailyPoint[];
+    statusBreakdown: AdminDashboardStatusPoint[];
+    appointmentTypeBreakdown: AdminReportsTypePoint[];
+    topItems: AdminReportsTopItem[];
+    topClients: AdminReportsTopClient[];
+    appointments: AdminDashboardAppointmentItem[];
+}
+
 export interface AppNotification {
     id: string;
     type: string;

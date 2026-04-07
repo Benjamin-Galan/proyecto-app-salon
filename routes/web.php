@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\EmployeesController;
 use App\Http\Controllers\Admin\NotificationsController;
 use App\Http\Controllers\Admin\PackagesController;
 use App\Http\Controllers\Admin\PromotionController;
+use App\Http\Controllers\Admin\ReportsController;
 use App\Http\Controllers\Admin\ServicesController;
 use App\Http\Controllers\Client\AppointmentDetailsController;
 use App\Http\Controllers\Client\ClientAppointmentsController;
@@ -97,6 +98,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::put('notifications/{notification}/read', [NotificationsController::class, 'read'])->name('notifications.read');
             Route::delete('notifications/{notification}/delete', [NotificationsController::class, 'delete'])->name('notifications.delete');
             Route::put('notifications/read-all', [NotificationsController::class, 'readAll'])->name('notifications.readAll');
+        });
+
+        Route::prefix('admin')->name('admin.')->group(function () {
+            Route::get('reports', [ReportsController::class, 'index'])->name('reports.index');
         });
     });
 
