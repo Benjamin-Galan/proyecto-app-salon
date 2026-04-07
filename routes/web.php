@@ -91,6 +91,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::put('appointments/{appointment}/cancel', [AdminAppointmentsController::class, 'cancel'])->name('appointments.cancel');
             Route::put('appointments/{appointment}/complete', [AdminAppointmentsController::class, 'complete'])->name('appointments.complete');
             Route::delete('appointments/{appointment}/destroy', [AdminAppointmentsController::class, 'destroy'])->name('appointments.destroy');
+            Route::put('appointments/{appointment}/assign', [AdminAppointmentsController::class, 'assign'])->name('appointments.assign');
         });
 
         Route::prefix('admin')->name('admin.')->group(function () {

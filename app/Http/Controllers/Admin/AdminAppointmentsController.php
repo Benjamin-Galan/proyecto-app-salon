@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\Employee;
 use App\Models\Package;
 use App\Models\Promotion;
 use App\Notifications\AppointmentCompletedNotification;
 use App\Notifications\AppointmentConfirmedNotification;
 use App\Services\AppointmentService;
 use Exception;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class AdminAppointmentsController extends Controller
@@ -23,6 +25,7 @@ class AdminAppointmentsController extends Controller
 
     public function index()
     {
+        $stylist = Employee::all();
         $appointments = Appointment::with([
             'items.item' => function ($query) {
                 $query->morphWith([
@@ -43,6 +46,7 @@ class AdminAppointmentsController extends Controller
 
         return Inertia::render('admin/Appointments', [
             'appointments' => $appointments,
+            'employees' => $stylist
         ]);
     }
 
@@ -111,6 +115,20 @@ class AdminAppointmentsController extends Controller
         try {
             $this->appointmentService->deleteAppointment($id);
             return redirect()->back()->with('success', 'Cita eliminada correctamente');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function assign(Request $request, int $id)
+    {
+        $validated = $request->validate([
+            'stylist_id' => ['required', 'integer', 'exists:employees,id'],
+        ]);
+
+        try {
+            $this->appointmentService->assignStylist($id, (int) $validated['stylist_id']);
+            return redirect()->back()->with('success', 'Estilista asignado correctamente');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

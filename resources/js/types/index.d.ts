@@ -216,12 +216,12 @@ export interface Appointment {
     active: boolean;
     status: string;
     user_id: number;
-    employee_id: number;
+    employee_id: number | null;
     created_at: string;
     updated_at: string;
     items: AppointmentItem[];
     user: User;
-    employee: Employee;
+    employee: Employee | null;
 }
 
 export interface AdminDashboardOverview {

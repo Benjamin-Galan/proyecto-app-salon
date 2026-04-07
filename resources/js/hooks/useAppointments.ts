@@ -1,4 +1,4 @@
-import { Appointment, AppointmentRequestPayload } from "@/types"
+import { Appointment, AppointmentRequestPayload, Employee } from "@/types"
 import { useState } from "react"
 import { router } from "@inertiajs/react"
 import { route } from "ziggy-js";
@@ -15,6 +15,7 @@ export const useAppointments = () => {
     const [toggleConfirmDialog, setToggleConfirmDialog] = useState(false)
     const [toggleCancelDialog, setToggleCancelDialog] = useState(false)
     const [toggleCompleteDialog, setToggleCompleteDialog] = useState(false)
+    const [toggleAssignStylistDialog, setToggleAssignStylistDialog] = useState(false)
     const [isProcessing, setIsProcessing] = useState(false)
 
     const [appointment, setAppointment] = useState<Appointment>({} as Appointment)
@@ -35,6 +36,20 @@ export const useAppointments = () => {
         } else {
             router.get(route('client.appointments.details', id))
         }
+    }
+
+    const openAssignStylistDialog = (appointment: Appointment) => {
+        if (!appointment) {
+            throw new Error('No se ha seleccionado ninguna cita')
+        }
+
+        setAppointment(appointment)
+        setToggleAssignStylistDialog(true)
+    }
+
+    const closeAssignStylistDialog = () => {
+        setToggleAssignStylistDialog(false)
+        setAppointment({} as Appointment)
     }
 
     const openConfirmDialog = (appointment: Appointment) => {
@@ -142,6 +157,23 @@ export const useAppointments = () => {
         })
     }
 
+    const assignStylist = (
+        appointment: Appointment,
+        stylist: Employee,
+        options?: {
+            onSuccess?: (flash?: AppointmentFlash) => void
+        }
+    ) => {
+        router.put(route('admin.appointments.assign', appointment.id,), { stylist_id: stylist.id }, {
+            onSuccess: (page) => {
+                closeAssignStylistDialog()
+
+                const flash = (page.props as { flash?: AppointmentFlash }).flash
+                options?.onSuccess?.(flash)
+            }
+        })
+    }
+
     const createAppointment = (
         payload: AppointmentRequestPayload,
         clearDraft?: () => void,
@@ -199,12 +231,18 @@ export const useAppointments = () => {
         closeCompleteDialog,
         openCompleteDialog,
 
+        toggleAssignStylistDialog,
+        setToggleAssignStylistDialog,
+        closeAssignStylistDialog,
+        openAssignStylistDialog,
+
         goToDetails,
         confirmAppointment,
         cancelAppointment,
         completeAppointment,
         deleteAppointment,
         createAppointment,
+        assignStylist,
 
         appointment,
         isProcessing

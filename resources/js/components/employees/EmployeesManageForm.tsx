@@ -7,7 +7,7 @@ import { User, Mail, Phone, Briefcase, UserCheck } from "lucide-react"
 import { useForm } from "@inertiajs/react";
 import { route } from "ziggy-js";
 import { Employee } from "@/types"
-import React from "react"
+import React, { useEffect } from "react"
 
 interface Props {
     employee: Employee | null
@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default function EmployeesManageForm({ employee, isCreating, onSuccess }: Props) {
-    const { data, setData, post, put, processing, errors } = useForm<{
+    const { data, setData, post, put, processing, errors, clearErrors } = useForm<{
         name: string;
         email: string;
         phone: string;
@@ -29,6 +29,17 @@ export default function EmployeesManageForm({ employee, isCreating, onSuccess }:
         position: employee?.position || "",
         available: employee ? employee.available : true,
     })
+
+    useEffect(() => {
+        setData({
+            name: employee?.name || "",
+            email: employee?.email || "",
+            phone: employee?.phone || "",
+            position: employee?.position || "",
+            available: employee ? employee.available : true,
+        });
+        clearErrors();
+    }, [employee, isCreating, setData, clearErrors]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

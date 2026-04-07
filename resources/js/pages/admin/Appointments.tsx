@@ -10,11 +10,12 @@ import ConfirmDialog from "@/components/appointments/ConfirmDialog";
 import DeleteDialog from "@/components/appointments/DeleteDialog";
 import CompleteDialog from "@/components/appointments/CompleteDialog";
 import HeaderContent from "@/components/HeaderContent";
+import AssignStylistDialog from "@/components/appointments/AssingStylistDialog";
 
 import ProductsLayout from "@/layouts/admin/ProductsLayout";
 import AppLayout from "@/layouts/app-layout";
 
-import { Appointment, BreadcrumbItem } from "@/types";
+import { Appointment, BreadcrumbItem, Employee } from "@/types";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -24,8 +25,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Appointments() {
-    const { appointments = [] } = usePage().props as {
+    const { appointments = [], employees = [] } = usePage().props as {
         appointments?: Appointment[]
+        employees?: Employee[]
     }
 
     const { errorAlert, successAlert, warningAlert } = useAlerts()
@@ -40,6 +42,10 @@ export default function Appointments() {
         toggleCompleteDialog,
         openCompleteDialog,
         closeCompleteDialog,
+        toggleAssignStylistDialog,
+        openAssignStylistDialog,
+        closeAssignStylistDialog,
+        assignStylist,
         confirmAppointment,
         completeAppointment,
         deleteAppointment,
@@ -131,11 +137,40 @@ export default function Appointments() {
         }
     }
 
+    const handleOpenAssignStylistDialog = (appointment: Appointment) => {
+        try {
+            if (appointment) {
+                openAssignStylistDialog(appointment)
+            }
+        } catch (error: any) {
+            warningAlert(error.message)
+        }
+    }
+
+    const handleAssignStylist = (appointment: Appointment, stylist: Employee) => {
+        try {
+            assignStylist(appointment, stylist, {
+                onSuccess: (flash) => {
+                    if (flash?.success) {
+                        successAlert(flash.success)
+                    }
+
+                    if (flash?.error) {
+                        errorAlert(flash.error)
+                    }
+                }
+            })
+        } catch (error: any) {
+            errorAlert(error.message)
+        }
+    }
+
     const columns = appointmentsTableColums({
         onView: goToDetails,
         onConfirm: handleOpenConfirmDialog,
         onCancel: handleOpenDeleteDialog,
-        onComplete: handleOpenCompleteDialog
+        onComplete: handleOpenCompleteDialog,
+        onAssignStylist: handleOpenAssignStylistDialog
     })
 
     return (
@@ -177,6 +212,14 @@ export default function Appointments() {
                 onOpenChange={closeCompleteDialog}
                 onComplete={handleComplete}
                 appointment={appointment}
+            />
+
+            <AssignStylistDialog
+                open={toggleAssignStylistDialog}
+                onOpenChange={closeAssignStylistDialog}
+                onConfirm={handleAssignStylist}
+                appointment={appointment}
+                stylists={employees}
             />
         </AppLayout>
     )

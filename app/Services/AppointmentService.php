@@ -29,6 +29,10 @@ class AppointmentService
         //Buscar la cita para ver si existe en la base de datos
         $appointment = $this->getAppointmentById($id);
 
+        if (!$appointment->employee_id) {
+            throw new \Exception('Debes asignar un empleado antes de confirmar la cita');
+        }
+
         //Verificar si la cita ya esta confirmada
         if ($appointment->status === 'Confirmada') {
             throw new \Exception('La cita ya esta confirmada');
@@ -178,5 +182,29 @@ class AppointmentService
 
             return $appointment;
         });
+    }
+
+    public function assignStylist(int $id, int $employeeId)
+    {
+        $appointment = $this->getAppointmentById($id);
+        $employee = Employee::where('id', $employeeId)->first();
+
+        if (!$employee) {
+            throw new Exception('No se ha encontrado el estilista');
+        }
+
+        if ($appointment->status === 'Completada') {
+            throw new Exception('La cita ya esta completada, no se puede asignar ni cambiar el estilista');
+        }
+
+        if ($appointment->employee_id === $employeeId) {
+            throw new Exception('La cita ya tiene asignado a este estilista');
+        }
+
+        $appointment->update([
+            'employee_id' => $employeeId,
+        ]);
+
+        return $appointment;
     }
 }
