@@ -194,13 +194,23 @@ export default function Dashboard() {
                         </CardHeader>
                         <CardContent className="space-y-3">
                             {stats.upcomingAppointments.length > 0 ? (
-                                stats.upcomingAppointments.map((appointment) => (
-                                    <AppointmentListItem
-                                        key={appointment.id}
-                                        appointment={appointment}
-                                        href={route("admin.appointments.show", appointment.id)}
-                                    />
-                                ))
+                                <>
+                                    {stats.upcomingAppointments.slice(0, 5).map((appointment) => (
+                                        <AppointmentListItem
+                                            key={appointment.id}
+                                            appointment={appointment}
+                                            href={route("admin.appointments.show", appointment.id)}
+                                        />
+                                    ))}
+                                    {stats.upcomingAppointments.length > 5 && (
+                                        <Button asChild variant="ghost" className="w-full text-sm text-muted-foreground hover:text-foreground">
+                                            <Link href={route("admin.appointments.index")}>
+                                                Ver todas las citas ({stats.upcomingAppointments.length})
+                                                <ArrowRight className="ml-2 h-4 w-4" />
+                                            </Link>
+                                        </Button>
+                                    )}
+                                </>
                             ) : (
                                 <EmptyState
                                     title="No hay próximas citas"
@@ -220,13 +230,23 @@ export default function Dashboard() {
                         </CardHeader>
                         <CardContent className="space-y-3">
                             {stats.recentCompletedAppointments.length > 0 ? (
-                                stats.recentCompletedAppointments.map((appointment) => (
-                                    <AppointmentListItem
-                                        key={appointment.id}
-                                        appointment={appointment}
-                                        href={route("admin.appointments.show", appointment.id)}
-                                    />
-                                ))
+                                <>
+                                    {stats.recentCompletedAppointments.slice(0, 5).map((appointment) => (
+                                        <AppointmentListItem
+                                            key={appointment.id}
+                                            appointment={appointment}
+                                            href={route("admin.appointments.show", appointment.id)}
+                                        />
+                                    ))}
+                                    {stats.recentCompletedAppointments.length > 5 && (
+                                        <Button asChild variant="ghost" className="w-full text-sm text-muted-foreground hover:text-foreground">
+                                            <Link href={route("admin.appointments.index")}>
+                                                Ver todas ({stats.recentCompletedAppointments.length})
+                                                <ArrowRight className="ml-2 h-4 w-4" />
+                                            </Link>
+                                        </Button>
+                                    )}
+                                </>
                             ) : (
                                 <EmptyState
                                     title="Sin citas completadas"

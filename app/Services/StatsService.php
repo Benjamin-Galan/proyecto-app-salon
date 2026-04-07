@@ -56,10 +56,12 @@ class StatsService
     {
         $today = now()->startOfDay();
         $monthStart = $today->copy()->startOfMonth();
+        $monthEnd = $today->copy()->endOfMonth();
 
         return [
             'today' => $today,
             'monthStart' => $monthStart,
+            'monthEnd' => $monthEnd,
             'seriesStart' => $monthStart->copy()->subMonths(5),
         ];
     }
@@ -119,7 +121,7 @@ class StatsService
         $completedAppointmentsThisMonth = $this->getCompletedAppointmentsThisMonth(
             $completedAppointments,
             $dates['monthStart'],
-            $dates['today']
+            $dates['monthEnd']
         );
 
         $revenueToday = $this->getRevenueToday($completedAppointments, $dates['today']);
@@ -131,7 +133,7 @@ class StatsService
         return [
             'revenueToday' => $revenueToday,
             'revenueMonth' => $revenueMonth,
-            'newClientsMonth' => $this->getNewClientsThisMonth($newClients, $dates['monthStart'], $dates['today']),
+            'newClientsMonth' => $this->getNewClientsThisMonth($newClients, $dates['monthStart'], $dates['monthEnd']),
             'attendedClientsMonth' => $completedAppointmentsThisMonth->pluck('user_id')->filter()->unique()->count(),
             'completedAppointmentsMonth' => $completedAppointmentsMonth,
             'averageTicketMonth' => $completedAppointmentsMonth > 0
@@ -171,10 +173,10 @@ class StatsService
     private function getCompletedAppointmentsThisMonth(
         Collection $completedAppointments,
         Carbon $monthStart,
-        Carbon $today
+        Carbon $monthEnd
     ): Collection {
         return $completedAppointments->filter(
-            fn (Appointment $appointment) => $this->isDateWithinRange($appointment->date, $monthStart, $today)
+            fn (Appointment $appointment) => $this->isDateWithinRange($appointment->date, $monthStart, $monthEnd)
         );
     }
 
@@ -188,10 +190,10 @@ class StatsService
         );
     }
 
-    private function getNewClientsThisMonth(Collection $newClients, Carbon $monthStart, Carbon $today): int
+    private function getNewClientsThisMonth(Collection $newClients, Carbon $monthStart, Carbon $monthEnd): int
     {
         return $newClients->filter(
-            fn (User $user) => $user->created_at->betweenIncluded($monthStart, $today->copy()->endOfDay())
+            fn (User $user) => $user->created_at->betweenIncluded($monthStart, $monthEnd->copy()->endOfDay())
         )->count();
     }
 
@@ -220,13 +222,14 @@ class StatsService
     private function getStatusCounts(): Collection
     {
         return Appointment::query()
+            ->where('status', '!=', 'Cancelada')
             ->get(['status'])
             ->countBy('status');
     }
 
     private function getStatusBreakdown(Collection $statusCounts): array
     {
-        return collect(['Pendiente', 'Confirmada', 'Completada', 'Cancelada'])
+        return collect(['Pendiente', 'Confirmada', 'Completada'])
             ->map(fn (string $status) => [
                 'status' => $status,
                 'count' => (int) ($statusCounts[$status] ?? 0),
