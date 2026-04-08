@@ -57,13 +57,13 @@ export default function ServicesFilters({ categories }: FiltersProps) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
                 {/* Búsqueda */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium">Buscar Cliente</label>
+                    <label className="text-sm font-medium">Buscar Servicio</label>
                     <div className="relative">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <Input
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Nombre del cliente..."
+                            placeholder="Nombre del servicio..."
                             className="pl-10"
                         />
                     </div>

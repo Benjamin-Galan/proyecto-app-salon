@@ -4,6 +4,7 @@ import { Card, CardTitle } from "@/components/ui/card"
 import ServiceOptions from "./ServicesOptions"
 import Pagination from "@/components/Pagination"
 import { cardStyle, imageStyle } from "@/utils/servicesCardStyles"
+import { Badge } from "@/components/ui/badge"
 
 import { useState } from "react"
 import ServiceDetailsDialog from "./ServiceDetailsDialog"
@@ -47,6 +48,10 @@ export default function ServicesList({ services, onEdit, onDelete }: ServicesPro
                 alt={service.name}
                 className="w-full object-cover"
               />
+
+              <Badge variant="secondary" className="absolute bottom-2 right-2">
+                {service.category?.name}
+              </Badge>
             </div>
 
             <article className="px-2.5 py-1.5 space-y-1.5">
