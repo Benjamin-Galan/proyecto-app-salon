@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\Package;
 use App\Models\Promotion;
+use App\Notifications\AppointmentCompletedNotification;
 use App\Services\AppointmentService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -62,6 +63,9 @@ class CheckInController extends Controller
             $appointment->update([
                 'status' => 'Completada'
             ]);
+
+            // Notificar al cliente que su cita ha sido completada
+            $appointment->user->notify(new AppointmentCompletedNotification($appointment, $appointment->user));
 
             return response()->json([
                 'success' => true,
