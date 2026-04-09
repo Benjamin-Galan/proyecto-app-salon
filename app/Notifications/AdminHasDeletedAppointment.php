@@ -10,17 +10,33 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class AppointmentCompletedNotification extends Notification
+class AdminHasDeletedAppointment extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
+    public array $appointmentData;
+
+    /**
+     * Create a new notification instance.
+     */
     public function __construct(
-        public Appointment $appointment,
+        Appointment $appointment,
         public User $customer,
     ) {
+        $date = $appointment->date?->format('d-m-Y') ?? (string) $appointment->date;
+        $dateText = $date === now()->format('d-m-Y') ? 'hoy' : $date;
+
+        $this->appointmentData = [
+            'id' => $appointment->id,
+            'code' => $appointment->code,
+            'date' => $date,
+            'dateText' => $dateText,
+            'time' => (string) $appointment->time,
+            'total' => $appointment->total,
+        ];
     }
 
     /**
@@ -41,18 +57,16 @@ class AppointmentCompletedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'type' => 'appointment_completed',
-            'title' => 'Cita completada',
-            'date' => $this->appointment->date?->format('Y-m-d') ?? (string) $this->appointment->date,
-            'message' => sprintf(
-                'Tu cita de hoy ha finalizado. Gracias por su preferencia.',
-            ),
-            'appointment_id' => $this->appointment->id,
-            'appointment_code' => $this->appointment->code,
+            'type' => 'appointment_deleted',
+            'title' => 'Cita eliminada',
+            'date' => $this->appointmentData['date'],
+            'message' => "Tu cita para {$this->appointmentData['dateText']} a las {$this->appointmentData['time']} ha sido eliminada por el administrador.",
+            'appointment_id' => $this->appointmentData['id'],
+            'appointment_code' => $this->appointmentData['code'],
             'customer_id' => $this->customer->id,
             'customer_name' => $this->customer->name,
-            'time' => $this->appointment->time,
-            'total' => $this->appointment->total,
+            'time' => $this->appointmentData['time'],
+            'total' => $this->appointmentData['total'],
             'created_at' => now()->toDateTimeString(),
         ];
     }

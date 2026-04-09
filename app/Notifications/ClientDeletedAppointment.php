@@ -10,17 +10,29 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class AppointmentCompletedNotification extends Notification
+class ClientDeletedAppointment extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
+    public array $appointmentData;
+
+    /**
+     * Create a new notification instance.
+     */
     public function __construct(
-        public Appointment $appointment,
+        Appointment $appointment,
         public User $customer,
     ) {
+        $this->appointmentData = [
+            'id' => $appointment->id,
+            'code' => $appointment->code,
+            'date' => $appointment->date?->format('Y-m-d') ?? (string) $appointment->date,
+            'time' => (string) $appointment->time,
+            'total' => $appointment->total,
+        ];
     }
 
     /**
@@ -33,6 +45,8 @@ class AppointmentCompletedNotification extends Notification
         return ['database', 'broadcast'];
     }
 
+
+
     /**
      * Get the array representation of the notification.
      *
@@ -41,18 +55,21 @@ class AppointmentCompletedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'type' => 'appointment_completed',
-            'title' => 'Cita completada',
-            'date' => $this->appointment->date?->format('Y-m-d') ?? (string) $this->appointment->date,
+            'type' => 'appointment_deleted',
+            'title' => 'Cita cancelada',
             'message' => sprintf(
-                'Tu cita de hoy ha finalizado. Gracias por su preferencia.',
+                '%s canceló una cita para %s a las %s.',
+                $this->customer->name,
+                $this->appointmentData['date'],
+                $this->appointmentData['time'],
             ),
-            'appointment_id' => $this->appointment->id,
-            'appointment_code' => $this->appointment->code,
+            'appointment_id' => $this->appointmentData['id'],
+            'appointment_code' => $this->appointmentData['code'],
             'customer_id' => $this->customer->id,
             'customer_name' => $this->customer->name,
-            'time' => $this->appointment->time,
-            'total' => $this->appointment->total,
+            'date' => $this->appointmentData['date'],
+            'time' => $this->appointmentData['time'],
+            'total' => $this->appointmentData['total'],
             'created_at' => now()->toDateTimeString(),
         ];
     }

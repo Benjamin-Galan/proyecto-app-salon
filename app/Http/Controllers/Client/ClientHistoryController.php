@@ -43,14 +43,4 @@ class ClientHistoryController extends Controller
             'appointments' => $appointments,
         ]);
     }
-
-    public function destroy(int $id)
-    {
-        try {
-            $this->appointmentService->deleteAppointment($id);
-            return redirect()->back()->with('success', 'Cita eliminada correctamente');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
 }

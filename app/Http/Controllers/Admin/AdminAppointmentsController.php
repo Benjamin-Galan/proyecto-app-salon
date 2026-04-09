@@ -7,6 +7,7 @@ use App\Models\Appointment;
 use App\Models\Employee;
 use App\Models\Package;
 use App\Models\Promotion;
+use App\Notifications\AdminHasDeletedAppointment;
 use App\Notifications\AppointmentCompletedNotification;
 use App\Notifications\AppointmentConfirmedNotification;
 use App\Services\AppointmentService;
@@ -103,7 +104,14 @@ class AdminAppointmentsController extends Controller
     public function complete(int $id)
     {
         try {
-            $this->appointmentService->completeAppointment($id);
+            $appointment = $this->appointmentService->completeAppointment($id);
+            $appointment->load('user');
+
+            if ($appointment->user) {
+                $appointment->user->notify(
+                    new AppointmentCompletedNotification($appointment, $appointment->user)
+                );
+            }
             return redirect()->back()->with('success', 'Cita completada correctamente');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -113,7 +121,14 @@ class AdminAppointmentsController extends Controller
     public function destroy(int $id)
     {
         try {
-            $this->appointmentService->deleteAppointment($id);
+            $appointment = $this->appointmentService->deleteAppointment($id);
+            $appointment->load('user');
+
+            if ($appointment->user) {
+                $appointment->user->notify(
+                    new AdminHasDeletedAppointment($appointment, $appointment->user)
+                );
+            }
             return redirect()->back()->with('success', 'Cita eliminada correctamente');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
