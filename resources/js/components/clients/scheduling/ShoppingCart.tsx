@@ -67,13 +67,58 @@ export default function ShoppingCartScreen({
         });
     }, [draft.date, uncompleted]);
 
-    const takenTime = new Set(
-        appointmentsByDate.map((appointment) => formatTime(appointment.time))
-    )
+    // Obtenemos la cantidad total de empleados que están disponibles
+    const activeEmployeesCount = employees.filter((e) => e.available).length;
+    const salonCapacity = Math.max(1, activeEmployeesCount);
 
-    const availableEmployees = employees.some((e) => e.available)
+    // Creamos un arreglo que representa los 1440 minutos del día para calcular la ocupación real
+    const minuteOccupancy = useMemo(() => {
+        const occupancy = new Array(1440).fill(0);
+
+        appointmentsByDate.forEach((appointment) => {
+            const timeStr = formatTime(appointment.time); // ej: "09:00" o "14:19"
+            if (timeStr === "-") return;
+
+            const [hours, minutes] = timeStr.split(":").map(Number);
+            const startMin = hours * 60 + minutes;
+            const duration = appointment.duration || 30; // fallback por si no hay num
+            const endMin = startMin + duration;
+
+            // Ocupamos los minutos que dure la cita 
+            for (let m = startMin; m < endMin && m < 1440; m++) {
+                occupancy[m]++;
+            }
+        });
+
+        return occupancy;
+    }, [appointmentsByDate]);
+
+    // Función auxiliar para verificar si cabe la nueva cita
+    const isTimeSlotAvailable = (slotValue: string) => {
+        const [hours, minutes] = slotValue.split(":").map(Number);
+        const startMin = hours * 60 + minutes;
+
+        // Si el cliente no ha seleccionado productos usamos 30 mins base para mostrar previas
+        const requiredDuration = totals.durationMin > 0 ? totals.durationMin : 30;
+        const endMin = startMin + requiredDuration;
+
+        for (let m = startMin; m < endMin && m < 1440; m++) {
+            if (minuteOccupancy[m] >= salonCapacity) {
+                return false; // Choca en este minuto con el cupo máximo
+            }
+        }
+
+        return true; // Hay espacio continuo para toda la duración
+    };
     const today = new Date();
     const minDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+    console.log(timeSlots, 'timeSlots')
+    console.log(salonCapacity, 'salonCapacity')
+    console.log(draft.date, 'draft.date')
+    console.log(appointmentsByDate, 'appointmentsByDate')
+    console.log(employees, 'employees')
+    console.log(activeEmployeesCount, 'activeEmployeesCount')
 
     return (
         <div className="space-y-4">
@@ -238,7 +283,7 @@ export default function ShoppingCartScreen({
                                             <SelectItem
                                                 key={slot.value}
                                                 value={slot.value}
-                                                disabled={takenTime.has(slot.value) && !availableEmployees}
+                                                disabled={!isTimeSlotAvailable(slot.value)}
                                             >
                                                 {slot.label}
                                             </SelectItem>
