@@ -8,7 +8,9 @@ import { useNotifications } from "@/hooks/useNotifications";
 import AppLayout from "@/layouts/app-layout";
 import { AppNotification, BreadcrumbItem, PaginatedNotification } from "@/types";
 import { Head, usePage } from "@inertiajs/react";
-import { BellRing, CheckCheck, Inbox } from "lucide-react";
+import { BellRing, CheckCheck } from "lucide-react";
+import HeaderContent from "@/components/HeaderContent";
+import ProductsLayout from "@/layouts/admin/ProductsLayout";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -102,56 +104,17 @@ export default function Notifications() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Notificaciones" />
 
-            <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-4 md:p-8">
-                <header className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-                    <div className="space-y-1">
-                        <h1 className="text-3xl font-bold tracking-tight">Notificaciones del administrador</h1>
-                        <p className="text-muted-foreground">
-                            Revisa avisos operativos y novedades importantes del salón.
-                        </p>
-                    </div>
-
-                    <Button onClick={handleMarkAllAsRead} disabled={notificationStats.unread === 0}>
-                        <CheckCheck className="mr-2 h-4 w-4" />
-                        Marcar todas como leídas
-                    </Button>
-                </header>
-
-                <div className="grid gap-4 md:grid-cols-3">
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Total</CardTitle>
-                            <BellRing className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-3xl font-semibold">{notificationStats.total}</div>
-                            <CardDescription>Todas las notificaciones del panel.</CardDescription>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">No leídas</CardTitle>
-                            <Inbox className="h-4 w-4 text-amber-500" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-3xl font-semibold">{notificationStats.unread}</div>
-                            <CardDescription>Notificaciones que siguen pendientes.</CardDescription>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Leídas</CardTitle>
-                            <CheckCheck className="h-4 w-4 text-emerald-500" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-3xl font-semibold">{notificationStats.read}</div>
-                            <CardDescription>Notificaciones ya revisadas.</CardDescription>
-                        </CardContent>
-                    </Card>
-                </div>
-
+            <ProductsLayout
+                header={
+                    <HeaderContent
+                        titleIcon={<BellRing className="w-6 h-6 text-purple-600" />}
+                        buttonIcon={<CheckCheck className="w-4 h-4" />}
+                        sectionTitle="Notificaciones"
+                        onOpenModal={handleMarkAllAsRead}
+                        showActionButtons={true}
+                    />
+                }
+            >
                 <Card>
                     <CardHeader>
                         <CardTitle>Bandeja de notificaciones</CardTitle>
@@ -162,8 +125,18 @@ export default function Notifications() {
                     <CardContent className="space-y-6">
                         <Tabs defaultValue="unread" className="w-full">
                             <TabsList className="grid w-full grid-cols-2">
-                                <TabsTrigger value="unread">No leídas</TabsTrigger>
-                                <TabsTrigger value="read">Leídas</TabsTrigger>
+                                <TabsTrigger value="unread" className="flex items-center gap-2">
+                                    No leídas
+                                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">
+                                        {notificationStats.unread}
+                                    </span>
+                                </TabsTrigger>
+                                <TabsTrigger value="read" className="flex items-center gap-2">
+                                    Leídas
+                                    <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                                        {notificationStats.read}
+                                    </span>
+                                </TabsTrigger>
                             </TabsList>
 
                             <TabsContent value="unread" className="pt-4">
@@ -193,7 +166,8 @@ export default function Notifications() {
                         />
                     </CardContent>
                 </Card>
-            </div>
+            </ProductsLayout>
         </AppLayout>
     );
 }
+

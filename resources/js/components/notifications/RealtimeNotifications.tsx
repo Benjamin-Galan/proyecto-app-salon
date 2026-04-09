@@ -45,6 +45,29 @@ export default function RealtimeNotifications() {
                     });
                     break;
 
+                case "App\\Notifications\\AppointmentCompletedNotification":
+                    toast.success(notification.title ?? "Cita completada", {
+                        description:
+                            notification.message ?? "Tu cita ha finalizado.",
+                        action: {
+                            label: "Ver",
+                            onClick: () => console.log(notification),
+                        }
+                    });
+                    break;
+
+                case "App\\Notifications\\AdminHasDeletedAppointment":
+                case "App\\Notifications\\ClientDeletedAppointment":
+                    toast.info(notification.title ?? "Cita cancelada", {
+                        description:
+                            notification.message ?? "Una cita ha sido cancelada.",
+                        action: {
+                            label: "Ver",
+                            onClick: () => console.log(notification),
+                        }
+                    });
+                    break;
+
                 default:
                     console.log('cae en default')
                     toast.success(notification.title ?? "Nueva notificacion", {
