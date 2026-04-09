@@ -12,7 +12,9 @@ interface HeaderContentProps {
 }
 
 export default function HeaderContent({ titleIcon, buttonIcon, sectionTitle, onOpenModal, onCategories, showActionButtons }: HeaderContentProps) {
-
+    const title = sectionTitle === "Notificaciones" ? "Notificaciones" : `Gestión de ${sectionTitle}`;
+    const description = sectionTitle === "Notificaciones" ? "Revisa avisos operativos y novedades importantes del salón." : `Administra la disponibilidad de tus ${sectionTitle}.`;
+    const buttonText = sectionTitle === "Notificaciones" ? "Marcar todas como leídas" : `Agregar ${sectionTitle}`;
     return (
         <div className="w-full">
             <div className="flex flex-col lg:flex-row md:justify-between items-center rounded-xl gap-4">
@@ -21,8 +23,8 @@ export default function HeaderContent({ titleIcon, buttonIcon, sectionTitle, onO
                         {titleIcon}
                     </div>
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Gestión de {sectionTitle}</h1>
-                        <p className="text-gray-600 dark:text-gray-400">Administra la disponibilidad de tus {sectionTitle}.</p>
+                        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{title}</h1>
+                        <p className="text-gray-600 dark:text-gray-400">{description}</p>
                     </div>
                 </div>
 
@@ -31,7 +33,7 @@ export default function HeaderContent({ titleIcon, buttonIcon, sectionTitle, onO
                         <div className="flex flex-col md:flex-row justify-center gap-2">
                             <Button variant="default" onClick={onOpenModal}>
                                 {buttonIcon}
-                                Agregar {sectionTitle}
+                                {buttonText}
                             </Button>
 
                             {onCategories && sectionTitle === "Servicios" && (
