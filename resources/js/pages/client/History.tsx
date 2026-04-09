@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout"
-import { Appointment, BreadcrumbItem, SharedData, PaginatedAppointment } from "@/types"
+import { Appointment, BreadcrumbItem, PaginatedAppointment } from "@/types"
 import { Head, usePage } from "@inertiajs/react"
 import { useAppointments } from "@/hooks/useAppointments"
 import { useMemo, useState } from "react"
@@ -24,7 +24,6 @@ function normalizeDate(date: string) {
     return date.includes("T") ? date.split("T")[0] : date
 }
 
-
 export default function History() {
     const [status, setStatus] = useState("all")
     const [startDate, setStartDate] = useState("")
@@ -36,27 +35,12 @@ export default function History() {
         appointments: PaginatedAppointment
     }
 
-    const { auth } = usePage<SharedData>().props;
-    const user = auth?.user;
-    const role = user?.role;
-
-    const getRole = () => {
-        if (role === 'cliente') {
-            return 'client'
-        }
-
-        return role
-    }
-
-    console.log(appointments, 'appointments from history')
-
-
     const { goToDetails, deleteAppointment } = useAppointments();
     const { errorAlert, successAlert } = useAlerts();
 
     const handleDeleteAppointment = (appointment: Appointment) => {
         try {
-            deleteAppointment(appointment, getRole(), {
+            deleteAppointment(appointment, 'client', {
                 onSuccess: (flash) => {
                     if (flash?.success) {
                         successAlert(flash.success)
@@ -68,7 +52,7 @@ export default function History() {
                 }
             })
         } catch (error: any) {
-            errorAlert(error.message)
+            errorAlert(error)
         }
     }
 

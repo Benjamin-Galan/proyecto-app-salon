@@ -18,22 +18,6 @@ export default function DetailsIncludeFooter({ appointment }: Props) {
                     {appointment?.notes || "No notes provided"}
                 </div>
             </div>
-
-            {/* Actions */}
-            <div className="flex flex-col items-center gap-3">
-                <Button
-                    className="w-full rounded-full py-6 text-base font-semibold 
-                               bg-rose-400 hover:bg-rose-500 text-white shadow-md"
-                >
-                    Reschedule
-                </Button>
-
-                <button
-                    className="text-sm text-muted-foreground transition hover:text-red-500 dark:hover:text-red-400"
-                >
-                    Cancel appointment
-                </button>
-            </div>
         </div>
     );
 }
