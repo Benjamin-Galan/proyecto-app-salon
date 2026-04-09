@@ -120,6 +120,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::prefix('client')->name('client.')->group(function () {
             Route::get('appointments', [ClientAppointmentsController::class, 'index'])->name('appointments.index');
             Route::get('appointments/{appointment}/details', [AppointmentDetailsController::class, 'show'])->name('appointments.details');
+            Route::delete('appointments/{appointment}/destroy', [ClientAppointmentsController::class, 'destroy'])->name('appointments.destroy');
+
         });
 
         Route::prefix('client')->name('client.')->group(function () {
@@ -131,7 +133,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::put('notifications/{notification}/read', [ClientNotificationsController::class, 'read'])->name('notifications.read');
             Route::delete('notifications/{notification}/delete', [ClientNotificationsController::class, 'delete'])->name('notifications.delete');
             Route::put('notifications/read-all', [ClientNotificationsController::class, 'markAllAsRead'])->name('notifications.readAll');
-            Route::delete('appointments/{appointment}/destroy', [ClientHistoryController::class, 'destroy'])->name('appointments.destroy');
         });
     });
 });
