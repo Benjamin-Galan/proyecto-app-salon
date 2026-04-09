@@ -1,4 +1,4 @@
-import { usePage } from "@inertiajs/react";
+import { usePage, router } from "@inertiajs/react";
 import { toast } from "sonner";
 import { useEcho } from "@laravel/echo-react";
 import type { SharedData } from "@/types";
@@ -26,33 +26,21 @@ export default function RealtimeNotifications() {
                 case "App\\Notifications\\AppointmentCreatedNotification":
                     toast.success(notification.title ?? "Nueva cita", {
                         description:
-                            notification.message ?? "Se registro una nueva cita.",
-                        action: {
-                            label: "Ver",
-                            onClick: () => console.log(notification),
-                        }
+                            notification.message ?? "Se registro una nueva cita."
                     });
                     break;
 
                 case "App\\Notifications\\AppointmentConfirmedNotification":
                     toast.success(notification.title ?? "Cita confirmada", {
                         description:
-                            notification.message ?? "Tu cita fue confirmada.",
-                        action: {
-                            label: "Ver",
-                            onClick: () => console.log(notification),
-                        }
+                            notification.message ?? "Tu cita fue confirmada."
                     });
                     break;
 
                 case "App\\Notifications\\AppointmentCompletedNotification":
                     toast.success(notification.title ?? "Cita completada", {
                         description:
-                            notification.message ?? "Tu cita ha finalizado.",
-                        action: {
-                            label: "Ver",
-                            onClick: () => console.log(notification),
-                        }
+                            notification.message ?? "Tu cita ha finalizado."
                     });
                     break;
 
@@ -60,11 +48,7 @@ export default function RealtimeNotifications() {
                 case "App\\Notifications\\ClientDeletedAppointment":
                     toast.info(notification.title ?? "Cita cancelada", {
                         description:
-                            notification.message ?? "Una cita ha sido cancelada.",
-                        action: {
-                            label: "Ver",
-                            onClick: () => console.log(notification),
-                        }
+                            notification.message ?? "Una cita ha sido cancelada."
                     });
                     break;
 
@@ -75,6 +59,10 @@ export default function RealtimeNotifications() {
                             notification.message ?? "Tienes una nueva actualizacion.",
                     });
             }
+
+            // Refrescar los datos de la página actual para obtener las citas actualizadas
+            // y actualizar el conteo de notificaciones sin perder el scroll del usuario.
+            router.reload({ preserveScroll: true, preserveState: true } as any);
         },
         [userId],
     );
