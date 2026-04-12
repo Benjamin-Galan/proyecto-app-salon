@@ -30,23 +30,26 @@ export default function Header() {
   }
 
   return (
-    <div className={`header_container ${scrolled ? "scrolled" : ""} hidden lg:flex`}>
-      <div className="header_logo">
-        <img src="/logo.png" alt="Logo de la empresa" />
-        <a href="/" className="header_text">
+    <div className={`fixed top-0 left-0 w-full z-20 justify-between items-center px-8 py-4 font-medium transition-all duration-300 hidden lg:flex ${scrolled ? "backdrop-blur-md bg-white/60 shadow-sm text-[#141414]" : "bg-transparent text-white"}`}>
+      <div className="flex items-center gap-2 text-[18px]">
+        <img src="/logo.png" alt="Logo de la empresa" className="w-8 h-8" />
+        <a href="/" className="block">
           Uñas&Mechas
         </a>
       </div>
 
-      <nav className="header_nav">
+      <nav className="flex justify-between gap-6"
+        onMouseEnter={() => setScrolled(true)}
+        onMouseLeave={() => setScrolled(false)}
+      >
         {navLinks.map((link, index) => (
-          <a key={index} href={link.path} className="header_links">
+          <a key={index} href={link.path} className="text-shadow-lg">
             {link.name}
           </a>
         ))}
       </nav>
 
-      <button className="header_button" onClick={handleNavigate}>
+      <button className="border border-current rounded-lg px-4 py-1.5 transition-colors duration-300 hover:bg-[#fff8dc]/40 hover:cursor-pointer" onClick={handleNavigate}>
         Iniciar Sesión
       </button>
     </div>

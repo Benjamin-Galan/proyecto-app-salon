@@ -13,6 +13,8 @@
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
 
+    --font-script: 'Dancing Script', cursive;
+
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
@@ -61,9 +63,9 @@
     --color-sidebar-ring: var(--sidebar-ring);
 
     /* Beauty Theme Colors */
-    --color-beauty-light: oklch(0.96 0.01 350); 
+    --color-beauty-light: oklch(0.96 0.01 350);
     --color-beauty-soft: oklch(0.92 0.02 350);
-    --color-beauty-medium: oklch(0.65 0.15 320); 
+    --color-beauty-medium: oklch(0.65 0.15 320);
     --color-beauty-deep: oklch(0.45 0.18 320);
     --color-beauty-dark: oklch(0.30 0.15 320);
 }
@@ -102,6 +104,13 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.87 0 0);
+
+    /* Beauty Theme Colors */
+    --color-beauty-light: oklch(0.96 0.01 350);
+    --color-beauty-soft: oklch(0.92 0.02 350);
+    --color-beauty-medium: oklch(0.65 0.15 320);
+    --color-beauty-deep: oklch(0.45 0.18 320);
+    --color-beauty-dark: oklch(0.30 0.15 320);
 }
 
 .dark {

@@ -22,7 +22,7 @@ export default function Hero() {
 
         {/* Descripción */}
         <p className="hero__description">
-          Descubre la experiencia de belleza definitiva con nuestros servicios exclusivos y profesionales diseñados para
+          Servicios exclusivos y profesionales diseñados para
           realzar tu belleza natural.
         </p>
 

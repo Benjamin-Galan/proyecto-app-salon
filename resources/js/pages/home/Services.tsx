@@ -13,57 +13,57 @@ export default function Services({ services }: ServicesProps) {
   const { handleNavigate } = gotoRegister()
 
   return (
-    <section className="services-section">
+    <section className="relative py-20 bg-gradient-to-b from-beauty-light to-[#f3f4f5]">
       {/* Elementos decorativos de fondo */}
-      <div className="services-background">
-        <div className="circle-1"></div>
-        <div className="circle-2"></div>
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[10%] right-[5%] w-64 h-64 rounded-full bg-beauty-light blur-[100px] opacity-60"></div>
+        <div className="absolute bottom-[10%] left-[5%] w-64 h-64 rounded-full bg-beauty-soft blur-[100px] opacity-60"></div>
       </div>
 
-      <div className="services-container">
+      <div className="relative z-10 max-w-7xl mx-auto px-4">
         {/* Título de sección con decoración */}
-        <div className="services-header">
-          <div className="decoration-wrapper">
-            <div className="line"></div>
-            <div className="line"></div>
+        <div className="flex flex-col items-center justify-center mb-16 text-center">
+          <div className="flex items-center justify-center mb-3 gap-1">
+            <div className="h-px w-8 bg-beauty-medium"></div>
+            <div className="h-px w-8 bg-beauty-medium"></div>
           </div>
-          <h2 className="title">Nuestros Servicios</h2>
-          <p className="subtitle">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Nuestros Servicios</h2>
+          <p className="mt-3 text-gray-500 max-w-xl mx-auto">
             Descubre nuestra exclusiva gama de servicios diseñados para realzar tu belleza natural
           </p>
         </div>
 
         {/* Grid de servicios con diseño mejorado */}
-        <div className="services-grid">
+        <div className="grid grid-cols-1 sm:grid-cols-2 min-[800px]:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8">
           {services.slice(0, visibleCount).map((servicio) => (
             <div
               key={servicio.id}
-              className="service-card"
+              className="relative bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-row sm:flex-col transition-all duration-300 hover:shadow-md"
               onMouseEnter={() => setHoveredCard(servicio.id)}
               onMouseLeave={() => setHoveredCard(null)}
             >
               {/* Imagen con efecto hover */}
-              <div className="image-container">
+              <div className="w-32 aspect-video sm:w-full sm:aspect-[4/3] overflow-hidden shrink-0">
                 <img
                   src={`/storage/services/${servicio.image}`}
                   alt={servicio.name}
-                  className={hoveredCard === servicio.id ? "zoomed" : ""}
+                  className={`w-full h-full object-cover transition-transform duration-700 ease-out ${hoveredCard === servicio.id ? "scale-110" : ""}`}
                 />
               </div>
 
               {/* Contenido */}
-              <div className="card-content">
-                <div className="card-body">
-                  <h3 className="service-name">{servicio.name}</h3>
-                  <p className="service-description">
+              <div className="p-4 sm:p-6 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1 sm:mb-2">{servicio.name}</h3>
+                  <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 line-clamp-2 sm:line-clamp-none">
                     {servicio.description}
                   </p>
                 </div>
 
-                <div className="card-footer">
-                  <span className="price">C${servicio.price}</span>
+                <div className="flex items-center justify-between mt-auto">
+                  <span className="text-beauty-deep font-bold text-base sm:text-lg">C${servicio.price}</span>
                   <button
-                    className="reserve-btn"
+                    className="border border-beauty-medium text-beauty-deep bg-transparent rounded-full px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm transition-colors duration-300 hover:bg-beauty-medium hover:text-white cursor-pointer"
                     onClick={handleNavigate}
                   >
                     Reservar
@@ -76,9 +76,9 @@ export default function Services({ services }: ServicesProps) {
 
         {/* Botón "Ver todos los servicios" */}
         {visibleCount < services.length && (
-          <div className="view-more-wrapper">
+          <div className="flex justify-center mt-12">
             <button
-              className="view-more-btn"
+              className="bg-transparent border border-beauty-medium text-beauty-deep px-8 py-3 rounded-full transition-colors duration-300 hover:bg-beauty-medium hover:text-white cursor-pointer"
               onClick={() => setVisibleCount(visibleCount + 3)}
             >
               Ver más
