@@ -40,8 +40,8 @@ export default function Header({ className }: { className?: string }) {
     ${className}
   `}
     >
-      <div className="flex items-center gap-2 ">
-        <a href="/" className="block text-shadow-md font-semibold text-yellow-600 text-[24px] " style={{ fontFamily: "var(--font-script, 'Dancing Script', cursive)" }}>
+      <div className="flex items-center gap-2">
+        <a href="/" className={`block text-shadow-md font-bold text-[26px] ${scrolled ? "text-yellow-600" : "text-white"}`} style={{ fontFamily: "var(--font-script, 'Dancing Script', cursive)" }}>
           Uñas&Mechas
         </a>
       </div>
