@@ -18,13 +18,9 @@ export default function Welcome() {
         promotions?: Promotion[]
     }
 
-    console.log(services, 'servicios')
-    console.log(packages, 'paquetes')
-    console.log(promotions, 'promociones')
-
-    if (!promotions) return null;
-    if (!services) return null;
-    if (!packages) return null;
+    const safeServices = services ?? [];
+    const safePackages = packages ?? [];
+    const safePromotions = promotions ?? [];
 
     return (
         <>
@@ -98,15 +94,15 @@ export default function Welcome() {
                     </section>
 
                     <section id="servicios">
-                        <Services services={services} />
+                        <Services services={safeServices} />
                     </section>
 
                     <section id="promociones">
-                        <Promotions promotions={promotions} />
+                        <Promotions promotions={safePromotions} />
                     </section>
 
                     <section id="paquetes">
-                        <PackageList packages={packages} />
+                        <PackageList packages={safePackages} />
                     </section>
 
                     <section id="nosotros">
