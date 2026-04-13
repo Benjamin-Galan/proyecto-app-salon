@@ -1,156 +1,156 @@
-import type { Promotion, Service } from "@/types"
-import { Sparkles } from "lucide-react"
-import React from "react"
+import type { Promotion } from "@/types"
+import { Sparkles, Tag, ChevronDown, ChevronUp } from "lucide-react"
+import React, { useState } from "react"
 
 interface PromotionsProps {
   promotions: Promotion[]
 }
 
-function PromotionServices({ services }: { services: Service[] }) {
-  return (
-    <div className="flex flex-col gap-3 pt-3 md:gap-4 md:pt-5">
-      {services.map((detail: Service) => (
-        <div
-          key={detail.id}
-          className="flex items-center justify-between rounded-2xl border border-amber-100 bg-white/95 p-3 shadow-[0_1px_2px_0_rgba(254,243,199,0.4)]"
-        >
-          <span className="pr-3 text-sm font-medium text-gray-800 md:text-base">{detail.name}</span>
-          <div className="flex items-center gap-2 md:gap-3">
-            <span className="text-sm font-bold text-beauty-deep md:text-base">C${detail.price}</span>
-            <span className="text-xs text-gray-400 line-through md:text-sm">C${detail.discount}</span>
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-function CompactPromotionCard({ promo }: { promo: Promotion }) {
-  return (
-    <article className="bg-white rounded-2xl border border-amber-100 overflow-hidden relative shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md group">
-      <div className="relative aspect-[4/3] overflow-hidden">
-        <img
-          src={`/storage/promotions/${promo.image}`}
-          alt={promo.name}
-          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-beauty-deep/70 via-beauty-deep/20 to-transparent" />
-        <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-sm border border-white/40 rounded-full py-1 px-3 text-xs text-white">
-          Oferta especial
-        </div>
-      </div>
-
-      <div className="p-5 flex flex-col gap-4 sm:p-6">
-        <div>
-          <h3 className="text-xl font-bold text-gray-800 mb-2">{promo.name}</h3>
-          <p className="text-sm text-gray-600 line-clamp-2">{promo.description}</p>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          {promo.services.slice(0, 2).map((detail: Service) => (
-            <div key={detail.id} className="flex items-center justify-between rounded-xl bg-amber-50/70 p-2 px-3">
-              <span className="text-sm text-gray-700 pr-3">{detail.name}</span>
-              <span className="text-sm font-semibold text-beauty-deep">C${detail.price}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="flex items-center justify-between gap-3 pt-2">
-          <button className="bg-beauty-deep text-white px-4 py-2 rounded-full text-sm border-none cursor-pointer transition-colors duration-300 hover:bg-beauty-dark">
-            Reservar
-          </button>
-          <button className="bg-white text-beauty-deep px-4 py-2 rounded-full text-sm border border-beauty-medium/40 cursor-pointer transition-colors duration-300 hover:bg-beauty-light">
-            Ver mas
-          </button>
-        </div>
-      </div>
-    </article>
-  )
-}
-
 export default function Promotions({ promotions }: PromotionsProps) {
-  const mainPromotion = promotions.find((promotion) => promotion.main)
-  const secondaryPromotions = mainPromotion
-    ? promotions.filter((promotion) => promotion.id !== mainPromotion.id)
-    : promotions
+  const [expandedCard, setExpandedCard] = useState<number | null>(null)
+
+  const activePromotions = promotions.filter((p) => p.active)
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-beauty-light via-white to-beauty-soft/20 py-20">
+      {/* Orbes decorativos de fondo */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute top-[8%] right-[6%] h-64 w-64 rounded-full bg-beauty-soft/70 blur-[120px]"></div>
-        <div className="absolute bottom-[8%] left-[6%] h-64 w-64 rounded-full bg-beauty-light blur-[120px]"></div>
+        <div className="absolute top-[8%] right-[6%] h-72 w-72 rounded-full bg-beauty-soft/60 blur-[130px]" />
+        <div className="absolute bottom-[8%] left-[6%] h-72 w-72 rounded-full bg-beauty-light blur-[130px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-96 rounded-full bg-beauty-medium/10 blur-[150px]" />
       </div>
 
       <div className="relative z-10 max-w-[1280px] mx-auto px-4 md:px-6">
-        <div className="mb-12 flex flex-col items-center justify-center text-center">
-          <div className="mb-3 flex items-center justify-center gap-3">
-            <div className="h-px w-8 bg-beauty-medium"></div>
-            <div className="h-px w-8 bg-beauty-medium"></div>
+        {/* Encabezado de sección */}
+        <div className="mb-14 flex flex-col items-center justify-center text-center">
+          <div className="mb-4 flex items-center justify-center gap-2">
+            <div className="h-px w-10 bg-beauty-medium" />
+            <Sparkles className="h-4 w-4 text-beauty-medium" />
+            <div className="h-px w-10 bg-beauty-medium" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-800 md:text-4xl">Promociones</h2>
-          <p className="mt-3 max-w-xl text-gray-500 mx-auto">
+
+          <h2 className="text-3xl font-bold text-gray-800 md:text-4xl">
+            Promociones
+          </h2>
+          <p className="mt-3 max-w-xl text-gray-500 mx-auto text-sm leading-relaxed">
             Descubre nuestras ofertas exclusivas diseñadas para realzar tu belleza
           </p>
         </div>
 
-        {mainPromotion && (
-          <div className="mb-10 overflow-hidden rounded-3xl border border-white/70 bg-white/70 shadow-[0_24px_80px_-32px_rgba(120,84,58,0.28)] backdrop-blur-sm">
-            <div className="flex flex-col md:grid md:grid-cols-2 md:items-stretch">
-              <div className="order-2 p-6 md:order-1 md:p-12 lg:p-16">
-                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-beauty-medium/20 bg-white/90 py-1 px-3 text-sm font-medium text-beauty-deep">
-                  <Sparkles width={16} height={16} />
-                  <span>Promocion principal</span>
-                </div>
+        {/* Grid de cards */}
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          {activePromotions.map((promotion) => {
+            const isExpanded = expandedCard === promotion.id
+            const visibleServices = isExpanded
+              ? promotion.services
+              : promotion.services.slice(0, 3)
 
-                <div className="flex flex-col gap-4">
-                  <h3 className="text-2xl font-bold tracking-tight text-gray-800 md:text-3xl lg:text-4xl">
-                    {mainPromotion.name}
-                  </h3>
-                  <p className="text-base text-gray-600 md:text-lg">{mainPromotion.description}</p>
-                </div>
+            return (
+              <div
+                key={promotion.id}
+                className="group relative flex flex-col rounded-2xl overflow-hidden bg-white border border-beauty-soft/60 shadow-sm shadow-beauty-soft/40 hover:shadow-lg hover:shadow-beauty-soft/50 hover:-translate-y-1.5 transition-all duration-300"
+              >
+                {/* Imagen con overlay gradiente */}
+                <div className="relative aspect-video overflow-hidden shrink-0">
+                  <img
+                    src={
+                      promotion.image
+                        ? `/storage/promotions/${promotion.image}`
+                        : "/placeholder.svg?height=200&width=400"
+                    }
+                    alt={promotion.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
 
-                <PromotionServices services={mainPromotion.services} />
+                  {/* Gradiente inferior sobre la imagen */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
 
-                <div className="flex flex-col gap-3 pt-4 sm:flex-row md:pt-6">
-                  <button className="bg-beauty-deep text-white py-3 px-6 rounded-full text-sm font-semibold border-none cursor-pointer transition-all duration-300 shadow-[0_10px_15px_-3px_rgba(var(--color-beauty-soft),0.3)] hover:bg-beauty-dark hover:shadow-[0_10px_15px_-3px_rgba(var(--color-beauty-soft),0.5)] md:text-base">
-                    Reservar ahora
-                  </button>
-                  <button className="bg-white text-beauty-deep py-3 px-6 rounded-full text-sm font-semibold border border-beauty-medium/40 cursor-pointer transition-colors duration-300 hover:bg-beauty-light md:text-base">
-                    Ver mas ofertas
-                  </button>
-                </div>
-
-                <p className="pt-2 text-xs italic text-gray-500 md:pt-4">
-                  * Promocion valida hasta agotar existencias.
-                </p>
-              </div>
-
-              <div className="relative order-1 min-h-[260px] md:order-2 md:min-h-[500px]">
-                <img
-                  src={`/storage/promotions/${mainPromotion.image}`}
-                  alt={mainPromotion.name}
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-beauty-deep/70 via-beauty-deep/25 to-white/10">
-                  <div className="absolute bottom-0 left-0 right-0 p-4 text-white md:p-8">
-                    <div className="inline-block rounded-full border border-white/30 bg-white/20 py-1 px-3 text-xs font-medium backdrop-blur-sm shadow-sm md:py-2 md:px-4 md:text-sm">
-                      Hasta 30% de descuento
+                  {/* Badges sobre imagen */}
+                  {promotion.main && (
+                    <div className="absolute top-2.5 right-2.5 flex flex-wrap gap-1.5 justify-end">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-beauty-deep/90 backdrop-blur-sm px-2.5 py-0.5 text-[10px] font-semibold text-white shadow">
+                        <Sparkles className="h-2.5 w-2.5" />
+                        Del mes
+                      </span>
+                      {promotion.discount > 0 && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-white/90 backdrop-blur-sm px-2.5 py-0.5 text-[10px] font-bold text-beauty-deep shadow">
+                          <Tag className="h-2.5 w-2.5" />
+                          {promotion.discount}% desc
+                        </span>
+                      )}
                     </div>
+                  )}
+                </div>
+
+                {/* Línea decorativa violeta */}
+                <div className="h-[3px] w-full bg-gradient-to-r from-beauty-soft via-beauty-medium to-beauty-deep" />
+
+                {/* Contenido */}
+                <div className="flex flex-col flex-1 p-4 gap-3">
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-900 leading-snug line-clamp-2">
+                      {promotion.name}
+                    </h3>
+                    <p className="mt-1 text-xs text-gray-500 line-clamp-2 leading-relaxed">
+                      {promotion.description}
+                    </p>
+                  </div>
+
+                  {/* Servicios incluidos */}
+                  {promotion.services.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {visibleServices.map((service) => (
+                        <span
+                          key={service.id}
+                          className="inline-flex items-center gap-1 rounded-full bg-beauty-light/70 border border-beauty-soft px-2.5 py-0.5 text-[10px] font-medium text-beauty-deep"
+                        >
+                          {service.name}
+                          {promotion.promotion_type === "Individual" &&
+                            service.pivot?.service_discount && (
+                              <span className="text-beauty-medium font-semibold">
+                                -{service.pivot.service_discount}%
+                              </span>
+                            )}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Ver más / Ver menos servicios */}
+                  {promotion.services.length > 3 && (
+                    <button
+                      onClick={() =>
+                        setExpandedCard(isExpanded ? null : promotion.id)
+                      }
+                      className="inline-flex items-center gap-0.5 text-[11px] font-medium text-beauty-deep hover:text-beauty-medium transition-colors self-start"
+                    >
+                      {isExpanded ? (
+                        <>
+                          Ver menos <ChevronUp className="h-3 w-3" />
+                        </>
+                      ) : (
+                        <>
+                          Ver más ({promotion.services.length - 3}){" "}
+                          <ChevronDown className="h-3 w-3" />
+                        </>
+                      )}
+                    </button>
+                  )}
+
+                  {/* Footer: precio */}
+                  <div className="mt-auto pt-2 border-t border-beauty-soft/50 flex items-center justify-between">
+                    <span className="text-sm font-bold text-beauty-deep">
+                      C$ {promotion.total}
+                    </span>
+                    <span className="text-[10px] text-gray-400 uppercase tracking-wide">
+                      {promotion.promotion_type}
+                    </span>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        )}
-
-        {secondaryPromotions.length > 0 && (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {secondaryPromotions.map((promo) => (
-              <CompactPromotionCard key={promo.id} promo={promo} />
-            ))}
-          </div>
-        )}
+            )
+          })}
+        </div>
       </div>
     </section>
   )

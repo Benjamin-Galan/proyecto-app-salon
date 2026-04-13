@@ -1,6 +1,6 @@
 "use client"
 
-import { Building2, Contact, Gift, HandHelping, HomeIcon as House, MapPinHouse, Menu, X,  } from "lucide-react"
+import { Building2, Contact, Gift, HandHelping, HomeIcon as House, MapPinHouse, Menu, X, User } from "lucide-react"
 import { useState } from "react"
 
 export function MobileMenu() {
@@ -13,6 +13,7 @@ export function MobileMenu() {
     { icon: Building2, name: "Nosotros", path: "#nosotros" },
     { icon: MapPinHouse, name: "Ubicación", path: "#ubicacion" },
     { icon: Contact, name: "Contacto", path: "#contacto" },
+    { icon: User, name: "Iniciar Sesión", path: "/login" },
   ]
 
   const toggleMenu = () => {

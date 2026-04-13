@@ -1,6 +1,8 @@
 import { Link } from "@inertiajs/react"
-import { Facebook, Instagram, Twitter } from "lucide-react"
 import { gotoRegister } from "@/utils/goToRegister"
+import TiktokIcon from "./icons/TiktokIcon"
+import InstagramIcon from "./icons/InstagramIcon"
+import FacebookIcon from "./icons/FacebookIcon"
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -23,14 +25,14 @@ export default function Footer() {
             </p>
 
             <div className="flex gap-4">
-              <a href="#" className="flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 no-underline text-pink-800 hover:bg-beauty-medium hover:text-white" aria-label="Facebook">
-                <Facebook className="w-4 h-4" />
+              <a href="https://www.facebook.com/umechas/" className="flex items-center justify-center w-9 h-9 p-2 rounded-full transition-all duration-300 no-underline text-pink-800 hover:bg-beauty-medium/40 hover:text-white" aria-label="Facebook">
+                <FacebookIcon />
               </a>
-              <a href="#" className="flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 no-underline text-purple-800 hover:bg-beauty-deep hover:text-white" aria-label="Instagram">
-                <Instagram className="w-4 h-4" />
+              <a href="https://www.instagram.com/unasymechas_nic/" className="flex items-center justify-center w-9 h-9 p-2 rounded-full transition-all duration-300 no-underline text-purple-800 hover:bg-beauty-medium/40 hover:text-white" aria-label="Instagram">
+                <InstagramIcon />
               </a>
-              <a href="#" className="flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 no-underline text-teal-800 hover:bg-beauty-medium/40 hover:text-white" aria-label="Twitter">
-                <Twitter className="w-4 h-4" />
+              <a href="https://www.tiktok.com/@umechas_salon" className="flex items-center justify-center w-9 h-9 p-2 rounded-full transition-all duration-300 no-underline text-teal-800 hover:bg-beauty-medium/40 hover:text-white" aria-label="Twitter">
+                <TiktokIcon />
               </a>
             </div>
           </div>
@@ -52,12 +54,12 @@ export default function Footer() {
           <div>
             <h3 className="text-base font-medium mb-4 text-gray-800">Servicios</h3>
             <ul className="list-none p-0 m-0 flex flex-col gap-3">
-              <li><a href="#" className="text-gray-600 no-underline text-sm transition-colors hover:text-beauty-medium">Cortes de cabello</a></li>
-              <li><a href="#" className="text-gray-600 no-underline text-sm transition-colors hover:text-beauty-medium">Coloración</a></li>
-              <li><a href="#" className="text-gray-600 no-underline text-sm transition-colors hover:text-beauty-medium">Tratamientos capilares</a></li>
-              <li><a href="#" className="text-gray-600 no-underline text-sm transition-colors hover:text-beauty-medium">Manicure y pedicure</a></li>
-              <li><a href="#" className="text-gray-600 no-underline text-sm transition-colors hover:text-beauty-medium">Maquillaje</a></li>
-              <li><a href="#" className="text-gray-600 no-underline text-sm transition-colors hover:text-beauty-medium">Tratamientos faciales</a></li>
+              <li><a href="#servicios" className="text-gray-600 no-underline text-sm transition-colors hover:text-beauty-medium">Cortes de cabello</a></li>
+              <li><a href="#servicios" className="text-gray-600 no-underline text-sm transition-colors hover:text-beauty-medium">Coloración</a></li>
+              <li><a href="#servicios" className="text-gray-600 no-underline text-sm transition-colors hover:text-beauty-medium">Tratamientos capilares</a></li>
+              <li><a href="#servicios" className="text-gray-600 no-underline text-sm transition-colors hover:text-beauty-medium">Manicure y pedicure</a></li>
+              <li><a href="#servicios" className="text-gray-600 no-underline text-sm transition-colors hover:text-beauty-medium">Maquillaje</a></li>
+              <li><a href="#servicios" className="text-gray-600 no-underline text-sm transition-colors hover:text-beauty-medium">Tratamientos faciales y más</a></li>
             </ul>
           </div>
 
@@ -100,3 +102,4 @@ export default function Footer() {
     </footer>
   )
 }
+
