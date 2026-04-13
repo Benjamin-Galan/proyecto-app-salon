@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Appointment } from "@/types"
+import { formatDateLong, formatTime } from "@/utils/formatDateTime"
 
 interface DeleteDialogProps {
     open: boolean
@@ -25,7 +26,9 @@ export default function DeleteDialog({ open, onOpenChange, onConfirm, appointmen
                 <DialogHeader>
                     <DialogTitle>Eliminar cita</DialogTitle>
                     <DialogDescription>
-                        {`¿Eliminar la cita con el cliente ${appointment?.user?.name} el ${appointment?.date}?`}
+                        {`¿Eliminar la cita con el cliente 
+                        ${appointment?.user?.name} 
+                        el ${formatDateLong(appointment?.date)} a las ${formatTime(appointment?.date)}?`}
                     </DialogDescription>
                 </DialogHeader>
 

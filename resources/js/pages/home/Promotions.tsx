@@ -87,9 +87,9 @@ export default function Promotions({ promotions }: PromotionsProps) {
             <div className="h-px w-8 bg-beauty-medium"></div>
             <div className="h-px w-8 bg-beauty-medium"></div>
           </div>
-          <h2 className="text-3xl font-bold text-gray-800 md:text-4xl">Promocion del mes</h2>
+          <h2 className="text-3xl font-bold text-gray-800 md:text-4xl">Promociones</h2>
           <p className="mt-3 max-w-xl text-gray-500 mx-auto">
-            Descubre nuestras ofertas exclusivas disenadas para realzar tu belleza
+            Descubre nuestras ofertas exclusivas diseñadas para realzar tu belleza
           </p>
         </div>
 

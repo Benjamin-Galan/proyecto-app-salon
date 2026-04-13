@@ -9,7 +9,7 @@ export default function Hero() {
   const { handleNavigate } = gotoRegister()
 
   return (
-    <section className="relative flex items-end justify-center p-4 bg-[#f7d4f4] min-h-[100dvh] overflow-hidden lg:justify-between lg:p-16">
+    <section className="relative flex items-end justify-center p-4 bg-purple-300 min-h-[100dvh] overflow-hidden lg:justify-between lg:p-16">
       {/* Renderizado condicional basado en el tamaño de pantalla */}
       {isDesktop ? <Header /> : <MobileMenu />}
 
@@ -26,7 +26,7 @@ export default function Hero() {
         {/* Título principal */}
         <h1
           className="text-[4.5rem] font-bold leading-[1.1] mb-4 text-white [text-shadow:0_4px_12px_rgba(0,0,0,0.6)] opacity-0 lg:text-[7.5rem] lg:mb-6 lg:[text-shadow:0_6px_16px_rgba(0,0,0,0.6)]"
-          style={{ fontFamily: "var(--font-script, 'Dancing Script', cursive)", animation: 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards' }}
+          style={{ fontFamily: "var(--font-script, 'Dancing Script', cursive)", animation: 'fadeInUp 0.8s  forwards' }}
         >
           Uñas & Mechas
         </h1>
