@@ -203,10 +203,10 @@ export const aboutUs = {
 
 export const contactUs = {
     'address': 'Portón sur, Multicentro Las Americas, 50 metros abajo, Managua',
-    'phone': '+505 1234 5678',
-    'whatsapp': '+505 1234 5678',
+    'phone': '+505 7820 6792',
+    'whatsapp': '+505 7820 6792',
     'schedule': {
-        'normal': 'Lunes a Sábado: 9:00 AM - 8:00 PM',
-        'sunday': 'Domingo: 10:00 AM - 6:00 PM',
+        'normal': 'Lunes a Sábado: 8:30 AM - 6:00 PM',
+        'sunday': 'Domingo: 8:00 AM - 12:00 PM',
     }
 }

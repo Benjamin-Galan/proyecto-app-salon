@@ -38,7 +38,7 @@ export default function Welcome() {
                     content="salón de belleza Managua, uñas acrílicas Managua, mechas, cortes, spa, maquillaje, uñas y mechas"
                 />
                 <meta name="robots" content="index, follow" />
-                <link rel="canonical" href="https://xn--uasymechassalon-yqb.es/" />
+                <link rel="canonical" href="http://72.61.5.146/" />
 
                 {/* Open Graph */}
                 <meta property="og:locale" content="es_NI" />
@@ -47,8 +47,8 @@ export default function Welcome() {
                     property="og:description"
                     content="Descubre nuestros servicios de uñas, peinados y spa en el mejor salón de Managua."
                 />
-                <meta property="og:image" content="https://xn--uasymechassalon-yqb.es/preview.jpg" />
-                <meta property="og:url" content="https://xn--uasymechassalon-yqb.es/" />
+                <meta property="og:image" content="http://72.61.5.146/preview.jpg" />
+                <meta property="og:url" content="http://72.61.5.146/" />
                 <meta property="og:type" content="website" />
 
                 {/* Twitter */}
@@ -58,7 +58,7 @@ export default function Welcome() {
                     name="twitter:description"
                     content="Agenda tu cita en línea para uñas, peinados y spa."
                 />
-                <meta name="twitter:image" content="https://xn--uasymechassalon-yqb.es/preview.jpg" />
+                <meta name="twitter:image" content="http://72.61.5.146/preview.jpg" />
 
                 {/* Fonts */}
                 <link rel="preconnect" href="https://fonts.bunny.net" />
@@ -70,9 +70,9 @@ export default function Welcome() {
     "@context": "https://schema.org",
     "@type": "BeautySalon",
     "name": "Uñas & Mechas",
-    "image": "https://xn--uasymechassalon-yqb.es/preview.jpg",
-    "@id": "https://xn--uasymechassalon-yqb.es",
-    "url": "https://xn--uasymechassalon-yqb.es",
+    "image": "http://72.61.5.146/preview.jpg",
+    "@id": "http://72.61.5.146/",
+    "url": "http://72.61.5.146/",
     "telephone": "+50512345678",
     "address": {
       "@type": "PostalAddress",
