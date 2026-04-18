@@ -30,7 +30,11 @@ class AppointmentService
         $appointment = $this->getAppointmentById($id);
 
         if (!$appointment->employee_id) {
-            throw new \Exception('Debes asignar un empleado antes de confirmar la cita');
+            throw new \Exception('Debes asignar un estilista antes de confirmar la cita');
+        }
+
+        if ($appointment->status === 'Completada') {
+            throw new \Exception('La cita ya esta completada, no se puede confirmar');
         }
 
         //Verificar si la cita ya esta confirmada
@@ -38,9 +42,12 @@ class AppointmentService
             throw new \Exception('La cita ya esta confirmada');
         }
 
-        $appointment->update([
-            'status' => 'Confirmada',
-        ]);
+        //pendiente
+        if ($appointment->status === 'Pendiente') {
+            $appointment->update([
+                'status' => 'Confirmada',
+            ]);
+        }
 
         return $appointment;
     }
@@ -83,13 +90,23 @@ class AppointmentService
         $appointment = $this->getAppointmentById($id);
 
         //Verificar si la cita ya esta completada
-        if ($appointment->status !== 'Confirmada') {
-            throw new \Exception('La cita no esta confirmada, no se puede completar');
+        if ($appointment->status === 'Pendiente') {
+            throw new \Exception('La cita aun no esta confirmada, no se puede completar');
         }
 
-        $appointment->update([
-            'status' => 'Completada',
-        ]);
+        if (!$appointment->employee_id) {
+            throw new \Exception('Debes asignar un estilista antes de completar la cita');
+        }
+
+        if ($appointment->status === 'Completada') {
+            throw new \Exception('Esta cita ya se encuentra completada');
+        }
+
+        if ($appointment->status === 'Confirmada') {
+            $appointment->update([
+                'status' => 'Completada',
+            ]);
+        }
 
         return $appointment;
     }
